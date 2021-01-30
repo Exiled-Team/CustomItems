@@ -1,4 +1,3 @@
-using CustomItems.Components;
 using CustomItems.Items;
 
 namespace CustomItems
@@ -9,7 +8,7 @@ namespace CustomItems
         public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
         //This is to prevent making more new item managers when they aren't needed, that could get messy.
-        public bool first = true;
+        private bool first = true;
 
         public void OnWaitingForPlayers()
         {
