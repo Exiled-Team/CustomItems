@@ -21,7 +21,7 @@ namespace CustomItems
         public Dictionary<string, List<string>> SubclassList { get; set; } = new Dictionary<string, List<string>>
         {
             {
-                "ExampleSubclass", new List<string>{"ExampleItem1-100", "ExampleItem2-50"}
+                "ExampleSubclass", new List<string>{"SR-119:100", "RL-119:50"}
             }
         };
         
@@ -40,7 +40,7 @@ namespace CustomItems
                 List<Tuple<CustomItem, float>> customItems = new List<Tuple<CustomItem, float>>();
                 foreach (string itemName in list.Value)
                 {
-                    string[] array = itemName.Split('-');
+                    string[] array = itemName.Split(':');
                     string name = array[0];
                     if (!float.TryParse(array[1], out float chance))
                     {
