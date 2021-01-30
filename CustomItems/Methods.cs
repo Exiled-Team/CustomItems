@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using CustomItems.Components;
 using Exiled.Loader;
 using HarmonyLib;
-using MEC;
-using Subclass;
-using Player = Exiled.API.Features.Player;
 
 namespace CustomItems
 {

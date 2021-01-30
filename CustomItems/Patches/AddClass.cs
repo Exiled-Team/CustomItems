@@ -1,7 +1,6 @@
 using CustomItems.Events;
 using Exiled.API.Features;
 using HarmonyLib;
-using MEC;
 using Subclass;
 
 namespace CustomItems.Patches

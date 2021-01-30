@@ -1,5 +1,4 @@
-using System;
-using CustomItems.Events;
+using CustomItems.Components;
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
@@ -7,9 +6,8 @@ using Exiled.Events.EventArgs;
 using Grenades;
 using Mirror;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-namespace CustomItems.Components
+namespace CustomItems.Items
 {
     public class GrenadeLauncher : CustomItem
     {

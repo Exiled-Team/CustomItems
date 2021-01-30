@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Exiled.API.Enums;
-using Exiled.API.Features;
+using CustomItems.Components;
 using Exiled.Events.EventArgs;
-using MEC;
-using UnityEngine;
 
-namespace CustomItems.Components
+namespace CustomItems.Items
 {
     public class SniperRifle : CustomItem
     {

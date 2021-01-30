@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using CustomItems.Components;
 using Exiled.API.Features;
 using Exiled.API.Interfaces;

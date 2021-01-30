@@ -1,9 +1,10 @@
+using CustomItems.Components;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using UnityEngine;
 
-namespace CustomItems.Components
+namespace CustomItems.Items
 {
     public class Shotgun : CustomItem
     {

@@ -7,7 +7,6 @@ using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Exiled.Loader;
 using MEC;
-using UnityEngine;
 
 namespace CustomItems.Components
 {
@@ -127,6 +126,15 @@ namespace CustomItems.Components
             Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUpItem;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
 
+            try
+            {
+                CheckAndUnloadSubclassEvent();
+            }
+            catch (Exception)
+            {
+                //ignored
+            }
+
             if (ItemType.IsWeapon())
                 Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloadingWeapon;
 
@@ -155,6 +163,11 @@ namespace CustomItems.Components
         {
             if (Loader.Plugins.Any(p => p.Name == "Subclass"))
                 AddClassEvent.AddClass += OnAddingClass;
+        }
+        private void CheckAndUnloadSubclassEvent()
+        {
+            if (Loader.Plugins.Any(p => p.Name == "Subclass"))
+                AddClassEvent.AddClass -= OnAddingClass;
         }
 
         private void OnAddingClass(AddClassEventArgs ev)
