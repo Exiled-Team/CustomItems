@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
 
@@ -14,13 +15,13 @@ namespace CustomItems.Commands
             switch (args[1])
             {
                 case "sniper":
-                    Plugin.Singleton.SniperRifleComponent.GiveItem(player);
+                    Plugin.Singleton.ItemManagers.FirstOrDefault(m => m.ItemName == "SR-119")?.GiveItem(player);
                     break;
                 case "gl":
-                    Plugin.Singleton.GrenadeLauncherComponent.GiveItem(player);
+                    Plugin.Singleton.ItemManagers.FirstOrDefault(m => m.ItemName == "RL-119")?.GiveItem(player);
                     break;
                 case "sg":
-                    Plugin.Singleton.ShotgunManager.GiveItem(player);
+                    Plugin.Singleton.ItemManagers.FirstOrDefault(m => m.ItemName == "SG-119")?.GiveItem(player);
                     break;
             }
 

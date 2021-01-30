@@ -1,3 +1,4 @@
+using CustomItems.Events;
 using Exiled.API.Features;
 using HarmonyLib;
 using MEC;
@@ -11,8 +12,8 @@ namespace CustomItems.Patches
         public static void Postfix(Player player, SubClass subClass, bool is035 = false, bool lite = false,
             bool escaped = false, bool disguised = false)
         {
-            if (Plugin.Singleton.Config.SniperList.Contains(subClass.Name))
-                Timing.RunCoroutine(Plugin.Singleton.Methods.GiveSniper(player));
+            AddClassEventArgs ev = new AddClassEventArgs(player, subClass);
+            AddClassEvent.OnAddingClass(ev);
         }
     }
 }

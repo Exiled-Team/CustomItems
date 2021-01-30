@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using CustomItems.Components;
 using Exiled.API.Features;
+using UnityEngine;
 
 namespace CustomItems
 {
@@ -10,12 +13,17 @@ namespace CustomItems
 
         public void OnWaitingForPlayers()
         {
-            if (plugin.SniperRifleComponent == null)
-               plugin.SniperRifleComponent = Server.Host.GameObject.AddComponent<SniperRifle>();
-            if (plugin.GrenadeLauncherComponent == null)
-                plugin.GrenadeLauncherComponent = Server.Host.GameObject.AddComponent<GrenadeLauncher>();
-            if (plugin.ShotgunManager == null)
-                plugin.ShotgunManager = Server.Host.GameObject.AddComponent<Shotgun>();
+            API.RegisterCustomItem(new Shotgun());
+            API.RegisterCustomItem(new GrenadeLauncher());
+            API.RegisterCustomItem(new SniperRifle());
+            
+            foreach (CustomItem item in plugin.ItemManagers)
+                item.Init();
+        }
+
+        public void OnReloadingConfigs()
+        {
+            plugin.Config.ParseSubclassList();
         }
     }
 }

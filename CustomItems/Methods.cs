@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using CustomItems.Components;
+using Exiled.Loader;
+using HarmonyLib;
 using MEC;
 using Subclass;
 using Player = Exiled.API.Features.Player;
@@ -10,15 +14,14 @@ namespace CustomItems
     {
         private readonly Plugin plugin;
         public Methods(Plugin plugin) => this.plugin = plugin;
-        
-        public IEnumerator<float> GiveSniper(Player player)
-        {
-            while (!TrackingAndMethods.PlayersWithSubclasses.ContainsKey(player))
-                yield return Timing.WaitForSeconds(0.75f);
 
-            yield return Timing.WaitForSeconds(1f);
-            
-            plugin.SniperRifleComponent.GiveItem(player);
+        internal void CheckAndPatchSubclassing()
+        {
+            if (Loader.Plugins.Any(p => p.Name == "Subclass"))
+            {
+                plugin.HarmonyInstance = new Harmony($"com.galaxy.CI=-{DateTime.UtcNow.Ticks}");
+                plugin.HarmonyInstance.PatchAll();
+            }
         }
     }
 }

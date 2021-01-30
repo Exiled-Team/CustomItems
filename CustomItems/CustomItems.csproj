@@ -91,10 +91,12 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="API.cs" />
         <Compile Include="Commands\GiveItem.cs" />
         <Compile Include="Components\CustomItem.cs" />
         <Compile Include="Config.cs" />
         <Compile Include="EventHandlers.cs" />
+        <Compile Include="Events\AddClassEvent.cs" />
         <Compile Include="Items\GrenadeLauncher.cs" />
         <Compile Include="Items\Scp-127.cs" />
         <Compile Include="Items\Shotgun.cs" />

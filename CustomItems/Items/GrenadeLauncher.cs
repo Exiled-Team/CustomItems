@@ -1,4 +1,5 @@
 using System;
+using CustomItems.Events;
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
@@ -54,7 +55,7 @@ namespace CustomItems.Components
                 player = Server.Host;
 
             GrenadeManager component = player.GrenadeManager;
-            Grenade component2 = Instantiate(component.availableGrenades[(int)grenadeType].grenadeInstance).GetComponent<Grenades.Grenade>();
+            Grenade component2 = GameObject.Instantiate(component.availableGrenades[(int)grenadeType].grenadeInstance).GetComponent<Grenades.Grenade>();
             component2.FullInitData(component, position, Quaternion.Euler(component2.throwStartAngle), velocity, component2.throwAngularVelocity, player == Server.Host ? Team.RIP : player.Team);
             component2.NetworkfuseTime = NetworkTime.time + (double)fusetime;
             NetworkServer.Spawn(component2.gameObject);

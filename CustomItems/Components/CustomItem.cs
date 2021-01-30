@@ -1,13 +1,17 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using CustomItems.Events;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Loader;
 using MEC;
 using UnityEngine;
 
 namespace CustomItems.Components
 {
-    public abstract class CustomItem : MonoBehaviour
+    public abstract class CustomItem
     {
         public abstract ItemType ItemType { get; set; }
         public abstract string ItemName { get; set; }
@@ -96,7 +100,7 @@ namespace CustomItems.Components
         public bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
         public bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
 
-        private void Awake()
+        public void Init()
         {
             Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
             Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
@@ -104,11 +108,20 @@ namespace CustomItems.Components
             
             if (ItemType.IsWeapon())
                 Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloadingWeapon;
-            
+
+            try
+            {
+                CheckAndLoadSubclassEvent();
+            }
+            catch (Exception)
+            {
+                //ignored
+            }
+
             LoadEvents();
         }
 
-        private void OnDestroy()
+        public void Destroy()
         {
             Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
             Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUpItem;
@@ -136,6 +149,28 @@ namespace CustomItems.Components
             };
             player.Inventory.items.Add(syncItemInfo);
             ItemIds.Add(syncItemInfo.uniq);
+        }
+
+        private void CheckAndLoadSubclassEvent()
+        {
+            if (Loader.Plugins.Any(p => p.Name == "Subclass"))
+                AddClassEvent.AddClass += OnAddingClass;
+        }
+
+        private void OnAddingClass(AddClassEventArgs ev)
+        {
+            if (Plugin.Singleton.Config.SubclassItems.ContainsKey(ev.Subclass.Name))
+            {
+                foreach (Tuple<CustomItem, float> item in Plugin.Singleton.Config.SubclassItems[ev.Subclass.Name])
+                {
+                    if (item.Item1.ItemName == ItemName)
+                    {
+                        int r = Plugin.Singleton.Rng.Next(100);
+                        if (r < item.Item2)
+                            GiveItem(ev.Player);
+                    }
+                }
+            }
         }
     }
 }

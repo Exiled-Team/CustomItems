@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using CustomItems.Components;
 using Exiled.API.Features;
 using HarmonyLib;
+using UnityEngine;
 using MapEvents = Exiled.Events.Handlers.Map;
 using Object = UnityEngine.Object;
 using PlayerEvents = Exiled.Events.Handlers.Player;
+using Random = System.Random;
 using Scp049Events = Exiled.Events.Handlers.Scp049;
 using Scp079Events = Exiled.Events.Handlers.Scp079;
 using Scp096Events = Exiled.Events.Handlers.Scp096;
@@ -25,12 +28,12 @@ namespace CustomItems
 
         public Methods Methods { get; private set; }
         public EventHandlers EventHandlers { get; private set; }
-        public SniperRifle SniperRifleComponent { get; set; }
-        public GrenadeLauncher GrenadeLauncherComponent { get; set; }
-        public Shotgun ShotgunManager { get; set; }
+        public List<CustomItem> ItemManagers { get; set; } = new List<CustomItem>();
+
 
         public static Plugin Singleton;
         public Harmony HarmonyInstance;
+        public Random Rng = new Random();
 
         public override void OnEnabled()
         {
@@ -38,9 +41,17 @@ namespace CustomItems
             EventHandlers = new EventHandlers(this);
             Methods = new Methods(this);
 
-            HarmonyInstance = new Harmony($"com.galaxy.customItems-{DateTime.UtcNow.Ticks}");
-            HarmonyInstance.PatchAll();
+            Log.Debug($"Checking for Subclassing..", Config.Debug);
+            try
+            {
+                Methods.CheckAndPatchSubclassing();
+            }
+            catch (Exception)
+            {
+                Log.Debug($"Subclassing not installed.", Config.Debug);
+            }
 
+            Exiled.Events.Handlers.Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
             Exiled.Events.Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
             
             base.OnEnabled();
@@ -48,10 +59,14 @@ namespace CustomItems
 
         public override void OnDisabled()
         {
-            if (SniperRifleComponent != null)
-                Object.Destroy(SniperRifleComponent);
+            foreach (CustomItem item in ItemManagers)
+                item.Destroy();
+            ItemManagers.Clear();
             
-            HarmonyInstance.UnpatchAll();
+            Exiled.Events.Handlers.Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
+            
+            HarmonyInstance?.UnpatchAll();
             EventHandlers = null;
             Methods = null;
 
