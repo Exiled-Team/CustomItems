@@ -1,9 +1,6 @@
 using System;
-using System.Linq;
 using CommandSystem;
-using CustomItems.Components;
 using Exiled.API.Features;
-using Log = GameCore.Log;
 
 namespace CustomItems.Commands
 {
