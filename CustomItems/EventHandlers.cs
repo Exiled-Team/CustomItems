@@ -8,11 +8,18 @@ namespace CustomItems
         private readonly Plugin plugin;
         public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
+        //This is to prevent making more new item managers when they aren't needed, that could get messy.
+        public bool first = true;
+
         public void OnWaitingForPlayers()
         {
-            API.RegisterCustomItem(new Shotgun());
-            API.RegisterCustomItem(new GrenadeLauncher());
-            API.RegisterCustomItem(new SniperRifle());
+            if (first)
+            {
+                API.RegisterCustomItem(new Shotgun());
+                API.RegisterCustomItem(new GrenadeLauncher());
+                API.RegisterCustomItem(new SniperRifle());
+                first = false;
+            }
         }
 
         public void OnReloadingConfigs()
