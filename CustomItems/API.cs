@@ -39,8 +39,28 @@ namespace CustomItems
         }
 
         public static void GiveItem(Player player, CustomItem item) => item.GiveItem(player);
-        public static void GiveItem(Player player, string name) => GetItem(name)?.GiveItem(player);
+
+        public static bool GiveItem(Player player, string name)
+        {
+            CustomItem item = GetItem(name);
+            if (item == null) 
+                return false;
+            
+            item.GiveItem(player);
+            
+            return true;
+        }
         public static void SpawnItem(CustomItem item, Vector3 position) => item.SpawnItem(position);
-        public static void SpawnItem(string name, Vector3 position) => GetItem(name)?.SpawnItem(position);
+
+        public static bool SpawnItem(string name, Vector3 position)
+        {
+            CustomItem item = GetItem(name);
+            if (item == null) 
+                return false;
+            
+            item.SpawnItem(position);
+            
+            return true;
+        }
     }
 }

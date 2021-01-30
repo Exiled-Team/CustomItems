@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using CommandSystem;
+using CustomItems.Components;
 using Exiled.API.Features;
+using Log = GameCore.Log;
 
 namespace CustomItems.Commands
 {
@@ -12,21 +14,30 @@ namespace CustomItems.Commands
         {
             Player player = Player.Get(((CommandSender)sender).SenderId);
             string[] args = arguments.Array;
-            switch (args[1])
+            if (args == null)
             {
-                case "sniper":
-                    Plugin.Singleton.ItemManagers.FirstOrDefault(m => m.ItemName == "SR-119")?.GiveItem(player);
-                    break;
-                case "gl":
-                    Plugin.Singleton.ItemManagers.FirstOrDefault(m => m.ItemName == "RL-119")?.GiveItem(player);
-                    break;
-                case "sg":
-                    Plugin.Singleton.ItemManagers.FirstOrDefault(m => m.ItemName == "SG-119")?.GiveItem(player);
-                    break;
+                response = "This error is an easter egg because it can't happen.";
+
+                return false;
+            }
+            
+            if (args.Length < 2)
+            {
+                response = "You must define an item name.";
+                
+                return false;
             }
 
-            response = "Done.";
-            return true;
+            if (API.GiveItem(player, args[1]))
+            {
+                response = "Done.";
+                
+                return true;
+            }
+
+            response = "Item not found.";
+            
+            return false;
         }
 
         public string Command { get; } = "customgive";
