@@ -19,5 +19,15 @@ namespace CustomItems
                 item.Init();
             }
         }
+
+        public static CustomItem GetItem(string name)
+        {
+            foreach (CustomItem item in Plugin.Singleton.ItemManagers)
+                if (item.ItemName == name)
+                    return item;
+            return null;
+        }
+
+        public static void GiveItem(Player player, CustomItem item) => item.GiveItem(player);
     }
 }

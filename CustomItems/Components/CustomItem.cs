@@ -89,10 +89,12 @@ namespace CustomItems.Components
                 ItemIds.Add(rifle.uniq);
                 ev.Pickup.Delete();
                 
-                ev.Player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
+                ShowHint(ev.Player);
             }
         }
-        
+
+        public virtual void ShowHint(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
+
         public List<int> ItemIds { get; set; } = new List<int>();
         public List<Pickup> ItemPickups { get; set; } = new List<Pickup>();
         
@@ -157,6 +159,7 @@ namespace CustomItems.Components
             };
             player.Inventory.items.Add(syncItemInfo);
             ItemIds.Add(syncItemInfo.uniq);
+            ShowHint(player);
         }
 
         private void CheckAndLoadSubclassEvent()
