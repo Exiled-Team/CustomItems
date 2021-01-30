@@ -1,5 +1,6 @@
 using CustomItems.Components;
 using Exiled.API.Features;
+using UnityEngine;
 
 namespace CustomItems
 {
@@ -20,6 +21,15 @@ namespace CustomItems
             }
         }
 
+        public static void UnregisterCustomItem(CustomItem item)
+        {
+            if (Plugin.Singleton.ItemManagers.Contains(item))
+            {
+                item.Destroy();
+                Plugin.Singleton.ItemManagers.Remove(item);
+            }
+        }
+
         public static CustomItem GetItem(string name)
         {
             foreach (CustomItem item in Plugin.Singleton.ItemManagers)
@@ -29,5 +39,8 @@ namespace CustomItems
         }
 
         public static void GiveItem(Player player, CustomItem item) => item.GiveItem(player);
+        public static void GiveItem(Player player, string name) => GetItem(name)?.GiveItem(player);
+        public static void SpawnItem(CustomItem item, Vector3 position) => item.SpawnItem(position);
+        public static void SpawnItem(string name, Vector3 position) => GetItem(name)?.SpawnItem(position);
     }
 }

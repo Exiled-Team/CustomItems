@@ -7,6 +7,8 @@ using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Exiled.Loader;
 using MEC;
+using UnityEngine;
+using Utf8Json.Internal.DoubleConversion;
 
 namespace CustomItems.Components
 {
@@ -161,6 +163,8 @@ namespace CustomItems.Components
             ItemIds.Add(syncItemInfo.uniq);
             ShowHint(player);
         }
+
+        public void SpawnItem(Vector3 position) => ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(ItemType, ClipSize, position, default, ModSight, ModBarrel, ModOther));
 
         private void CheckAndLoadSubclassEvent()
         {
