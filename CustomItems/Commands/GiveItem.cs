@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
 
@@ -23,6 +24,22 @@ namespace CustomItems.Commands
                 response = "You must define an item name.";
                 
                 return false;
+            }
+            
+            if (args.Length > 2)
+            {
+                string identifier = string.Empty;
+                foreach (string s in args.Skip(3))
+                    identifier += $"{s} ";
+                identifier = identifier.Trim();
+                
+                player = Player.Get(identifier);
+                if (player == null)
+                {
+                    response = $"Unable to find player: {identifier}";
+
+                    return false;
+                }
             }
 
             if (API.GiveItem(player, args[1]))
