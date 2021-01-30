@@ -35,38 +35,43 @@ namespace CustomItems
             }
         }
 
-        public static CustomItem GetItem(string name)
+        public static bool TryGetItem(string name, out CustomItem item)
         {
-            foreach (CustomItem item in Plugin.Singleton.ItemManagers)
-                if (item.ItemName == name)
-                    return item;
-            return null;
+            foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
+                if (cItem.ItemName == name)
+                {
+                    item = cItem;
+                    return true;
+                }
+
+            item = null;
+            return false;
         }
 
         public static void GiveItem(this Player player, CustomItem item) => item.GiveItem(player);
 
         public static bool GiveItem(this Player player, string name)
         {
-            CustomItem item = GetItem(name);
-            if (item == null) 
+            if (!TryGetItem(name, out CustomItem item)) 
                 return false;
             
             item.GiveItem(player);
-            
+                
             return true;
+
         }
 
         public static void SpawnItem(this CustomItem item, Vector3 position) => item.SpawnItem(position);
 
         public static bool SpawnItem(string name, Vector3 position)
         {
-            CustomItem item = GetItem(name);
-            if (item == null) 
+            if (!TryGetItem(name, out CustomItem item)) 
                 return false;
             
             item.SpawnItem(position);
-            
+
             return true;
+
         }
 
         public static List<CustomItem> GetInstalledItems() => Plugin.Singleton.ItemManagers;
