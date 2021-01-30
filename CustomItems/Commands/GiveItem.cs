@@ -29,7 +29,7 @@ namespace CustomItems.Commands
             if (args.Length > 2)
             {
                 string identifier = string.Empty;
-                foreach (string s in args.Skip(3))
+                foreach (string s in args.Skip(2))
                     identifier += $"{s} ";
                 identifier = identifier.Trim();
                 
