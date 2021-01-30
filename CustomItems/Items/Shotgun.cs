@@ -14,14 +14,14 @@ namespace CustomItems.Items
         public override string ItemDescription { get; set; } =
             "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles infront of you.";
 
-        public override int ClipSize { get; set; } = 10;
+        protected override int ClipSize { get; set; } = 10;
 
-        public override void LoadEvents()
+        protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
         }
 
-        public override void UnloadEvents()
+        protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
         }

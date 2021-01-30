@@ -11,23 +11,23 @@ namespace CustomItems.Items
 {
     public class GrenadeLauncher : CustomItem
     {
-        public override int ClipSize { get; set; } = 1;
+        protected override int ClipSize { get; set; } = 1;
         public override ItemType ItemType { get; set; } = ItemType.GunLogicer;
         public override string ItemName { get; set; } = "RL-119";
 
         public override string ItemDescription { get; set; } =
             "This weapon will launch grenades in the direction you are firing, instead of bullets.";
 
-        public override void LoadEvents()
+        protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
         }
 
-        public override void UnloadEvents()
+        protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
         }
-        
+
         private void OnShooting(ShootingEventArgs ev)
         {
             if (CheckItem(ev.Shooter.CurrentItem))
@@ -38,7 +38,7 @@ namespace CustomItems.Items
                 Vector3 velocity = (ev.Position - ev.Shooter.Position) * 1f;
                 Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
                 Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-                var grenade = SpawnGrenade(pos, velocity, 1f);
+                var grenade = SpawnGrenade(pos, velocity, 1f, GrenadeType.FragGrenade, ev.Shooter);
                 CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
                 collisionHandler.owner = ev.Shooter.GameObject;
                 collisionHandler.grenade = grenadeComponent;

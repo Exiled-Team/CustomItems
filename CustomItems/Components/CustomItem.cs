@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CustomItems.Events;
+using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
@@ -18,20 +19,20 @@ namespace CustomItems.Components
         public abstract string ItemName { get; set; }
         public abstract string ItemDescription { get; set; }
 
-        public virtual int ModBarrel { get; set; } = 0;
-        public virtual int ModSight { get; set; } = 0;
-        public virtual int ModOther { get; set; } = 0;
-        public virtual int ClipSize { get; set; } = 1;
-        public virtual void LoadEvents(){}
-        public virtual void UnloadEvents(){}
+        protected virtual BarrelType ModBarrel { get; set; } = 0;
+        protected virtual SightType ModSight { get; set; } = 0;
+        protected virtual OtherType ModOther { get; set; } = 0;
+        protected virtual int ClipSize { get; set; } = 1;
+        protected virtual void LoadEvents(){}
+        protected virtual void UnloadEvents(){}
         
-        public virtual void OnWaitingForPlayers()
+        protected virtual void OnWaitingForPlayers()
         {
             ItemIds.Clear();
             ItemPickups.Clear();
         }
 
-        public virtual void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
+        protected virtual void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
             if (CheckItem(ev.Player.CurrentItem))
             {
@@ -61,7 +62,7 @@ namespace CustomItems.Components
             }
         }
         
-        public virtual void OnDroppingItem(DroppingItemEventArgs ev)
+        protected virtual void OnDroppingItem(DroppingItemEventArgs ev)
         {
             if (CheckItem(ev.Item))
             {
@@ -71,7 +72,7 @@ namespace CustomItems.Components
             }
         }
 
-        public virtual void OnPickingUpItem(PickingUpItemEventArgs ev)
+        protected virtual void OnPickingUpItem(PickingUpItemEventArgs ev)
         {
             if (CheckItem(ev.Pickup) && ev.Player.Inventory.items.Count < 8)
             {
@@ -94,19 +95,70 @@ namespace CustomItems.Components
                 ShowHint(ev.Player);
             }
         }
-
-        public virtual void ShowHint(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
-
-        public List<int> ItemIds { get; set; } = new List<int>();
-        public List<Pickup> ItemPickups { get; set; } = new List<Pickup>();
         
-        public bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
-        public bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
+        protected virtual void OnUpgradingItems(UpgradingItemsEventArgs ev)
+        {
+            Vector3 outPos = ev.Scp914.output.position - ev.Scp914.intake.position;
+            
+            foreach (Pickup pickup in ev.Items.ToList())
+                if (CheckItem(pickup))
+                {
+                    pickup.transform.position += outPos;
+                    ev.Items.Remove(pickup);
+                }
+            
+            Dictionary<Player, Inventory.SyncItemInfo> itemsToSave = new Dictionary<Player, Inventory.SyncItemInfo>();
+            
+            foreach (Player player in ev.Players)
+                foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+                    if (CheckItem(item))
+                    {
+                        itemsToSave.Add(player, item);
+                        player.Inventory.items.Remove(item);
+                    }
+
+            Timing.CallDelayed(3.5f, () =>
+            {
+                foreach (KeyValuePair<Player, Inventory.SyncItemInfo> kvp in itemsToSave)
+                    kvp.Key.AddItem(kvp.Value);
+            });
+        }
+
+        protected virtual void OnHandcuffing(HandcuffingEventArgs ev)
+        {
+            foreach (Inventory.SyncItemInfo item in ev.Target.Inventory.items)
+                if (CheckItem(item))
+                {
+                    ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(item.id, item.durability, ev.Target.Position, default, item.modSight, item.modBarrel, item.modOther));
+                    ev.Target.RemoveItem(item);
+                }
+        }
+
+        protected virtual void OnDying(DyingEventArgs ev)
+        {
+            foreach (Inventory.SyncItemInfo item in ev.Target.Inventory.items)
+                if (CheckItem(item))
+                {
+                    ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(item.id, item.durability, ev.Target.Position, default, item.modSight, item.modBarrel, item.modOther));
+                    ev.Target.RemoveItem(item);
+                }
+        }
+
+        protected virtual void ShowHint(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
+
+        protected List<int> ItemIds { get; } = new List<int>();
+        protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
+        
+        protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
+        protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
 
         public void Init()
         {
+            Exiled.Events.Handlers.Player.Dying += OnDying;
+            Exiled.Events.Handlers.Player.Handcuffing += OnHandcuffing;
             Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
             Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
+            Exiled.Events.Handlers.Scp914.UpgradingItems += OnUpgradingItems;
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
             
             if (ItemType.IsWeapon())
@@ -155,16 +207,16 @@ namespace CustomItems.Components
                 durability = ClipSize,
                 id = ItemType,
                 uniq = Inventory._uniqId,
-                modBarrel = ModBarrel,
-                modSight = ModSight,
-                modOther = ModOther
+                modBarrel = (int)ModBarrel,
+                modSight = (int)ModSight,
+                modOther = (int)ModOther
             };
             player.Inventory.items.Add(syncItemInfo);
             ItemIds.Add(syncItemInfo.uniq);
             ShowHint(player);
         }
 
-        public void SpawnItem(Vector3 position) => ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(ItemType, ClipSize, position, default, ModSight, ModBarrel, ModOther));
+        public void SpawnItem(Vector3 position) => ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(ItemType, ClipSize, position, default, (int)ModSight, (int)ModBarrel, (int)ModOther));
 
         private void CheckAndLoadSubclassEvent()
         {
@@ -187,7 +239,7 @@ namespace CustomItems.Components
                     {
                         int r = Plugin.Singleton.Rng.Next(100);
                         if (r < item.Item2)
-                            GiveItem(ev.Player);
+                            Timing.CallDelayed(1.5f, () => GiveItem(ev.Player));
                     }
                 }
             }
