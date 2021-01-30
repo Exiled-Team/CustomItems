@@ -13,9 +13,6 @@ namespace CustomItems
             API.RegisterCustomItem(new Shotgun());
             API.RegisterCustomItem(new GrenadeLauncher());
             API.RegisterCustomItem(new SniperRifle());
-            
-            foreach (CustomItem item in plugin.ItemManagers)
-                item.Init();
         }
 
         public void OnReloadingConfigs()

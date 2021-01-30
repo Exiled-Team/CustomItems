@@ -7,7 +7,10 @@ namespace CustomItems
         public static void RegisterCustomItem(CustomItem item)
         {
             if (!Plugin.Singleton.ItemManagers.Contains(item))
+            {
                 Plugin.Singleton.ItemManagers.Add(item);
+                item.Init();
+            }
         }
     }
 }
