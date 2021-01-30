@@ -10,6 +10,8 @@ namespace CustomItems.Components
     public abstract class CustomItem : MonoBehaviour
     {
         public abstract ItemType ItemType { get; set; }
+        public abstract string ItemName { get; set; }
+        public abstract string ItemDescription { get; set; }
 
         public virtual int ModBarrel { get; set; } = 0;
         public virtual int ModSight { get; set; } = 0;
@@ -26,20 +28,26 @@ namespace CustomItems.Components
 
         public virtual void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
-            Log.Debug($"{ev.Player.Nickname} is reloading..", Plugin.Singleton.Config.Debug);
             if (CheckItem(ev.Player.CurrentItem))
             {
                 ev.IsAllowed = false;
-                Log.Debug($"{ev.Player.Nickname} is reloading a sniper!", Plugin.Singleton.Config.Debug);
-                int amount = (int) ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] - 1;
-                Log.Debug($"{ev.Player.Nickname}: {amount}", Plugin.Singleton.Config.Debug);
-                if (amount >= 0)
+                Log.Debug($"{ev.Player.Nickname} is reloading a {ItemName}!", Plugin.Singleton.Config.Debug);
+                int remainingInClip = ClipSize - (int) ev.Player.CurrentItem.durability;
+                int currentAmmoAmount = (int)ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType];
+                int amountToReload = ClipSize - remainingInClip;
+                if (currentAmmoAmount >= 0)
                 {
                     ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
                     Reload(ev.Player);
-                    ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = (uint)amount;
-                    ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), 1f);
-                    Log.Debug($"{ev.Player.Nickname} - {ev.Player.CurrentItem.durability}", Plugin.Singleton.Config.Debug);
+                    
+                    int amountAfterReload = currentAmmoAmount - amountToReload;
+                    if (amountAfterReload < 0)
+                        ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = 0;
+                    else
+                        ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = (uint)(currentAmmoAmount - amountToReload);
+                    
+                    ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
+                    Log.Debug($"{ev.Player.Nickname} - {ev.Player.CurrentItem.durability} - {ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType]}", Plugin.Singleton.Config.Debug);
                     Timing.CallDelayed(4.5f, () =>
                     {
                         Reload(ev.Player);
@@ -77,6 +85,8 @@ namespace CustomItems.Components
                 ev.Player.Inventory.items.Add(rifle);
                 ItemIds.Add(rifle.uniq);
                 ev.Pickup.Delete();
+                
+                ev.Player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
             }
         }
         

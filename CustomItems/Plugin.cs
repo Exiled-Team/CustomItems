@@ -27,6 +27,7 @@ namespace CustomItems
         public EventHandlers EventHandlers { get; private set; }
         public SniperRifle SniperRifleComponent { get; set; }
         public GrenadeLauncher GrenadeLauncherComponent { get; set; }
+        public Shotgun ShotgunManager { get; set; }
 
         public static Plugin Singleton;
         public Harmony HarmonyInstance;

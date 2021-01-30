@@ -13,6 +13,9 @@ namespace CustomItems.Components
     {
         public override int ClipSize { get; set; } = 1;
         public override ItemType ItemType { get; set; } = ItemType.GunE11SR;
+        public override string ItemName { get; set; } = "SR-119";
+        public override string ItemDescription { get; set; } =
+            "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
         public override int ModBarrel { get; set; } = 3;
         public override int ModSight { get; set; } = 4;
 

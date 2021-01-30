@@ -14,6 +14,10 @@ namespace CustomItems.Components
     {
         public override int ClipSize { get; set; } = 1;
         public override ItemType ItemType { get; set; } = ItemType.GunLogicer;
+        public override string ItemName { get; set; } = "RL-119";
+
+        public override string ItemDescription { get; set; } =
+            "This weapon will launch grenades in the direction you are firing, instead of bullets.";
 
         public override void LoadEvents()
         {

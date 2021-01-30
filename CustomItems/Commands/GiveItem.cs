@@ -19,6 +19,9 @@ namespace CustomItems.Commands
                 case "gl":
                     Plugin.Singleton.GrenadeLauncherComponent.GiveItem(player);
                     break;
+                case "sg":
+                    Plugin.Singleton.ShotgunManager.GiveItem(player);
+                    break;
             }
 
             response = "Done.";

@@ -25,12 +25,29 @@ namespace CustomItems
         {
             {
                 "Sniper", true
+            },
+            {
+                "GrenadeLauncher", true
+            },
+            {
+                "Shotgun", true
             }
         };
         
         [Description("A list of each item and the subclasses that can spawn with it, and the % chance of them receiving it. **This is only used if Advanced Subclassing is installed!**")]
-        public Dictionary<string, string> SubclassList { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, List<string>> SubclassList { get; set; } = new Dictionary<string, List<string>>
+        {
+            {
+                "ExampleSubclass", new List<string>{"ExampleItem1", "ExampleItem2"}
+            }
+        };
 
         public bool GrenadeLauncherEnabled { get; set; } = true;
+        public int ShotgunSpreadCount { get; set; } = 5;
+        public float ShotgunAimCone { get; set; } = 5;
+        public float ShotgunHeadDamage { get; set; } = 12.5f;
+        public float ShotgunArmDamage { get; set; } = 6.75f;
+        public float ShotgunLegDamage { get; set; } = 6.75f;
+        public float ShotgunBodyDamage { get; set; } = 13.5f;
     }
 }
