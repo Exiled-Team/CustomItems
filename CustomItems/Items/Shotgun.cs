@@ -44,9 +44,8 @@ namespace CustomItems.Items
                 
                 RaycastHit[] hits = new RaycastHit[bullets];
                 bool[] didHit = new bool[hits.Length];
-
                 for (int i = 0; i < hits.Length; i++)
-                    didHit[i] = Physics.Raycast(rays[i], out hits[i], 500f, 1208246273);
+                    didHit[i] = Physics.Raycast(rays[i], out hits[i], 500f, ev.Shooter.ReferenceHub.weaponManager.raycastMask);
 
                 WeaponManager wepManager = ev.Shooter.ReferenceHub.weaponManager;
                 bool confirm = false;
