@@ -17,6 +17,8 @@ namespace CustomItems
                 API.RegisterCustomItem(new Shotgun());
                 API.RegisterCustomItem(new GrenadeLauncher());
                 API.RegisterCustomItem(new SniperRifle());
+                plugin.Config.ParseSubclassList();
+                
                 first = false;
             }
         }
