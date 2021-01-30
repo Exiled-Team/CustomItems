@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CustomItems.Components;
 using Exiled.API.Features;
 using UnityEngine;
@@ -62,5 +63,7 @@ namespace CustomItems
             
             return true;
         }
+
+        public static List<CustomItem> GetInstalledItems() => Plugin.Singleton.ItemManagers;
     }
 }
