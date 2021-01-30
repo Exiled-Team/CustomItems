@@ -192,5 +192,7 @@ namespace CustomItems.Components
                 }
             }
         }
+
+        public override string ToString() => $"[{ItemName}] {ItemDescription} {ItemType}";
     }
 }

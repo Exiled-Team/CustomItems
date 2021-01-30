@@ -25,7 +25,7 @@ namespace CustomItems.Commands
                 return false;
             }
 
-            if (API.GiveItem(player, args[1]))
+            if (player.GiveItem(args[1]))
             {
                 response = "Done.";
                 
