@@ -42,7 +42,7 @@ namespace CustomItems.Commands
                 }
             }
 
-            if (API.GiveItem(player, args[1]))
+            if (player.GiveItem(args[1]))
             {
                 response = "Done.";
                 

@@ -7,7 +7,7 @@ namespace CustomItems
 {
     public static class API
     {
-        public static void RegisterCustomItem(CustomItem item)
+        public static bool RegisterCustomItem(this CustomItem item)
         {
             if (!Plugin.Singleton.ItemManagers.Contains(item))
             {
@@ -19,10 +19,14 @@ namespace CustomItems
                 }
                 Plugin.Singleton.ItemManagers.Add(item);
                 item.Init();
+                return true;
             }
+
+            Log.Warn($"Couldn't register {item} as it already exists.");
+            return false;
         }
 
-        public static void UnregisterCustomItem(CustomItem item)
+        public static void UnregisterCustomItem(this CustomItem item)
         {
             if (Plugin.Singleton.ItemManagers.Contains(item))
             {
@@ -44,9 +48,9 @@ namespace CustomItems
             return false;
         }
 
-        public static void GiveItem(Player player, CustomItem item) => item.GiveItem(player);
+        public static void GiveItem(this Player player, CustomItem item) => item.GiveItem(player);
 
-        public static bool GiveItem(Player player, string name)
+        public static bool GiveItem(this Player player, string name)
         {
             if (!TryGetItem(name, out CustomItem item)) 
                 return false;
@@ -56,7 +60,8 @@ namespace CustomItems
             return true;
 
         }
-        public static void SpawnItem(CustomItem item, Vector3 position) => item.SpawnItem(position);
+
+        public static void SpawnItem(this CustomItem item, Vector3 position) => item.SpawnItem(position);
 
         public static bool SpawnItem(string name, Vector3 position)
         {
