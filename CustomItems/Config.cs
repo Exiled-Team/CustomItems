@@ -22,7 +22,7 @@ namespace CustomItems
         public Dictionary<string, List<string>> SubclassList { get; set; } = new Dictionary<string, List<string>>
         {
             {
-                "ExampleSubclass", new List<string>{"ExampleItem1", "ExampleItem2"}
+                "ExampleSubclass", new List<string>{"ExampleItem1-100", "ExampleItem2-50"}
             }
         };
         
