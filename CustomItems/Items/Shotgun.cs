@@ -2,6 +2,8 @@ using System;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Mirror;
+using RemoteAdmin;
 using UnityEngine;
 
 namespace CustomItems.Items
@@ -31,95 +33,98 @@ namespace CustomItems.Items
             {
                 ev.IsAllowed = false;
 
-                int bullets = Plugin.Singleton.Config.ShotgunSpreadCount;
-                if (ev.Shooter.CurrentItem.durability < bullets)
-                    bullets = (int)ev.Shooter.CurrentItem.durability;
-                
-                Ray[] rays = new Ray[bullets];
-                Vector3 forward = ev.Shooter.CameraTransform.forward;
-                
-                for (int i = 0; i < rays.Length; i++)
-                    rays[i] = new Ray(ev.Shooter.CameraTransform.position + forward, RandomAimcone() * forward);
-                
-                RaycastHit[] hits = new RaycastHit[bullets];
-                bool[] didHit = new bool[hits.Length];
-                for (int i = 0; i < hits.Length; i++)
-                    didHit[i] = Physics.Raycast(rays[i], out hits[i], 500f, ev.Shooter.ReferenceHub.weaponManager.raycastMask);
-
-                WeaponManager wepManager = ev.Shooter.ReferenceHub.weaponManager;
-                bool confirm = false;
-
-                for (int i = 0; i < hits.Length; i++)
+                try
                 {
-                    if (!didHit[i])
-                        continue;
+	                int bullets = Plugin.Singleton.Config.ShotgunSpreadCount;
+	                if (ev.Shooter.CurrentItem.durability < bullets)
+		                bullets = (int) ev.Shooter.CurrentItem.durability;
 
-                    HitboxIdentity hitbox = hits[i].collider.GetComponent<HitboxIdentity>();
+	                Transform cam = ev.Shooter.CameraTransform.transform;
+	                WeaponManager weps = ev.Shooter.ReferenceHub.weaponManager;
+	                Ray[] rays = new Ray[bullets];
+	                for (int i = 0; i < rays.Length; i++)
+		                rays[i] = new Ray(cam.position + cam.forward, RandomAimcone() * cam.forward);
 
-                    if (hitbox != null)
-                    {
-                        try
-                        {
-                            Player target = Player.Get(hits[i].collider.GetComponent<ReferenceHub>());
+	                RaycastHit[] hits = new RaycastHit[bullets];
+	                bool[] didHit = new bool[hits.Length];
+	                for (int i = 0; i < hits.Length; i++)
+		                didHit[i] = Physics.Raycast(rays[i], out hits[i], 500f, weps.raycastMask);
 
-                            if (wepManager.GetShootPermission(target.ReferenceHub.characterClassManager))
-                            {
-                                float damage;
-                                switch (hitbox.id)
-                                {
-                                    case HitBoxType.HEAD:
-                                        damage = Plugin.Singleton.Config.ShotgunHeadDamage;
-                                        break;
-                                    case HitBoxType.ARM:
-                                        damage = Plugin.Singleton.Config.ShotgunArmDamage;
-                                        break;
-                                    case HitBoxType.BODY:
-                                        damage = Plugin.Singleton.Config.ShotgunBodyDamage;
-                                        break;
-                                    case HitBoxType.LEG:
-                                        damage = Plugin.Singleton.Config.ShotgunLegDamage;
-                                        break;
-                                    default:
-                                        damage = 10f;
-                                        break;
-                                }
+	                bool confirm = false;
+	                for (int i = 0; i < hits.Length; i++)
+	                {
+		                if (!didHit[i])
+			                continue;
 
-                                if (target.Role == RoleType.Scp106)
-                                    damage /= 10;
+		                HitboxIdentity hitbox = hits[i].collider.GetComponent<HitboxIdentity>();
+		                if (hitbox != null)
+		                {
+			                GameObject parent;
+			                CharacterClassManager hitCcm;
+			                PlayerStats stats;
+			                try
+			                {
+				                parent = hitbox.gameObject.GetComponent<NetworkIdentity>().gameObject;
+				                hitCcm = parent.GetComponent<CharacterClassManager>();
+				                stats = parent.GetComponent<PlayerStats>();
+			                }
+			                catch (Exception e)
+			                {
+				                //Log.Error(e.ToString());
+				                continue;
+			                }
 
-                                target.Hurt(damage, DamageTypes.Mp7, ev.Shooter.Nickname, ev.Shooter.Id);
-                                wepManager.RpcPlaceDecal(true,
-                                    (sbyte) target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role)
-                                        .bloodType, hits[i].point + hits[i].normal * 0.01f,
-                                    Quaternion.FromToRotation(Vector3.up, hits[i].normal));
-                                confirm = true;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            //ignored
-                        }
+			                if (weps.GetShootPermission(hitCcm))
+			                {
+				                Player target = Player.Get(parent);
+				                float damage = target.Role == RoleType.Scp106 ? HitHandler(hitbox) / 2f : HitHandler(hitbox);
+				                
+				                target.Hurt(damage, DamageTypes.FromWeaponId(ev.Shooter.ReferenceHub.weaponManager.curWeapon), ev.Shooter.Nickname, ev.Shooter.Id);
+				                weps.RpcPlaceDecal(true, (sbyte) hitCcm.Classes[(int) hitCcm.CurClass].bloodType, hits[i].point + hits[i].normal * 0.01f, Quaternion.FromToRotation(Vector3.up, hits[i].normal));
+				                
+				                confirm = true;
+			                }
 
-                        continue;
-                    }
+			                continue;
+		                }
 
-                    BreakableWindow window = hits[i].collider.GetComponent<BreakableWindow>();
-                    if (window != null)
-                    {
-                        window.ServerDamageWindow(Plugin.Singleton.Config.ShotgunBodyDamage);
-                        confirm = true;
-                        
-                        continue;
-                    }
-                    
-                    wepManager.RpcPlaceDecal(false, wepManager.curWeapon, hits[i].point + hits[i].normal * 0.01f, Quaternion.FromToRotation(Vector3.up, hits[i].normal));
+		                BreakableWindow window = hits[i].collider.GetComponent<BreakableWindow>();
+		                if (window != null)
+		                {
+			                window.ServerDamageWindow(Plugin.Singleton.Config.ShotgunBodyDamage);
+			                confirm = true;
+			                continue;
+		                }
+
+		                weps.RpcPlaceDecal(false, weps.curWeapon, hits[i].point + hits[i].normal * 0.01f,
+			                Quaternion.FromToRotation(Vector3.up, hits[i].normal));
+	                }
+
+	                for (int i = 0; i < bullets; i++)
+		                weps.RpcConfirmShot(confirm, weps.curWeapon);
+
+	                ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int) ev.Shooter.CurrentItem.durability - bullets);
                 }
-                
-                for (int i = 0; i < bullets; i++)
-                    wepManager.RpcConfirmShot(confirm, wepManager.curWeapon);
-                
-                ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - bullets);
+                catch (Exception e)
+                {
+	                Log.Error(e.ToString());
+                }
             }
+        }
+        
+        private static float HitHandler(HitboxIdentity box)
+        {
+	        switch (box.id)
+	        {
+		        case HitBoxType.HEAD:
+			        return Plugin.Singleton.Config.ShotgunHeadDamage;
+		        case HitBoxType.LEG:
+			        return Plugin.Singleton.Config.ShotgunLegDamage;
+		        case HitBoxType.ARM:
+			        return Plugin.Singleton.Config.ShotgunArmDamage;
+		        default:
+			        return Plugin.Singleton.Config.ShotgunBodyDamage;
+	        }
         }
         
         private Quaternion RandomAimcone()
