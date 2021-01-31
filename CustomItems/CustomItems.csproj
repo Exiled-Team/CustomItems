@@ -93,6 +93,7 @@
     <ItemGroup>
         <Compile Include="API.cs" />
         <Compile Include="Commands\GiveItem.cs" />
+        <Compile Include="Components\CollisionHandler.cs" />
         <Compile Include="Config.cs" />
         <Compile Include="CustomGrenade.cs" />
         <Compile Include="CustomItem.cs" />
@@ -116,9 +117,6 @@
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Components" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
