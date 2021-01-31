@@ -1,4 +1,3 @@
-using CustomItems.Components;
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
@@ -12,7 +11,6 @@ namespace CustomItems.Items
     public class GrenadeLauncher : CustomItem
     {
         protected override int ClipSize { get; set; } = 1;
-        public override ItemType ItemType { get; set; } = ItemType.GunLogicer;
         public override string ItemName { get; set; } = "RL-119";
 
         public override string ItemDescription { get; set; } =
@@ -59,6 +57,10 @@ namespace CustomItems.Items
             NetworkServer.Spawn(component2.gameObject);
 
             return component2;
+        }
+
+        public GrenadeLauncher(ItemType type, int itemId) : base(type, itemId)
+        {
         }
     }
 

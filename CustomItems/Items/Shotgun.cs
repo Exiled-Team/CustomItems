@@ -1,4 +1,4 @@
-using CustomItems.Components;
+using System;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
@@ -8,7 +8,6 @@ namespace CustomItems.Items
 {
     public class Shotgun : CustomItem
     {
-        public override ItemType ItemType { get; set; } = ItemType.GunMP7;
         public override string ItemName { get; set; } = "SG-119";
 
         public override string ItemDescription { get; set; } =
@@ -59,36 +58,46 @@ namespace CustomItems.Items
 
                     if (hitbox != null)
                     {
-                        Player target = Player.Get(hits[i].collider.GetComponent<ReferenceHub>());
-
-                        if (wepManager.GetShootPermission(target.ReferenceHub.characterClassManager))
+                        try
                         {
-                            float damage;
-                            switch (hitbox.id)
-                            {
-                                case HitBoxType.HEAD:
-                                    damage = Plugin.Singleton.Config.ShotgunHeadDamage;
-                                    break;
-                                case HitBoxType.ARM:
-                                    damage = Plugin.Singleton.Config.ShotgunArmDamage;
-                                    break;
-                                case HitBoxType.BODY:
-                                    damage = Plugin.Singleton.Config.ShotgunBodyDamage;
-                                    break;
-                                case HitBoxType.LEG:
-                                    damage = Plugin.Singleton.Config.ShotgunLegDamage;
-                                    break;
-                                default:
-                                    damage = 10f;
-                                    break;
-                            }
+                            Player target = Player.Get(hits[i].collider.GetComponent<ReferenceHub>());
 
-                            if (target.Role == RoleType.Scp106)
-                                damage /= 10;
-                            
-                            target.Hurt(damage, DamageTypes.Mp7, ev.Shooter.Nickname, ev.Shooter.Id);
-                            wepManager.RpcPlaceDecal(true, (sbyte)target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role).bloodType, hits[i].point + hits[i].normal * 0.01f, Quaternion.FromToRotation(Vector3.up, hits[i].normal));
-                            confirm = true;
+                            if (wepManager.GetShootPermission(target.ReferenceHub.characterClassManager))
+                            {
+                                float damage;
+                                switch (hitbox.id)
+                                {
+                                    case HitBoxType.HEAD:
+                                        damage = Plugin.Singleton.Config.ShotgunHeadDamage;
+                                        break;
+                                    case HitBoxType.ARM:
+                                        damage = Plugin.Singleton.Config.ShotgunArmDamage;
+                                        break;
+                                    case HitBoxType.BODY:
+                                        damage = Plugin.Singleton.Config.ShotgunBodyDamage;
+                                        break;
+                                    case HitBoxType.LEG:
+                                        damage = Plugin.Singleton.Config.ShotgunLegDamage;
+                                        break;
+                                    default:
+                                        damage = 10f;
+                                        break;
+                                }
+
+                                if (target.Role == RoleType.Scp106)
+                                    damage /= 10;
+
+                                target.Hurt(damage, DamageTypes.Mp7, ev.Shooter.Nickname, ev.Shooter.Id);
+                                wepManager.RpcPlaceDecal(true,
+                                    (sbyte) target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role)
+                                        .bloodType, hits[i].point + hits[i].normal * 0.01f,
+                                    Quaternion.FromToRotation(Vector3.up, hits[i].normal));
+                                confirm = true;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            //ignored
                         }
 
                         continue;
@@ -120,6 +129,10 @@ namespace CustomItems.Items
                 UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone),
                 UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone)
             );
+        }
+
+        public Shotgun(ItemType type, int itemId) : base(type, itemId)
+        {
         }
     }
 }

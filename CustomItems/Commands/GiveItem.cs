@@ -42,6 +42,15 @@ namespace CustomItems.Commands
                 }
             }
 
+            if (int.TryParse(args[1], out int id))
+            {
+                player.GiveItem(id);
+
+                response = "Done.";
+
+                return true;
+            }
+            
             if (player.GiveItem(args[1]))
             {
                 response = "Done.";

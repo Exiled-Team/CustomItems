@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CustomItems.Components;
 using Exiled.API.Features;
 using HarmonyLib;
 using MapEvents = Exiled.Events.Handlers.Map;

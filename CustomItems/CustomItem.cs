@@ -9,19 +9,23 @@ using Exiled.Events.EventArgs;
 using Exiled.Loader;
 using MEC;
 using UnityEngine;
-using Utf8Json.Internal.DoubleConversion;
 
-namespace CustomItems.Components
+namespace CustomItems
 {
     public abstract class CustomItem
     {
-        public abstract ItemType ItemType { get; set; }
+        protected CustomItem(ItemType type, int itemId)
+        {
+            ItemType = type;
+            ItemId = itemId;
+        }
+        
         public abstract string ItemName { get; set; }
         public abstract string ItemDescription { get; set; }
 
-        protected virtual BarrelType ModBarrel { get; set; } = 0;
-        protected virtual SightType ModSight { get; set; } = 0;
-        protected virtual OtherType ModOther { get; set; } = 0;
+        protected virtual int ModBarrel { get; set; } = 0;
+        protected virtual int ModSight { get; set; } = 0;
+        protected virtual int ModOther { get; set; } = 0;
         protected virtual int ClipSize { get; set; } = 1;
         protected virtual void LoadEvents(){}
         protected virtual void UnloadEvents(){}
@@ -78,7 +82,7 @@ namespace CustomItems.Components
             {
                 ev.IsAllowed = false;
                 Inventory._uniqId++;
-                Inventory.SyncItemInfo rifle = new Inventory.SyncItemInfo()
+                Inventory.SyncItemInfo item = new Inventory.SyncItemInfo()
                 {
                     durability = ev.Pickup.durability,
                     id = ev.Pickup.itemId,
@@ -88,11 +92,11 @@ namespace CustomItems.Components
                     uniq = Inventory._uniqId
                 };
                 
-                ev.Player.Inventory.items.Add(rifle);
-                ItemIds.Add(rifle.uniq);
+                ev.Player.Inventory.items.Add(item);
+                ItemIds.Add(item.uniq);
                 ev.Pickup.Delete();
                 
-                ShowHint(ev.Player);
+                ShowMessage(ev.Player);
             }
         }
         
@@ -120,7 +124,7 @@ namespace CustomItems.Components
             Timing.CallDelayed(3.5f, () =>
             {
                 foreach (KeyValuePair<Player, Inventory.SyncItemInfo> kvp in itemsToSave)
-                    kvp.Key.AddItem(kvp.Value);
+                    kvp.Key.Inventory.items.Add(kvp.Value);
             });
         }
 
@@ -136,7 +140,7 @@ namespace CustomItems.Components
 
         protected virtual void OnDying(DyingEventArgs ev)
         {
-            foreach (Inventory.SyncItemInfo item in ev.Target.Inventory.items)
+            foreach (Inventory.SyncItemInfo item in ev.Target.Inventory.items.ToList())
                 if (CheckItem(item))
                 {
                     ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(item.id, item.durability, ev.Target.Position, default, item.modSight, item.modBarrel, item.modOther));
@@ -144,8 +148,12 @@ namespace CustomItems.Components
                 }
         }
 
-        protected virtual void ShowHint(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
+        protected virtual void ShowMessage(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
 
+        protected virtual void ItemGiven(Player player){}
+
+        public ItemType ItemType { get; set; }
+        public int ItemId { get; set; }
         protected List<int> ItemIds { get; } = new List<int>();
         protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
         
@@ -199,23 +207,6 @@ namespace CustomItems.Components
         
         private void Reload(Player player) => player.ReferenceHub.weaponManager.RpcReload(player.ReferenceHub.weaponManager.curWeapon);
 
-        public void GiveItem(Player player)
-        {
-            ++Inventory._uniqId;
-            Inventory.SyncItemInfo syncItemInfo = new Inventory.SyncItemInfo()
-            {
-                durability = ClipSize,
-                id = ItemType,
-                uniq = Inventory._uniqId,
-                modBarrel = (int)ModBarrel,
-                modSight = (int)ModSight,
-                modOther = (int)ModOther
-            };
-            player.Inventory.items.Add(syncItemInfo);
-            ItemIds.Add(syncItemInfo.uniq);
-            ShowHint(player);
-        }
-
         public void SpawnItem(Vector3 position) => ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(ItemType, ClipSize, position, default, (int)ModSight, (int)ModBarrel, (int)ModOther));
 
         private void CheckAndLoadSubclassEvent()
@@ -243,6 +234,25 @@ namespace CustomItems.Components
                     }
                 }
             }
+        }
+        
+        public void GiveItem(Player player)
+        {
+            ++Inventory._uniqId;
+            Inventory.SyncItemInfo syncItemInfo = new Inventory.SyncItemInfo()
+            {
+                durability = ClipSize,
+                id = ItemType,
+                uniq = Inventory._uniqId,
+                modBarrel = (int)ModBarrel,
+                modSight = (int)ModSight,
+                modOther = (int)ModOther
+            };
+            player.Inventory.items.Add(syncItemInfo);
+            ItemIds.Add(syncItemInfo.uniq);
+            ShowMessage(player);
+            
+            ItemGiven(player);
         }
 
         public override string ToString() => $"[{ItemName}] {ItemDescription} {ItemType}";

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using CustomItems.Components;
 using Exiled.API.Features;
 using Exiled.API.Interfaces;
 
@@ -31,6 +30,8 @@ namespace CustomItems
         public float ShotgunArmDamage { get; set; } = 6.75f;
         public float ShotgunLegDamage { get; set; } = 6.75f;
         public float ShotgunBodyDamage { get; set; } = 13.5f;
+        public float Scp127RegenerationDelay { get; set; } = 10f;
+        public int Scp127RegenerationAmount { get; set; } = 2;
 
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         public void ParseSubclassList()

@@ -14,9 +14,11 @@ namespace CustomItems
         {
             if (first)
             {
-                API.RegisterCustomItem(new Shotgun());
-                API.RegisterCustomItem(new GrenadeLauncher());
-                API.RegisterCustomItem(new SniperRifle());
+                API.RegisterCustomItem(new Shotgun(ItemType.GunMP7, 1));
+                API.RegisterCustomItem(new GrenadeLauncher(ItemType.GunLogicer, 2));
+                API.RegisterCustomItem(new SniperRifle(ItemType.GunE11SR, 3));
+                API.RegisterCustomItem(new Scp127(ItemType.GunCOM15, 4));
+                API.RegisterCustomItem(new ImplosionGrenade(ItemType.GrenadeFrag, 5));
                 plugin.Config.ParseSubclassList();
                 
                 first = false;
