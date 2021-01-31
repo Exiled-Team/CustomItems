@@ -17,8 +17,8 @@ namespace CustomItems
         }
 
         public abstract override string ItemName { get; set; }
-        public abstract override string ItemDescription { get; set; }
-        public virtual bool ExplodeOnCollision { get; set; }
+        protected abstract override string ItemDescription { get; set; }
+        protected virtual bool ExplodeOnCollision { get; set; }
 
         protected override void LoadEvents()
         {

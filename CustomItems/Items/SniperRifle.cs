@@ -5,9 +5,12 @@ namespace CustomItems.Items
 {
     public class SniperRifle : CustomWeapon
     {
-        protected override int ClipSize { get; set; } = 1;
+        public SniperRifle(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
+        {
+        }
+        
         public override string ItemName { get; set; } = "SR-119";
-        public override string ItemDescription { get; set; } =
+        protected override string ItemDescription { get; set; } =
             "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
         protected override int ModBarrel { get; set; } = 3;
         protected override int ModSight { get; set; } = 4;
@@ -15,21 +18,19 @@ namespace CustomItems.Items
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
+            base.LoadEvents();
         }
 
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
+            base.UnloadEvents();
         }
 
         private void OnHurting(HurtingEventArgs ev)
         {
             if (CheckItem(ev.Attacker.CurrentItem))
                 ev.Amount *= Plugin.Singleton.Config.SniperDmgMult;
-        }
-
-        public SniperRifle(ItemType type, int itemId) : base(type, itemId)
-        {
         }
     }
 }

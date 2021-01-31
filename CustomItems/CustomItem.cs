@@ -21,7 +21,7 @@ namespace CustomItems
         }
         
         public abstract string ItemName { get; set; }
-        public abstract string ItemDescription { get; set; }
+        protected abstract string ItemDescription { get; set; }
         protected virtual void LoadEvents(){}
         protected virtual void UnloadEvents(){}
         

@@ -10,20 +10,24 @@ namespace CustomItems.Items
 {
     public class GrenadeLauncher : CustomWeapon
     {
-        protected override int ClipSize { get; set; } = 1;
+        public GrenadeLauncher(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
+        {
+        }
+        
         public override string ItemName { get; set; } = "RL-119";
-
-        public override string ItemDescription { get; set; } =
+        protected override string ItemDescription { get; set; } =
             "This weapon will launch grenades in the direction you are firing, instead of bullets.";
 
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
+            base.LoadEvents();
         }
 
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
+            base.UnloadEvents();
         }
 
         private void OnShooting(ShootingEventArgs ev)
@@ -57,10 +61,6 @@ namespace CustomItems.Items
             NetworkServer.Spawn(component2.gameObject);
 
             return component2;
-        }
-
-        public GrenadeLauncher(ItemType type, int itemId) : base(type, itemId)
-        {
         }
     }
 

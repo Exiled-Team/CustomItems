@@ -7,17 +7,18 @@ namespace CustomItems
 {
     public abstract class CustomWeapon : CustomItem
     {
-        public CustomWeapon(ItemType type, int itemId) : base(type, itemId)
+        protected CustomWeapon(ItemType type, int clipSize, int itemId) : base(type, itemId)
         {
+            ClipSize = clipSize;
         }
 
         public abstract override string ItemName { get; set; }
-        public abstract override string ItemDescription { get; set; }
+        protected abstract override string ItemDescription { get; set; }
+        protected virtual int ClipSize { get; set; }
         
         protected virtual int ModBarrel { get; set; } = 0;
         protected virtual int ModSight { get; set; } = 0;
         protected virtual int ModOther { get; set; } = 0;
-        protected virtual int ClipSize { get; set; } = 1;
 
         protected override void LoadEvents()
         {

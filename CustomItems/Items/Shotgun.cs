@@ -10,21 +10,24 @@ namespace CustomItems.Items
 {
     public class Shotgun : CustomWeapon
     {
+        public Shotgun(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
+        {
+        }
+        
         public override string ItemName { get; set; } = "SG-119";
-
-        public override string ItemDescription { get; set; } =
+        protected override string ItemDescription { get; set; } =
             "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles infront of you.";
-
-        protected override int ClipSize { get; set; } = Plugin.Singleton.Config.ShotgunSpreadCount;
 
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
+            base.LoadEvents();
         }
 
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
+            base.UnloadEvents();
         }
 
         private void OnShooting(ShootingEventArgs ev)
@@ -139,10 +142,6 @@ namespace CustomItems.Items
                 UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone),
                 UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone)
             );
-        }
-
-        public Shotgun(ItemType type, int itemId) : base(type, itemId)
-        {
         }
     }
 }

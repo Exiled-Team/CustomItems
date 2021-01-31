@@ -5,26 +5,27 @@ using Exiled.Events.EventArgs;
 
 namespace CustomItems.Items
 {
-    public class MediGun : CustomItem
+    public class MediGun : CustomWeapon
     {
-        public MediGun(ItemType type, int itemId) : base(type, itemId)
+        public MediGun(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
         {
         }
 
         public override string ItemName { get; set; } = "MG-119";
-
-        public override string ItemDescription { get; set; } =
+        protected override string ItemDescription { get; set; } =
             "A specialized weapon that fires darts filled with a special mixture of Painkillers, Antibiotics, Antiseptics and other medicines. When fires at friendly targets, they will be healed. When fired at instances of SCP-049-2, they will be slowly converted back to human form. Does nothing when fired at anyone else.";
 
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Shot += OnShot;
             Exiled.Events.Handlers.Scp049.FinishingRecall += OnFinishingRecall;
+            base.LoadEvents();
         }
 
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Shot -= OnShot;
+            base.UnloadEvents();
         }
 
         protected override void OnWaitingForPlayers()

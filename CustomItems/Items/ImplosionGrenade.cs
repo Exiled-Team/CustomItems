@@ -12,10 +12,10 @@ namespace CustomItems.Items
     public class ImplosionGrenade : CustomGrenade
     {
         public override string ItemName { get; set; } = "IG-119";
-        public override string ItemDescription { get; set; } =
+        protected override string ItemDescription { get; set; } =
             "This grenade does almost 0 damage, however it will succ nearby players towards the center of the implosion area.";
 
-        public override bool ExplodeOnCollision { get; set; } = true;
+        protected override bool ExplodeOnCollision { get; set; } = true;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
         private int layerMask = 0;
