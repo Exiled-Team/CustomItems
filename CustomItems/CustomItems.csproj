@@ -94,11 +94,15 @@
         <Compile Include="API.cs" />
         <Compile Include="Commands\GiveItem.cs" />
         <Compile Include="Config.cs" />
+        <Compile Include="CustomGrenade.cs" />
         <Compile Include="CustomItem.cs" />
         <Compile Include="EventHandlers.cs" />
         <Compile Include="Events\AddClassEvent.cs" />
+        <Compile Include="Items\EmpGrenade.cs" />
         <Compile Include="Items\Flamethrower.cs" />
         <Compile Include="Items\GrenadeLauncher.cs" />
+        <Compile Include="Items\LethalInjection.cs" />
+        <Compile Include="Items\MediGun.cs" />
         <Compile Include="Items\Scp-127.cs" />
         <Compile Include="Items\Shotgun.cs" />
         <Compile Include="Items\SniperRifle.cs" />

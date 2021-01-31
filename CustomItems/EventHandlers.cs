@@ -19,6 +19,9 @@ namespace CustomItems
                 API.RegisterCustomItem(new SniperRifle(ItemType.GunE11SR, 3));
                 API.RegisterCustomItem(new Scp127(ItemType.GunCOM15, 4));
                 API.RegisterCustomItem(new ImplosionGrenade(ItemType.GrenadeFrag, 5));
+                API.RegisterCustomItem(new EmpGrenade(ItemType.GrenadeFlash, 6));
+                API.RegisterCustomItem(new LethalInjection(ItemType.Adrenaline, 7));
+                API.RegisterCustomItem(new MediGun(ItemType.GunProject90, 8));
                 plugin.Config.ParseSubclassList();
                 
                 first = false;

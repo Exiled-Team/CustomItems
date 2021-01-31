@@ -32,6 +32,8 @@ namespace CustomItems
         public float ShotgunBodyDamage { get; set; } = 13.5f;
         public float Scp127RegenerationDelay { get; set; } = 10f;
         public int Scp127RegenerationAmount { get; set; } = 2;
+        public int EmpDuration { get; set; } = 20;
+        public int MedigunZombieHealthRequired { get; set; } = 200;
 
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         public void ParseSubclassList()

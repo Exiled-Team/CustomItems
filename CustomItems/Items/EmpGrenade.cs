@@ -1,0 +1,75 @@
+using System.Linq;
+using Exiled.API.Extensions;
+using Exiled.API.Features;
+using Exiled.Events.EventArgs;
+using Interactables.Interobjects.DoorUtils;
+using MEC;
+
+namespace CustomItems.Items
+{
+    public class EmpGrenade : CustomGrenade
+    {
+        public EmpGrenade(ItemType type, int itemId) : base(type, itemId)
+        {
+        }
+
+        public override string ItemName { get; set; } = "EM-119";
+
+        public override string ItemDescription { get; set; } =
+            "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
+
+        public override bool ExplodeOnCollision { get; set; } = true;
+
+        protected override void LoadEvents()
+        {
+            Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
+            base.LoadEvents();
+        }
+
+        protected override void UnloadEvents()
+        {
+            Exiled.Events.Handlers.Map.ExplodingGrenade -= OnExplodingGrenade;
+            base.UnloadEvents();
+        }
+
+        private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
+        {
+            if (CheckGrenade(ev.Grenade))
+            {
+                ev.IsAllowed = false;
+
+                Room room = Map.FindParentRoom(ev.Grenade);
+                
+                room.TurnOffLights(Plugin.Singleton.Config.EmpDuration);
+                foreach (DoorVariant door in room.Doors)
+                {
+                    door.NetworkTargetState = true;
+                    door.ServerChangeLock(DoorLockReason.NoPower, true);
+
+                    Timing.CallDelayed(Plugin.Singleton.Config.EmpDuration, () => door.ServerChangeLock(DoorLockReason.NoPower, false));
+                    
+                    foreach (Player player in Player.List)
+                        if (player.Role == RoleType.Scp079)
+                        {
+                            if (player.Camera.Room() == room)
+                            {
+                                Room homeRoom = Map.Rooms.FirstOrDefault(r => r.Name.Contains("079"));
+                                if (homeRoom == null)
+                                {
+                                    Log.Error($"HAH ROOM IS NULL BITCH");
+                                    continue;
+                                }
+
+                                player.Camera = homeRoom.GetComponentInParent<Camera079>();
+                            }
+
+                            if (!string.IsNullOrEmpty(player.Speaker))
+                                player.Speaker = string.Empty;
+
+                            break;
+                        }
+                }
+            }
+        }
+    }
+}
