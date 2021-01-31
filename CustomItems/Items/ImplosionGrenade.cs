@@ -72,7 +72,7 @@ namespace CustomItems.Items
                         
                         foreach (Transform grenadePoint in player.ReferenceHub.playerStats.grenadePoints)
                         {
-                            bool line = Physics.Linecast(player.Position, grenadePoint.position, layerMask);
+                            bool line = Physics.Linecast(ev.Grenade.transform.position, grenadePoint.position, layerMask);
                             Log.Debug($"{player.Nickname} - {line}", Plugin.Singleton.Config.Debug);
                             if (!line)
                             {
