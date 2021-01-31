@@ -22,11 +22,6 @@ namespace CustomItems
         
         public abstract string ItemName { get; set; }
         public abstract string ItemDescription { get; set; }
-
-        protected virtual int ModBarrel { get; set; } = 0;
-        protected virtual int ModSight { get; set; } = 0;
-        protected virtual int ModOther { get; set; } = 0;
-        protected virtual int ClipSize { get; set; } = 1;
         protected virtual void LoadEvents(){}
         protected virtual void UnloadEvents(){}
         
@@ -36,36 +31,6 @@ namespace CustomItems
             ItemPickups.Clear();
         }
 
-        protected virtual void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
-        {
-            if (CheckItem(ev.Player.CurrentItem))
-            {
-                ev.IsAllowed = false;
-                Log.Debug($"{ev.Player.Nickname} is reloading a {ItemName}!", Plugin.Singleton.Config.Debug);
-                int remainingInClip = ClipSize - (int) ev.Player.CurrentItem.durability;
-                int currentAmmoAmount = (int)ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType];
-                int amountToReload = ClipSize - remainingInClip;
-                if (currentAmmoAmount >= 0)
-                {
-                    ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
-                    Reload(ev.Player);
-                    
-                    int amountAfterReload = currentAmmoAmount - amountToReload;
-                    if (amountAfterReload < 0)
-                        ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = 0;
-                    else
-                        ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = (uint)(currentAmmoAmount - amountToReload);
-                    
-                    ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
-                    Log.Debug($"{ev.Player.Nickname} - {ev.Player.CurrentItem.durability} - {ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType]}", Plugin.Singleton.Config.Debug);
-                    Timing.CallDelayed(4.5f, () =>
-                    {
-                        Reload(ev.Player);
-                    });
-                }
-            }
-        }
-        
         protected virtual void OnDroppingItem(DroppingItemEventArgs ev)
         {
             if (CheckItem(ev.Item))
@@ -151,6 +116,24 @@ namespace CustomItems
         protected virtual void ShowMessage(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
 
         protected virtual void ItemGiven(Player player){}
+        
+        public virtual void SpawnItem(Vector3 position) => ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(ItemType, 1, position));
+        
+        public virtual void GiveItem(Player player)
+        {
+            ++Inventory._uniqId;
+            Inventory.SyncItemInfo syncItemInfo = new Inventory.SyncItemInfo()
+            {
+                durability = 1,
+                id = ItemType,
+                uniq = Inventory._uniqId,
+            };
+            player.Inventory.items.Add(syncItemInfo);
+            ItemIds.Add(syncItemInfo.uniq);
+            ShowMessage(player);
+            
+            ItemGiven(player);
+        }
 
         public ItemType ItemType { get; set; }
         public int ItemId { get; set; }
@@ -168,9 +151,6 @@ namespace CustomItems
             Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
             Exiled.Events.Handlers.Scp914.UpgradingItems += OnUpgradingItems;
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
-            
-            if (ItemType.IsWeapon())
-                Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloadingWeapon;
 
             try
             {
@@ -199,15 +179,8 @@ namespace CustomItems
                 //ignored
             }
 
-            if (ItemType.IsWeapon())
-                Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloadingWeapon;
-
             UnloadEvents();
         }
-        
-        private void Reload(Player player) => player.ReferenceHub.weaponManager.RpcReload(player.ReferenceHub.weaponManager.curWeapon);
-
-        public void SpawnItem(Vector3 position) => ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(ItemType, ClipSize, position, default, (int)ModSight, (int)ModBarrel, (int)ModOther));
 
         private void CheckAndLoadSubclassEvent()
         {
@@ -234,25 +207,6 @@ namespace CustomItems
                     }
                 }
             }
-        }
-        
-        public void GiveItem(Player player)
-        {
-            ++Inventory._uniqId;
-            Inventory.SyncItemInfo syncItemInfo = new Inventory.SyncItemInfo()
-            {
-                durability = ClipSize,
-                id = ItemType,
-                uniq = Inventory._uniqId,
-                modBarrel = (int)ModBarrel,
-                modSight = (int)ModSight,
-                modOther = (int)ModOther
-            };
-            player.Inventory.items.Add(syncItemInfo);
-            ItemIds.Add(syncItemInfo.uniq);
-            ShowMessage(player);
-            
-            ItemGiven(player);
         }
 
         public override string ToString() => $"[{ItemName}] {ItemDescription} {ItemType}";

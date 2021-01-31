@@ -96,6 +96,7 @@
         <Compile Include="Config.cs" />
         <Compile Include="CustomGrenade.cs" />
         <Compile Include="CustomItem.cs" />
+        <Compile Include="CustomWeapon.cs" />
         <Compile Include="EventHandlers.cs" />
         <Compile Include="Events\AddClassEvent.cs" />
         <Compile Include="Items\EmpGrenade.cs" />

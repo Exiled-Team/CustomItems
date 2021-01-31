@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace CustomItems.Items
 {
-    public class Shotgun : CustomItem
+    public class Shotgun : CustomWeapon
     {
         public override string ItemName { get; set; } = "SG-119";
 

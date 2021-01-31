@@ -5,7 +5,7 @@ using MEC;
 
 namespace CustomItems.Items
 {
-    public class Scp127 : CustomItem
+    public class Scp127 : CustomWeapon
     {
         public override string ItemName { get; set; } = "SCP-127";
         protected override int ClipSize { get; set; } = 12;

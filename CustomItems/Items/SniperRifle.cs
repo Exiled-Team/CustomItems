@@ -3,7 +3,7 @@ using Exiled.Events.EventArgs;
 
 namespace CustomItems.Items
 {
-    public class SniperRifle : CustomItem
+    public class SniperRifle : CustomWeapon
     {
         protected override int ClipSize { get; set; } = 1;
         public override string ItemName { get; set; } = "SR-119";

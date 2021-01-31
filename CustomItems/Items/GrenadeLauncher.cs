@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace CustomItems.Items
 {
-    public class GrenadeLauncher : CustomItem
+    public class GrenadeLauncher : CustomWeapon
     {
         protected override int ClipSize { get; set; } = 1;
         public override string ItemName { get; set; } = "RL-119";
