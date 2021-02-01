@@ -13,10 +13,6 @@ namespace CustomItems.Configs
     {
         [Description("Whether or not this plugin is enabled.")]
         public bool IsEnabled { get; set; } = true;
-
-        [Description("The damage multiplier to apply to Sniper Rifles.")]
-        public float SniperDmgMult { get; set; } = 1.5f;
-
         public bool Debug { get; set; } = false;
 
         [Description("A list of each item and the subclasses that can spawn with it, and the % chance of them receiving it. **This is only used if Advanced Subclassing is installed!**")]
@@ -28,7 +24,10 @@ namespace CustomItems.Configs
         };
 
         public WeaponConfigs WeaponConfigs;
-
+        public string CustomWeaponFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
+        public string ConfigFileName { get; set; } = "global.yml";
+        public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
+        
         public void LoadConfigs()
         {
             if (!Directory.Exists(CustomWeaponFolder))
@@ -49,21 +48,6 @@ namespace CustomItems.Configs
             }
         }
         
-
-        public string CustomWeaponFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
-        public string ConfigFileName { get; set; } = "global.yml";
-        public int ShotgunSpreadCount { get; set; } = 5;
-        public float ShotgunAimCone { get; set; } = 5;
-        public float ShotgunHeadDamage { get; set; } = 12.5f;
-        public float ShotgunArmDamage { get; set; } = 6.75f;
-        public float ShotgunLegDamage { get; set; } = 6.75f;
-        public float ShotgunBodyDamage { get; set; } = 13.5f;
-        public float Scp127RegenerationDelay { get; set; } = 10f;
-        public int Scp127RegenerationAmount { get; set; } = 2;
-        public int EmpDuration { get; set; } = 20;
-        public int MedigunZombieHealthRequired { get; set; } = 200;
-
-        public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         public void ParseSubclassList()
         {
             SubclassItems.Clear();
@@ -90,36 +74,5 @@ namespace CustomItems.Configs
                 Log.Debug($"{list.Key} has had {customItems.Count} items added to their spawn list.", Debug);
             }
         }
-        
-        /*        public Dictionary<string, List<Tuple<string, string>>> CustomWeaponConfigs { get; set; } = new Dictionary<string, List<Tuple<string, string>>>
-        {
-            {
-                "SR-119", new List<Tuple<string, string>>()
-                {
-                    new Tuple<string, string>("DamageMultiplier", "7.5")
-                }
-            },
-            {
-                "SG-119", new List<Tuple<string, string>>()
-                {
-                    new Tuple<string, string>("SpreadCount", "12"),
-                    new Tuple<string, string>("Aimcone", "5"),
-                    new Tuple<string, string>("BaseDamage", "13.5")
-                }
-            },
-            {
-                "SCP-127", new List<Tuple<string, string>>()
-                {
-                    new Tuple<string, string>("RegenDelay", "10"),
-                    new Tuple<string, string>("RegenAmount", "2")
-                }
-            },
-            {
-                "EM-119", new List<Tuple<string, string>>()
-                {
-                    new Tuple<string, string>("Duration", "20")
-                }
-            }
-        };*/
     }
 }

@@ -41,13 +41,13 @@ namespace CustomItems.Items
 
                 Room room = Map.FindParentRoom(ev.Grenade);
                 
-                room.TurnOffLights(Plugin.Singleton.Config.EmpDuration);
+                room.TurnOffLights(Plugin.Singleton.Config.WeaponConfigs.EmpCfg.Duration);
                 foreach (DoorVariant door in room.Doors)
                 {
                     door.NetworkTargetState = true;
                     door.ServerChangeLock(DoorLockReason.NoPower, true);
 
-                    Timing.CallDelayed(Plugin.Singleton.Config.EmpDuration, () => door.ServerChangeLock(DoorLockReason.NoPower, false));
+                    Timing.CallDelayed(Plugin.Singleton.Config.WeaponConfigs.EmpCfg.Duration, () => door.ServerChangeLock(DoorLockReason.NoPower, false));
                     
                     foreach (Player player in Player.List)
                         if (player.Role == RoleType.Scp079)

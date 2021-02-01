@@ -55,7 +55,7 @@ namespace CustomItems.Items
         {
             for (;;)
             {
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.Scp127RegenerationDelay);
+                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.WeaponConfigs.Scp127Cfg.RegenDelay);
 
                 bool hasItem = false;
 
@@ -68,7 +68,7 @@ namespace CustomItems.Items
                         if (player.Inventory.items[i].durability < ClipSize)
                         {
                             Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
-                            newInfo.durability += Plugin.Singleton.Config.Scp127RegenerationAmount;
+                            newInfo.durability += Plugin.Singleton.Config.WeaponConfigs.Scp127Cfg.RegenAmount;
                             player.Inventory.items[i] = newInfo;
                         }
                     }
@@ -83,12 +83,12 @@ namespace CustomItems.Items
         {
             for (;;)
             {
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.Scp127RegenerationDelay);
+                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.WeaponConfigs.Scp127Cfg.RegenDelay);
 
                 foreach (Pickup pickup in ItemPickups)
                     if (CheckItem(pickup) && pickup.durability < ClipSize)
                     {
-                        pickup.durability += Plugin.Singleton.Config.Scp127RegenerationAmount;
+                        pickup.durability += Plugin.Singleton.Config.WeaponConfigs.Scp127Cfg.RegenAmount;
 
                         yield return Timing.WaitForSeconds(0.5f);
                     }

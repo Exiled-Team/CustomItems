@@ -103,6 +103,9 @@
         <Compile Include="Configs\Config.cs" />
         <Compile Include="Configs\WeaponConfigs.cs" />
         <Compile Include="Configs\WeaponConfigs\EmpGrenadeConfig.cs" />
+        <Compile Include="Configs\WeaponConfigs\MediGunConfig.cs" />
+        <Compile Include="Configs\WeaponConfigs\Scp127Config.cs" />
+        <Compile Include="Configs\WeaponConfigs\ShotgunConfig.cs" />
         <Compile Include="Configs\WeaponConfigs\SniperRifleConfig.cs" />
         <Compile Include="EventHandlers.cs" />
         <Compile Include="Events\AddClassEvent.cs" />

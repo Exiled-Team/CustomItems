@@ -39,7 +39,7 @@ namespace CustomItems.Items
 
                 try
                 {
-                    int bullets = Plugin.Singleton.Config.ShotgunSpreadCount;
+                    int bullets = Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.SpreadCount;
                     if (ev.Shooter.CurrentItem.durability <= bullets)
                         bullets = (int) ev.Shooter.CurrentItem.durability;
                     Ray[] rays = new Ray[bullets];
@@ -100,7 +100,7 @@ namespace CustomItems.Items
                         BreakableWindow window = hits[i].collider.GetComponent<BreakableWindow>();
                         if (window != null)
                         {
-                            window.ServerDamageWindow(Plugin.Singleton.Config.ShotgunBodyDamage);
+                            window.ServerDamageWindow(Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.BaseDamage);
                             confirm = true;
                             continue;
                         }
@@ -126,22 +126,22 @@ namespace CustomItems.Items
 	        switch (box.id)
 	        {
 		        case HitBoxType.HEAD:
-			        return Plugin.Singleton.Config.ShotgunHeadDamage;
+			        return Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.BaseDamage * 1.25f;
 		        case HitBoxType.LEG:
-			        return Plugin.Singleton.Config.ShotgunLegDamage;
+			        return Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.BaseDamage * 0.65f;
 		        case HitBoxType.ARM:
-			        return Plugin.Singleton.Config.ShotgunArmDamage;
+			        return Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.BaseDamage * 0.55f;
 		        default:
-			        return Plugin.Singleton.Config.ShotgunBodyDamage;
+			        return Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.BaseDamage;
 	        }
         }
         
         private Quaternion RandomAimcone()
         {
             return Quaternion.Euler(
-                UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone),
-                UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone),
-                UnityEngine.Random.Range(-Plugin.Singleton.Config.ShotgunAimCone, Plugin.Singleton.Config.ShotgunAimCone)
+                UnityEngine.Random.Range(-Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.AimconeSeverity, Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.AimconeSeverity),
+                UnityEngine.Random.Range(-Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.AimconeSeverity, Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.AimconeSeverity),
+                UnityEngine.Random.Range(-Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.AimconeSeverity, Plugin.Singleton.Config.WeaponConfigs.ShotgunCfg.AimconeSeverity)
             );
         }
     }
