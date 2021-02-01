@@ -48,6 +48,7 @@ namespace CustomItems
         public void OnReloadingConfigs()
         {
             plugin.Config.ParseSubclassList();
+            plugin.Config.LoadConfigs();
         }
     }
 }
