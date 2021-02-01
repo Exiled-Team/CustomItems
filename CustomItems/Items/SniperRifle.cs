@@ -30,7 +30,7 @@ namespace CustomItems.Items
         private void OnHurting(HurtingEventArgs ev)
         {
             if (CheckItem(ev.Attacker.CurrentItem))
-                ev.Amount *= Plugin.Singleton.Config.WeaponConfigs.SniperCfg.DamageMultiplier;
+                ev.Amount *= Plugin.Singleton.Config.ItemConfigs.SniperCfg.DamageMultiplier;
         }
     }
 }

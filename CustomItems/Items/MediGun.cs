@@ -46,7 +46,7 @@ namespace CustomItems.Items
                         player.Health += ev.Damage;
                     else if (player.Role == RoleType.Scp0492)
                     {
-                        player.MaxAdrenalineHealth = Plugin.Singleton.Config.WeaponConfigs.MediCfg.ZombieHealingRequired;
+                        player.MaxAdrenalineHealth = Plugin.Singleton.Config.ItemConfigs.MediCfg.ZombieHealingRequired;
                         player.AdrenalineHealth += ev.Damage;
 
                         if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)

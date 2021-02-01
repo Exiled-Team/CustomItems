@@ -1,4 +1,4 @@
-namespace CustomItems.WeaponConfigs
+namespace CustomItems.ItemConfigs
 {
     public class SniperRifleConfig
     {

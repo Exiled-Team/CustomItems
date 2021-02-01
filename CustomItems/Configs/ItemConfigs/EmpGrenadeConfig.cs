@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CustomItems.WeaponConfigs
+namespace CustomItems.ItemConfigs
 {
     public class EmpGrenadeConfig
     {

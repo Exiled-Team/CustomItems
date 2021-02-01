@@ -23,28 +23,28 @@ namespace CustomItems.Configs
             }
         };
 
-        public ItemConfigs WeaponConfigs;
-        public string CustomWeaponFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
+        public ItemConfigs ItemConfigs;
+        public string CustomItemFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
         public string ConfigFileName { get; set; } = "global.yml";
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         
         public void LoadConfigs()
         {
-            if (!Directory.Exists(CustomWeaponFolder))
-                Directory.CreateDirectory(CustomWeaponFolder);
+            if (!Directory.Exists(CustomItemFolder))
+                Directory.CreateDirectory(CustomItemFolder);
             
-            string filePath = Path.Combine(CustomWeaponFolder, ConfigFileName);
+            string filePath = Path.Combine(CustomItemFolder, ConfigFileName);
             
             if (!File.Exists(filePath))
             {
-                WeaponConfigs = new ItemConfigs();
-                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(WeaponConfigs));
+                ItemConfigs = new ItemConfigs();
+                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
             }
             else
             {
-                WeaponConfigs =
+                ItemConfigs =
                     ConfigManager.Deserializer.Deserialize<ItemConfigs>(File.ReadAllText(filePath));
-                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(WeaponConfigs));
+                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
             }
         }
         

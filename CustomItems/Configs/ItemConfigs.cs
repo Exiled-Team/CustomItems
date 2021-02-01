@@ -1,4 +1,4 @@
-using CustomItems.WeaponConfigs;
+using CustomItems.ItemConfigs;
 
 namespace CustomItems.Configs
 {

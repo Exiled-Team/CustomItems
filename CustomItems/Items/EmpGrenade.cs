@@ -25,7 +25,7 @@ namespace CustomItems.Items
 
         protected override void LoadEvents()
         {
-            foreach (KeyValuePair<string, float> kvp in Plugin.Singleton.Config.WeaponConfigs.EmpCfg.SpawnLocations)
+            foreach (KeyValuePair<string, float> kvp in Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations)
             {
                 Vector3 pos = RoomLocation(kvp.Key);
                 
@@ -51,13 +51,13 @@ namespace CustomItems.Items
 
                 Room room = Map.FindParentRoom(ev.Grenade);
                 
-                room.TurnOffLights(Plugin.Singleton.Config.WeaponConfigs.EmpCfg.Duration);
+                room.TurnOffLights(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration);
                 foreach (DoorVariant door in room.Doors)
                 {
                     door.NetworkTargetState = true;
                     door.ServerChangeLock(DoorLockReason.NoPower, true);
 
-                    Timing.CallDelayed(Plugin.Singleton.Config.WeaponConfigs.EmpCfg.Duration, () => door.ServerChangeLock(DoorLockReason.NoPower, false));
+                    Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration, () => door.ServerChangeLock(DoorLockReason.NoPower, false));
                     
                     foreach (Player player in Player.List)
                         if (player.Role == RoleType.Scp079)

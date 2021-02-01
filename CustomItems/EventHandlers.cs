@@ -17,7 +17,7 @@ namespace CustomItems
         {
             if (first)
             {
-                new Shotgun(ItemType.GunMP7, plugin.Config.WeaponConfigs.ShotgunCfg.SpreadCount * 2, 1)
+                new Shotgun(ItemType.GunMP7, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1)
                     .RegisterCustomItem();
                 
                 new GrenadeLauncher(ItemType.GunLogicer,1,  2)
