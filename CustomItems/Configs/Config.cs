@@ -23,7 +23,7 @@ namespace CustomItems.Configs
             }
         };
 
-        public WeaponConfigs WeaponConfigs;
+        public ItemConfigs WeaponConfigs;
         public string CustomWeaponFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
         public string ConfigFileName { get; set; } = "global.yml";
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
@@ -37,13 +37,13 @@ namespace CustomItems.Configs
             
             if (!File.Exists(filePath))
             {
-                WeaponConfigs = new WeaponConfigs();
+                WeaponConfigs = new ItemConfigs();
                 File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(WeaponConfigs));
             }
             else
             {
                 WeaponConfigs =
-                    ConfigManager.Deserializer.Deserialize<WeaponConfigs>(File.ReadAllText(filePath));
+                    ConfigManager.Deserializer.Deserialize<ItemConfigs>(File.ReadAllText(filePath));
                 File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(WeaponConfigs));
             }
         }

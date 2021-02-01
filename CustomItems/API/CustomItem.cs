@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CustomItems.Events;
-using Exiled.API.Enums;
-using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Exiled.Loader;
@@ -20,8 +18,10 @@ namespace CustomItems.API
             ItemId = itemId;
         }
         
+        
         public abstract string ItemName { get; set; }
         protected abstract string ItemDescription { get; set; }
+        public virtual Dictionary<Vector3, float> SpawnLocations { get; set; }
         protected virtual void LoadEvents(){}
         protected virtual void UnloadEvents(){}
         
@@ -143,6 +143,15 @@ namespace CustomItems.API
         protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
         protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
 
+        public static Vector3 RoomLocation(string roomName)
+        {
+            foreach (Room room in Map.Rooms)
+                if (room.Name == roomName)
+                    return room.Position;
+            
+            return Vector3.zero;
+        }
+
         public void Init()
         {
             Exiled.Events.Handlers.Player.Dying += OnDying;
@@ -166,8 +175,11 @@ namespace CustomItems.API
 
         public void Destroy()
         {
+            Exiled.Events.Handlers.Player.Dying -= OnDying;
+            Exiled.Events.Handlers.Player.Handcuffing -= OnHandcuffing;
             Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
             Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUpItem;
+            Exiled.Events.Handlers.Scp914.UpgradingItems -= OnUpgradingItems;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
 
             try

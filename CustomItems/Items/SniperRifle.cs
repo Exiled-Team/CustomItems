@@ -1,5 +1,4 @@
 using CustomItems.API;
-using Exiled.API.Enums;
 using Exiled.Events.EventArgs;
 
 namespace CustomItems.Items

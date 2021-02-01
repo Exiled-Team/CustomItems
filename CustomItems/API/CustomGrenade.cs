@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using CustomItems.Items;
-using Exiled;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;

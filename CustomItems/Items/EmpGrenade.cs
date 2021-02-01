@@ -13,9 +13,8 @@ namespace CustomItems.Items
         public EmpGrenade(ItemType type, int itemId) : base(type, itemId)
         {
         }
-
+        
         public override string ItemName { get; set; } = "EM-119";
-
         protected override string ItemDescription { get; set; } =
             "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
 

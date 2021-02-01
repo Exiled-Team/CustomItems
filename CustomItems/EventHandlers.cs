@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using CustomItems.Items;
 using CustomItems.API;
+using UnityEngine;
 
 namespace CustomItems
 {
@@ -49,6 +51,21 @@ namespace CustomItems
         {
             plugin.Config.ParseSubclassList();
             plugin.Config.LoadConfigs();
+        }
+
+        public void OnRoundStart()
+        {
+            foreach (CustomItem item in plugin.ItemManagers)
+            {
+                if (item.SpawnLocations != null)
+                {
+                    foreach (KeyValuePair<Vector3, float> spawn in item.SpawnLocations)
+                    {
+                        if (plugin.Rng.Next(100) <= spawn.Value)
+                            item.SpawnItem(spawn.Key);
+                    }
+                }
+            }
         }
     }
 }

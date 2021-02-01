@@ -52,6 +52,7 @@ namespace CustomItems
                 Log.Debug($"Subclassing not installed.", Config.Debug);
             }
 
+            Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
             Exiled.Events.Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
             
@@ -64,8 +65,9 @@ namespace CustomItems
                 item.Destroy();
             ItemManagers.Clear();
             
-            Exiled.Events.Handlers.Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
+            Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
+            Exiled.Events.Handlers.Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
             
             HarmonyInstance?.UnpatchAll();
             EventHandlers = null;

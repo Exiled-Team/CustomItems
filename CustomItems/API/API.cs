@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
@@ -117,6 +116,6 @@ namespace CustomItems.API
             return true;
         }
 
-        public static List<CustomItem> GetInstalledItems() => Plugin.Singleton.ItemManagers;
+        public static List<CustomItem> GetInstalledItems() => Plugin.Singleton.ItemManagers; 
     }
 }
