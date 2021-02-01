@@ -62,7 +62,7 @@ namespace CustomItems
                     foreach (KeyValuePair<Vector3, float> spawn in item.SpawnLocations)
                     {
                         if (plugin.Rng.Next(100) <= spawn.Value)
-                            item.SpawnItem(spawn.Key);
+                            item.SpawnItem(spawn.Key + Vector3.up * 1.5f);
                     }
                 }
             }

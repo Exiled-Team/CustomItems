@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using CustomItems.API;
 using Exiled.API.Extensions;
@@ -5,6 +6,7 @@ using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Interactables.Interobjects.DoorUtils;
 using MEC;
+using UnityEngine;
 
 namespace CustomItems.Items
 {
@@ -13,7 +15,8 @@ namespace CustomItems.Items
         public EmpGrenade(ItemType type, int itemId) : base(type, itemId)
         {
         }
-        
+
+        public override Dictionary<Vector3, float> SpawnLocations { get; set; } = new Dictionary<Vector3, float>();
         public override string ItemName { get; set; } = "EM-119";
         protected override string ItemDescription { get; set; } =
             "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
@@ -22,6 +25,14 @@ namespace CustomItems.Items
 
         protected override void LoadEvents()
         {
+            foreach (KeyValuePair<string, float> kvp in Plugin.Singleton.Config.WeaponConfigs.EmpCfg.SpawnLocations)
+            {
+                Vector3 pos = RoomLocation(kvp.Key);
+                
+                if (pos != Vector3.zero)
+                    SpawnLocations.Add(pos, kvp.Value);
+            }
+            
             Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
             base.LoadEvents();
         }
