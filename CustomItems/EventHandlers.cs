@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using CustomItems.Items;
 using CustomItems.API;
+using Exiled.API.Features;
+using MEC;
 using UnityEngine;
 
 namespace CustomItems
@@ -61,8 +64,12 @@ namespace CustomItems
                 {
                     foreach (KeyValuePair<Vector3, float> spawn in item.SpawnLocations)
                     {
+                        Log.Debug($"Attempting to spawn {item.ItemName} at {spawn.Key}", plugin.Config.Debug);
                         if (plugin.Rng.Next(100) <= spawn.Value)
+                        {
                             item.SpawnItem(spawn.Key + Vector3.up * 1.5f);
+                            Log.Debug($"Spawned {item.ItemName} at {spawn.Key}", plugin.Config.Debug);
+                        }
                     }
                 }
             }

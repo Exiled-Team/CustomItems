@@ -24,7 +24,7 @@ namespace CustomItems.Configs
         };
 
         public ItemConfigs ItemConfigs;
-        public string CustomItemFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
+        public string CustomItemFolder { get; set; } = Path.Combine(Paths.Configs, "CustomItems");
         public string ConfigFileName { get; set; } = "global.yml";
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         

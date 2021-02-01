@@ -1,0 +1,34 @@
+namespace CustomItems.API
+{
+    public enum SpawnLocation
+    {
+        Inside012,
+        Inside012Bottom,
+        Inside012Locker,
+        Inside049Armory,
+        Inside079Secondary,
+        Inside096,
+        Inside173Armory,
+        Inside173Bottom,
+        Inside173Connector,
+        InsideEscapePrimary,
+        InsideEscapeSecondary,
+        InsideIntercom,
+        InsideLczArmory,
+        InsideLczCafe,
+        InsideNukeArmory,
+        InsideSurfaceNuke,
+        Inside079First,
+        Inside173Gate,
+        Inside914,
+        InsideGateA,
+        InsideGateB,
+        InsideGr18,
+        InsideHczArmory,
+        InsideHid,
+        InsideHidLeft,
+        InsideHidRight,
+        InsideLczWc,
+        InsideServersBottom
+    }
+}

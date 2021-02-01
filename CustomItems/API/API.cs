@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
+using Interactables.Interobjects.DoorUtils;
 using UnityEngine;
 
 namespace CustomItems.API
@@ -116,6 +117,19 @@ namespace CustomItems.API
             return true;
         }
 
-        public static List<CustomItem> GetInstalledItems() => Plugin.Singleton.ItemManagers; 
+        public static List<CustomItem> GetInstalledItems() => Plugin.Singleton.ItemManagers;
+        
+
+        public static Transform GetDoor(this SpawnLocation location)
+        {
+            if (SpawnLocationData.DoorNames.ContainsKey(location))
+            {
+                string doorName = SpawnLocationData.DoorNames[location];
+                if (DoorNametagExtension.NamedDoors.TryGetValue(doorName, out var nametag))
+                    return nametag.transform;
+            }
+
+            return null;
+        }
     }
 }

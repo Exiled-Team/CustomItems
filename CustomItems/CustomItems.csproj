@@ -98,6 +98,9 @@
         <Compile Include="API\CustomGrenade.cs" />
         <Compile Include="API\CustomItem.cs" />
         <Compile Include="API\CustomWeapon.cs" />
+        <Compile Include="API\SpawnLocation.cs" />
+        <Compile Include="API\SpawnLocationData.cs" />
+        <Compile Include="Commands\CalculatePosition.cs" />
         <Compile Include="Commands\GiveItem.cs" />
         <Compile Include="Components\CollisionHandler.cs" />
         <Compile Include="Configs\Config.cs" />

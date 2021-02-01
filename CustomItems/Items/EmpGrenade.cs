@@ -25,12 +25,10 @@ namespace CustomItems.Items
 
         protected override void LoadEvents()
         {
-            foreach (KeyValuePair<string, float> kvp in Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations)
+            foreach (KeyValuePair<SpawnLocation, float> kvp in Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations)
             {
-                Vector3 pos = RoomLocation(kvp.Key);
-                
-                if (pos != Vector3.zero)
-                    SpawnLocations.Add(pos, kvp.Value);
+                if (!TryAddSpawnLocation(kvp.Key, kvp.Value))
+                    Log.Warn($"{ItemName} unable to add spawn location {kvp.Key}");
             }
             
             Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
@@ -52,8 +50,10 @@ namespace CustomItems.Items
                 Room room = Map.FindParentRoom(ev.Grenade);
                 
                 room.TurnOffLights(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration);
+                Log.Debug($"{room.Doors.Count()} - {room.Type}");
                 foreach (DoorVariant door in room.Doors)
                 {
+                    Log.Debug($"Opening a door!", Plugin.Singleton.Config.Debug);
                     door.NetworkTargetState = true;
                     door.ServerChangeLock(DoorLockReason.NoPower, true);
 

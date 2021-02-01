@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using CustomItems.API;
 
 namespace CustomItems.ItemConfigs
 {
     public class EmpGrenadeConfig
     {
-        public float Duration { get; set; } = 20;
-        public Dictionary<string, float> SpawnLocations { get; set; } = new Dictionary<string, float>
+        public float Duration { get; set; } = 20f;
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
         {
             {
-                "SCP-173", 100
+                SpawnLocation.Inside173Gate, 100
             }
         };
     }

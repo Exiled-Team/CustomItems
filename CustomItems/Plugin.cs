@@ -22,7 +22,7 @@ namespace CustomItems
         public override string Author { get; } = "Galaxy119";
         public override string Name { get; } = "CustomItems";
         public override string Prefix { get; } = "CustomItems";
-        public override Version Version { get; } = new Version(1, 1, 0);
+        public override Version Version { get; } = new Version(1, 2, 0);
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 29);
 
         public Methods Methods { get; private set; }
