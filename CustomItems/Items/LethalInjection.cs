@@ -1,3 +1,4 @@
+using CustomItems.API;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using PlayableScps;

@@ -1,4 +1,5 @@
 using System;
+using CustomItems.API;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;

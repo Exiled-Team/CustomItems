@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using CustomItems.API;
 using Exiled.API.Features;
 using Exiled.API.Interfaces;
+using Exiled.Loader;
 
-namespace CustomItems
+namespace CustomItems.Configs
 {
     public class Config : IConfig
     {
@@ -23,7 +26,32 @@ namespace CustomItems
                 "ExampleSubclass", new Dictionary<string, float> {{"SR-119", 100}, {"SG-119", 50}}
             }
         };
+
+        public WeaponConfigs WeaponConfigs;
+
+        public void LoadConfigs()
+        {
+            if (!Directory.Exists(CustomWeaponFolder))
+                Directory.CreateDirectory(CustomWeaponFolder);
+            
+            string filePath = Path.Combine(CustomWeaponFolder, ConfigFileName);
+            
+            if (!File.Exists(filePath))
+            {
+                WeaponConfigs = new WeaponConfigs();
+                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(WeaponConfigs));
+            }
+            else
+            {
+                WeaponConfigs =
+                    ConfigManager.Deserializer.Deserialize<WeaponConfigs>(File.ReadAllText(filePath));
+                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(WeaponConfigs));
+            }
+        }
         
+
+        public string CustomWeaponFolder { get; set; } = Path.Combine(Paths.Configs, "CustomWeapons");
+        public string ConfigFileName { get; set; } = "global.yml";
         public int ShotgunSpreadCount { get; set; } = 5;
         public float ShotgunAimCone { get; set; } = 5;
         public float ShotgunHeadDamage { get; set; } = 12.5f;
@@ -62,5 +90,36 @@ namespace CustomItems
                 Log.Debug($"{list.Key} has had {customItems.Count} items added to their spawn list.", Debug);
             }
         }
+        
+        /*        public Dictionary<string, List<Tuple<string, string>>> CustomWeaponConfigs { get; set; } = new Dictionary<string, List<Tuple<string, string>>>
+        {
+            {
+                "SR-119", new List<Tuple<string, string>>()
+                {
+                    new Tuple<string, string>("DamageMultiplier", "7.5")
+                }
+            },
+            {
+                "SG-119", new List<Tuple<string, string>>()
+                {
+                    new Tuple<string, string>("SpreadCount", "12"),
+                    new Tuple<string, string>("Aimcone", "5"),
+                    new Tuple<string, string>("BaseDamage", "13.5")
+                }
+            },
+            {
+                "SCP-127", new List<Tuple<string, string>>()
+                {
+                    new Tuple<string, string>("RegenDelay", "10"),
+                    new Tuple<string, string>("RegenAmount", "2")
+                }
+            },
+            {
+                "EM-119", new List<Tuple<string, string>>()
+                {
+                    new Tuple<string, string>("Duration", "20")
+                }
+            }
+        };*/
     }
 }

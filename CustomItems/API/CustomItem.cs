@@ -10,7 +10,7 @@ using Exiled.Loader;
 using MEC;
 using UnityEngine;
 
-namespace CustomItems
+namespace CustomItems.API
 {
     public abstract class CustomItem
     {

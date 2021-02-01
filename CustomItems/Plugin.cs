@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using CustomItems.API;
+using CustomItems.Configs;
 using Exiled.API.Features;
 using HarmonyLib;
 using MapEvents = Exiled.Events.Handlers.Map;
@@ -37,6 +39,8 @@ namespace CustomItems
             Singleton = this;
             EventHandlers = new EventHandlers(this);
             Methods = new Methods(this);
+            
+            Config.LoadConfigs();
 
             Log.Debug($"Checking for Subclassing..", Config.Debug);
             try

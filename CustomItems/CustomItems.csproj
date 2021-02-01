@@ -89,15 +89,21 @@
         <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\References\UnityEngine.PhysicsModule.dll</HintPath>
         </Reference>
+        <Reference Include="YamlDotNet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
+          <HintPath>..\..\EXILED\bin\Release\YamlDotNet.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="API.cs" />
+        <Compile Include="API\API.cs" />
+        <Compile Include="API\CustomGrenade.cs" />
+        <Compile Include="API\CustomItem.cs" />
+        <Compile Include="API\CustomWeapon.cs" />
         <Compile Include="Commands\GiveItem.cs" />
         <Compile Include="Components\CollisionHandler.cs" />
-        <Compile Include="Config.cs" />
-        <Compile Include="CustomGrenade.cs" />
-        <Compile Include="CustomItem.cs" />
-        <Compile Include="CustomWeapon.cs" />
+        <Compile Include="Configs\Config.cs" />
+        <Compile Include="Configs\WeaponConfigs.cs" />
+        <Compile Include="Configs\WeaponConfigs\EmpGrenadeConfig.cs" />
+        <Compile Include="Configs\WeaponConfigs\SniperRifleConfig.cs" />
         <Compile Include="EventHandlers.cs" />
         <Compile Include="Events\AddClassEvent.cs" />
         <Compile Include="Items\EmpGrenade.cs" />

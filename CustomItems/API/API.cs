@@ -4,7 +4,7 @@ using System.Linq;
 using Exiled.API.Features;
 using UnityEngine;
 
-namespace CustomItems
+namespace CustomItems.API
 {
     public static class API
     {

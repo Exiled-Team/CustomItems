@@ -3,7 +3,7 @@ using Exiled.Events.EventArgs;
 using MEC;
 using UnityEngine;
 
-namespace CustomItems
+namespace CustomItems.API
 {
     public abstract class CustomWeapon : CustomItem
     {

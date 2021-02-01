@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CustomItems.API;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Grenades;

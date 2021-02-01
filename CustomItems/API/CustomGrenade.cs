@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CustomItems.Items;
+using Exiled;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
@@ -8,7 +9,7 @@ using MEC;
 using Mirror;
 using UnityEngine;
 
-namespace CustomItems
+namespace CustomItems.API
 {
     public abstract class CustomGrenade : CustomItem
     {
