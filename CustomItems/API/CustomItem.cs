@@ -98,7 +98,7 @@ namespace CustomItems.API
 
         protected virtual void OnHandcuffing(HandcuffingEventArgs ev)
         {
-            foreach (Inventory.SyncItemInfo item in ev.Target.Inventory.items)
+            foreach (Inventory.SyncItemInfo item in ev.Target.Inventory.items.ToList())
                 if (CheckItem(item))
                 {
                     ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(item.id, item.durability, ev.Target.Position, default, item.modSight, item.modBarrel, item.modOther));
@@ -118,7 +118,7 @@ namespace CustomItems.API
         
         protected virtual void OnEscaping(EscapingEventArgs ev)
         {
-            foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items)
+            foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items.ToList())
                 if (CheckItem(item))
                 {
                     ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(item.id, item.durability, ev.NewRole.GetRandomSpawnPoint(), default, item.modSight, item.modBarrel, item.modOther));
