@@ -68,8 +68,10 @@ namespace CustomItems.Items
                             {
                                 Player target = Player.Get(hits[i].collider.GetComponentInParent<ReferenceHub>());
 
-                                if (component.GetShootPermission(target.ReferenceHub.characterClassManager,
-                                    Server.FriendlyFire))
+                                if (target == null)
+                                    continue;
+                                
+                                if (component.GetShootPermission(target.ReferenceHub.characterClassManager, Server.FriendlyFire))
                                 {
                                     float damage = HitHandler(hitbox);
                                     if (target.Role == RoleType.Scp106)
