@@ -18,6 +18,7 @@ namespace CustomItems.API
         public abstract override string ItemName { get; set; }
         protected abstract override string ItemDescription { get; set; }
         protected virtual bool ExplodeOnCollision { get; set; }
+        protected virtual float FuseTime { get; set; } = 3f;
 
         public override void Init()
         {
@@ -73,7 +74,7 @@ namespace CustomItems.API
                         TrackedGrenades.Add(grenade);
                     }
                     else
-                        SpawnGrenade(pos, ev.Player.CameraTransform.forward * 9f, 3f, GetGrenadeType(ItemType));
+                        SpawnGrenade(pos, ev.Player.CameraTransform.forward * 9f, FuseTime, GetGrenadeType(ItemType));
 
                     ev.Player.RemoveItem(ev.Player.CurrentItem);
                 });

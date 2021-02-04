@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CustomItems.API;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
@@ -14,6 +15,8 @@ namespace CustomItems.Items
         }
         
         public override string ItemName { get; set; } = "SG-119";
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
+            Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLocations;
         protected override string ItemDescription { get; set; } =
             "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles infront of you.";
 
@@ -42,8 +45,10 @@ namespace CustomItems.Items
                         bullets = (int) ev.Shooter.CurrentItem.durability;
                     Ray[] rays = new Ray[bullets];
                     for (int i = 0; i < rays.Length; i++)
-                        rays[i] = new Ray(ev.Shooter.CameraTransform.position + ev.Shooter.CameraTransform.forward,
-                            RandomAimcone() * ev.Shooter.CameraTransform.forward);
+                    {
+                        Vector3 forward = ev.Shooter.CameraTransform.forward;
+                        rays[i] = new Ray(ev.Shooter.CameraTransform.position + forward, RandomAimcone() * forward);
+                    }
 
                     RaycastHit[] hits = new RaycastHit[bullets];
                     bool[] didHit = new bool[hits.Length];
@@ -73,17 +78,12 @@ namespace CustomItems.Items
                                     float distance = Vector3.Distance(ev.Shooter.Position, target.Position);
 
                                     for (int f = 0; f < (int)distance; f++)
-                                    {
-                                        damage *= 0.9f;
-                                    }
+                                        damage *= Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.DamageFalloffModifier;
 
                                     target.Hurt(damage,
                                         DamageTypes.FromWeaponId(ev.Shooter.ReferenceHub.weaponManager.curWeapon),
                                         ev.Shooter.Nickname, ev.Shooter.Id);
-                                    component.RpcPlaceDecal(true,
-                                        (sbyte) target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role)
-                                            .bloodType, hits[i].point + hits[i].normal * 0.01f,
-                                        Quaternion.FromToRotation(Vector3.up, hits[i].normal));
+                                    component.RpcPlaceDecal(true, (sbyte) target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role).bloodType, hits[i].point + hits[i].normal * 0.01f, Quaternion.FromToRotation(Vector3.up, hits[i].normal));
                                     confirm = true;
                                 }
 

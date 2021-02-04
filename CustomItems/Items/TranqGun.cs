@@ -38,15 +38,15 @@ namespace CustomItems.Items
             {
                 ev.Amount = 0;
                 
-                if (ev.Target.Team == Team.SCP)
-                    if (Plugin.Singleton.Rng.Next(100) > 40)
+                if (ev.Target.Team == Team.SCP && Plugin.Singleton.Config.ItemConfigs.TranqCfg.ResistantScps)
+                    if (Plugin.Singleton.Rng.Next(100) <= Plugin.Singleton.Config.ItemConfigs.TranqCfg.ScpResistChance)
                         return;
 
-                float dur = 5f;
+                float dur = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Duration;
                 if (!TranquilizedPlayers.ContainsKey(ev.Target))
                     TranquilizedPlayers.Add(ev.Target, 0);
                 
-                dur -= (TranquilizedPlayers[ev.Target] * 2);
+                dur -= (TranquilizedPlayers[ev.Target] * Plugin.Singleton.Config.ItemConfigs.TranqCfg.ResistanceModifier);
                 
                 if (dur > 0f)
                     Timing.RunCoroutine(DoTranquilize(ev.Target, dur));
@@ -56,7 +56,9 @@ namespace CustomItems.Items
         private IEnumerator<float> DoTranquilize(Player player, float duration)
         {
             Vector3 pos = player.Position;
-            player.DropItems();
+            
+            if (Plugin.Singleton.Config.ItemConfigs.TranqCfg.DropItems)
+                player.DropItems();
 
             Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
             player.Position = new Vector3(0, 0, 0);

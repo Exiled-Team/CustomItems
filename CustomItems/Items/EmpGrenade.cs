@@ -15,22 +15,17 @@ namespace CustomItems.Items
         public EmpGrenade(ItemType type, int itemId) : base(type, itemId)
         {
         }
-
-        public override Dictionary<Vector3, float> SpawnLocations { get; set; } = new Dictionary<Vector3, float>();
+        
         public override string ItemName { get; set; } = "EM-119";
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations;
         protected override string ItemDescription { get; set; } =
             "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
 
-        protected override bool ExplodeOnCollision { get; set; } = true;
+        protected override bool ExplodeOnCollision { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.ExplodeOnCollision;
+        protected override float FuseTime { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.FuseDuration;
 
         protected override void LoadEvents()
         {
-            foreach (KeyValuePair<SpawnLocation, float> kvp in Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations)
-            {
-                if (!TryAddSpawnLocation(kvp.Key, kvp.Value))
-                    Log.Warn($"{ItemName} unable to add spawn location {kvp.Key}");
-            }
-            
             Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
             base.LoadEvents();
         }

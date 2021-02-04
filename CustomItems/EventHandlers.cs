@@ -20,13 +20,13 @@ namespace CustomItems
         {
             if (first)
             {
-                new Shotgun(ItemType.GunMP7, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1).RegisterCustomItem();
+                new Shotgun(plugin.Config.ItemConfigs.ShotgunCfg.ItemType, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1).RegisterCustomItem();
                 
-                new GrenadeLauncher(ItemType.GunLogicer,1,  2).RegisterCustomItem();
+                new GrenadeLauncher(plugin.Config.ItemConfigs.GlCfg.ItemType, plugin.Config.ItemConfigs.GlCfg.ClipSize,  2).RegisterCustomItem();
                 
-                new SniperRifle(ItemType.GunE11SR, 1, 3).RegisterCustomItem();
+                new SniperRifle(plugin.Config.ItemConfigs.SniperCfg.ItemType, plugin.Config.ItemConfigs.SniperCfg.ClipSize, 3).RegisterCustomItem();
                 
-                new Scp127(ItemType.GunCOM15, 12, 4).RegisterCustomItem();
+                new Scp127(plugin.Config.ItemConfigs.Scp127Cfg.ItemType, plugin.Config.ItemConfigs.Scp127Cfg.ClipSize, 4).RegisterCustomItem();
                 
                 new ImplosionGrenade(ItemType.GrenadeFrag, 5).RegisterCustomItem();
                 
@@ -34,9 +34,9 @@ namespace CustomItems
                 
                 new LethalInjection(ItemType.Adrenaline, 7).RegisterCustomItem();
                 
-                new MediGun(ItemType.GunProject90, 30, 8).RegisterCustomItem();
+                new MediGun(plugin.Config.ItemConfigs.MediCfg.ItemType, plugin.Config.ItemConfigs.MediCfg.ClipSize, 8).RegisterCustomItem();
 
-                new TranqGun(ItemType.GunUSP, 3, 9).RegisterCustomItem();
+                new TranqGun(plugin.Config.ItemConfigs.TranqCfg.ItemType, plugin.Config.ItemConfigs.TranqCfg.ClipSize, 9).RegisterCustomItem();
                 
                 plugin.Config.ParseSubclassList();
                 
@@ -56,12 +56,12 @@ namespace CustomItems
             {
                 if (item.SpawnLocations != null)
                 {
-                    foreach (KeyValuePair<Vector3, float> spawn in item.SpawnLocations)
+                    foreach (KeyValuePair<SpawnLocation, float> spawn in item.SpawnLocations)
                     {
                         Log.Debug($"Attempting to spawn {item.ItemName} at {spawn.Key}", plugin.Config.Debug);
                         if (plugin.Rng.Next(100) <= spawn.Value)
                         {
-                            item.SpawnItem(spawn.Key + Vector3.up * 1.5f);
+                            item.SpawnItem(spawn.Key.TryGetLocation());
                             Log.Debug($"Spawned {item.ItemName} at {spawn.Key}", plugin.Config.Debug);
                         }
                     }

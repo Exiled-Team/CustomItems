@@ -14,6 +14,8 @@ namespace CustomItems.Items
         }
         
         public override string ItemName { get; set; } = "SCP-127";
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
+            Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
         protected override string ItemDescription { get; set; } =

@@ -131,5 +131,19 @@ namespace CustomItems.API
 
             return null;
         }
+        
+        public static Vector3 TryGetLocation(this SpawnLocation location)
+        {
+            Vector3 pos = Vector3.zero;
+            
+            float modifier = SpawnLocationData.ReversedLocations.Contains(location) ? -3f : 3f;
+            Transform transform = location.GetDoor();
+            if (transform != null)
+            {
+                pos = (transform.position + (Vector3.up * 1.5f)) + (transform.forward * modifier);
+            }
+
+            return pos;
+        }
     }
 }

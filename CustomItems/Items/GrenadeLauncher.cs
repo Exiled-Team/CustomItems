@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CustomItems.API;
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
@@ -16,6 +17,8 @@ namespace CustomItems.Items
         }
         
         public override string ItemName { get; set; } = "RL-119";
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
+            Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
         protected override string ItemDescription { get; set; } =
             "This weapon will launch grenades in the direction you are firing, instead of bullets.";
 
@@ -38,10 +41,10 @@ namespace CustomItems.Items
                 ev.IsAllowed = false;
                 ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - 1);
 
-                Vector3 velocity = (ev.Position - ev.Shooter.Position) * 1f;
+                Vector3 velocity = (ev.Position - ev.Shooter.Position) * Plugin.Singleton.Config.ItemConfigs.GlCfg.GrenadeSpeed;
                 Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
                 Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-                var grenade = SpawnGrenade(pos, velocity, 1f, GrenadeType.FragGrenade, ev.Shooter);
+                var grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
                 CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
                 collisionHandler.owner = ev.Shooter.GameObject;
                 collisionHandler.grenade = grenadeComponent;

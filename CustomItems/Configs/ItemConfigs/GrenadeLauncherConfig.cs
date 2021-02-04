@@ -3,11 +3,13 @@ using CustomItems.API;
 
 namespace CustomItems.ItemConfigs
 {
-    public class SniperRifleConfig
+    public class GrenadeLauncherConfig
     {
-        public float DamageMultiplier { get; set; } = 7.5f;
+        public bool UseGrenades { get; set; } = true;
         public int ClipSize { get; set; } = 1;
-        public ItemType ItemType { get; set; } = ItemType.GunE11SR;
+        public ItemType ItemType { get; set; } = ItemType.GunLogicer;
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public float GrenadeSpeed { get; set; } = 1f;
+        public float FuseTime { get; set; } = 1f;
     }
 }

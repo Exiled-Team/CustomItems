@@ -12,7 +12,13 @@ namespace CustomItems.Items
 {
     public class ImplosionGrenade : CustomGrenade
     {
+        public ImplosionGrenade(ItemType type, int itemId) : base(type, itemId)
+        {
+        }
+        
         public override string ItemName { get; set; } = "IG-119";
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
+            Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLocations;
         protected override string ItemDescription { get; set; } =
             "This grenade does almost 0 damage, however it will succ nearby players towards the center of the implosion area.";
 
@@ -54,7 +60,7 @@ namespace CustomItems.Items
                 Log.Debug($"IG: List cleared.", Plugin.Singleton.Config.Debug);
                 foreach (Player player in copiedList.Keys)
                 {
-                    ev.TargetToDamages.Add(player, copiedList[player] * 0.1f);
+                    ev.TargetToDamages.Add(player, copiedList[player] * Plugin.Singleton.Config.ItemConfigs.ImpCfg.DamageModifier);
                     Log.Debug($"{player.Nickname} starting suction", Plugin.Singleton.Config.Debug);
 
                     try
@@ -84,17 +90,13 @@ namespace CustomItems.Items
         IEnumerator<float> DoSuction(Player player, Vector3 position)
         {
             Log.Debug($"{player.Nickname} Suction begin", Plugin.Singleton.Config.Debug);
-            for (int i = 0; i < 90; i++)
+            for (int i = 0; i < Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionCount; i++)
             {
                 Log.Debug($"{player.Nickname} suctioned?", Plugin.Singleton.Config.Debug);
-                player.Position = Vector3.MoveTowards(player.Position, position, 0.125f);
-
-                yield return Timing.WaitForSeconds(0.025f);
+                player.Position = Vector3.MoveTowards(player.Position, position, Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionPerTick);
+                
+                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionTickRate);
             }
-        }
-
-        public ImplosionGrenade(ItemType type, int itemId) : base(type, itemId)
-        {
         }
     }
 }

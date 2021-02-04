@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CustomItems.API;
 using Exiled.Events.EventArgs;
 
@@ -10,6 +11,8 @@ namespace CustomItems.Items
         }
         
         public override string ItemName { get; set; } = "SR-119";
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
+            Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
         protected override string ItemDescription { get; set; } =
             "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
         protected override int ModBarrel { get; set; } = 3;

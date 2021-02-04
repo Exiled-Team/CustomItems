@@ -23,7 +23,8 @@ namespace CustomItems.API
         
         public abstract string ItemName { get; set; }
         protected abstract string ItemDescription { get; set; }
-        public virtual Dictionary<Vector3, float> SpawnLocations { get; set; }
+        public virtual Dictionary<SpawnLocation, float> SpawnLocations { get; set; }
+        
         protected virtual void LoadEvents(){}
         protected virtual void UnloadEvents(){}
         
@@ -142,22 +143,6 @@ namespace CustomItems.API
         protected List<int> ItemIds { get; } = new List<int>();
         protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
 
-        protected bool TryAddSpawnLocation(SpawnLocation location, float chance)
-        {
-            Transform transform = location.GetDoor();
-            if (transform != null)
-            {
-                float modifier = SpawnLocationData.ReversedLocations.Contains(location) ? -3f : 3f;
-                Vector3 pos = (transform.position + (Vector3.up * 1.5f))  + (transform.forward * modifier);
-                
-                SpawnLocations.Add(pos, chance);
-
-                return true;
-            }
-
-            return false;
-        }
-        
         protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
         protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
 

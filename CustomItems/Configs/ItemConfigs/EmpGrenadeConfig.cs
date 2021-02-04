@@ -12,5 +12,8 @@ namespace CustomItems.ItemConfigs
                 SpawnLocation.Inside173Gate, 100
             }
         };
+
+        public bool ExplodeOnCollision { get; set; } = true;
+        public float FuseDuration { get; set; } = 3f;
     }
 }
