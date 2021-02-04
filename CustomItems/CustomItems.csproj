@@ -113,7 +113,6 @@
         <Compile Include="EventHandlers.cs" />
         <Compile Include="Events\AddClassEvent.cs" />
         <Compile Include="Items\EmpGrenade.cs" />
-        <Compile Include="Items\Flamethrower.cs" />
         <Compile Include="Items\GrenadeLauncher.cs" />
         <Compile Include="Items\LethalInjection.cs" />
         <Compile Include="Items\MediGun.cs" />
