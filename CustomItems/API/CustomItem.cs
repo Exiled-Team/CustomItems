@@ -170,7 +170,7 @@ namespace CustomItems.API
             return Vector3.zero;
         }
 
-        public void Init()
+        public virtual void Init()
         {
             Exiled.Events.Handlers.Player.Dying += OnDying;
             Exiled.Events.Handlers.Player.Handcuffing += OnHandcuffing;
@@ -191,7 +191,7 @@ namespace CustomItems.API
             LoadEvents();
         }
 
-        public void Destroy()
+        public virtual void Destroy()
         {
             Exiled.Events.Handlers.Player.Dying -= OnDying;
             Exiled.Events.Handlers.Player.Handcuffing -= OnHandcuffing;

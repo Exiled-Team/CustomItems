@@ -20,29 +20,23 @@ namespace CustomItems
         {
             if (first)
             {
-                new Shotgun(ItemType.GunMP7, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1)
-                    .RegisterCustomItem();
+                new Shotgun(ItemType.GunMP7, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1).RegisterCustomItem();
                 
-                new GrenadeLauncher(ItemType.GunLogicer,1,  2)
-                    .RegisterCustomItem();
+                new GrenadeLauncher(ItemType.GunLogicer,1,  2).RegisterCustomItem();
                 
-                new SniperRifle(ItemType.GunE11SR, 1, 3)
-                    .RegisterCustomItem();
+                new SniperRifle(ItemType.GunE11SR, 1, 3).RegisterCustomItem();
                 
-                new Scp127(ItemType.GunCOM15, 12, 4)
-                    .RegisterCustomItem();
+                new Scp127(ItemType.GunCOM15, 12, 4).RegisterCustomItem();
                 
-                new ImplosionGrenade(ItemType.GrenadeFrag, 5)
-                    .RegisterCustomItem();
+                new ImplosionGrenade(ItemType.GrenadeFrag, 5).RegisterCustomItem();
                 
-                new EmpGrenade(ItemType.GrenadeFlash, 6)
-                    .RegisterCustomItem();
+                new EmpGrenade(ItemType.GrenadeFlash, 6).RegisterCustomItem();
                 
-                new LethalInjection(ItemType.Adrenaline, 7)
-                    .RegisterCustomItem();
+                new LethalInjection(ItemType.Adrenaline, 7).RegisterCustomItem();
                 
-                new MediGun(ItemType.GunProject90, 30, 8)
-                    .RegisterCustomItem();
+                new MediGun(ItemType.GunProject90, 30, 8).RegisterCustomItem();
+
+                new TranqGun(ItemType.GunUSP, 3, 9).RegisterCustomItem();
                 
                 plugin.Config.ParseSubclassList();
                 

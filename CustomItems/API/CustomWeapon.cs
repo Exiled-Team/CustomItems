@@ -20,16 +20,16 @@ namespace CustomItems.API
         protected virtual int ModSight { get; set; } = 0;
         protected virtual int ModOther { get; set; } = 0;
 
-        protected override void LoadEvents()
+        public override void Init()
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloadingWeapon;
-            base.LoadEvents();
+            base.Init();
         }
 
-        protected override void UnloadEvents()
+        public override void Destroy()
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloadingWeapon;
-            base.UnloadEvents();
+            base.Destroy();
         }
 
         protected virtual void OnReloadingWeapon(ReloadingWeaponEventArgs ev)

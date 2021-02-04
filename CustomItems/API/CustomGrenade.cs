@@ -19,14 +19,16 @@ namespace CustomItems.API
         protected abstract override string ItemDescription { get; set; }
         protected virtual bool ExplodeOnCollision { get; set; }
 
-        protected override void LoadEvents()
+        public override void Init()
         {
             Exiled.Events.Handlers.Player.ThrowingGrenade += OnThrowingGrenade;
+            base.Init();
         }
         
-        protected override void UnloadEvents()
+        public override void Destroy()
         {
             Exiled.Events.Handlers.Player.ThrowingGrenade -= OnThrowingGrenade;
+            base.Destroy();
         }
 
         protected override void OnWaitingForPlayers()
