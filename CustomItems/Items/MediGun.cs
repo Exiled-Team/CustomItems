@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using CustomItems.API;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using UnityEngine;
 
 namespace CustomItems.Items
 {
@@ -19,7 +21,7 @@ namespace CustomItems.Items
 
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.Shot += OnShot;
+            Exiled.Events.Handlers.Player.Shooting += OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Scp049.FinishingRecall += OnFinishingRecall;
             base.LoadEvents();
@@ -27,7 +29,7 @@ namespace CustomItems.Items
 
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.Shot -= OnShot;
+            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Scp049.FinishingRecall -= OnFinishingRecall;
             base.UnloadEvents();
@@ -41,25 +43,27 @@ namespace CustomItems.Items
 
         Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
 
-        private void OnShot(ShotEventArgs ev)
+        private void OnShooting(ShootingEventArgs ev)
         {
             if (CheckItem(ev.Shooter.CurrentItem))
             {
                 if (Player.Get(ev.Target) is Player player)
                 {
-                    if (player.Team == ev.Shooter.Team)
-                        player.Health += (ev.Damage * Plugin.Singleton.Config.ItemConfigs.MediCfg.HealingModifier);
+                    float num3 = Vector3.Distance(ev.Shooter.CameraTransform.transform.position, ev.Target.transform.position);
+                    float num4 = ev.Shooter.ReferenceHub.weaponManager.weapons[ev.Shooter.ReferenceHub.weaponManager.curWeapon].damageOverDistance.Evaluate(num3);
+                    float damage = num4 * ev.Shooter.ReferenceHub.weaponManager.weapons[ev.Shooter.ReferenceHub.weaponManager.curWeapon].allEffects.damageMultiplier * ev.Shooter.ReferenceHub.weaponManager.overallDamagerFactor;
+                    
+                    if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
+                        player.Health += (damage * Plugin.Singleton.Config.ItemConfigs.MediCfg.HealingModifier);
                     else if (player.Role == RoleType.Scp0492 && Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                     {
                         player.MaxAdrenalineHealth = Plugin.Singleton.Config.ItemConfigs.MediCfg.ZombieHealingRequired;
-                        player.AdrenalineHealth += ev.Damage;
+                        player.AdrenalineHealth += damage;
 
                         if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)
                             DoReviveZombie(player);
                     }
                 }
-
-                ev.Damage = 0;
             }
         }
         

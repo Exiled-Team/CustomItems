@@ -115,6 +115,16 @@ namespace CustomItems.API
                     ev.Target.RemoveItem(item);
                 }
         }
+        
+        protected virtual void OnEscaping(EscapingEventArgs ev)
+        {
+            foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items)
+                if (CheckItem(item))
+                {
+                    ItemPickups.Add(Exiled.API.Extensions.Item.Spawn(item.id, item.durability, ev.NewRole.GetRandomSpawnPoint(), default, item.modSight, item.modBarrel, item.modOther));
+                    ev.Player.RemoveItem(item);
+                }
+        }
 
         protected virtual void ShowMessage(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
 
@@ -158,6 +168,7 @@ namespace CustomItems.API
         public virtual void Init()
         {
             Exiled.Events.Handlers.Player.Dying += OnDying;
+            Exiled.Events.Handlers.Player.Escaping += OnEscaping;
             Exiled.Events.Handlers.Player.Handcuffing += OnHandcuffing;
             Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
             Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
@@ -179,6 +190,7 @@ namespace CustomItems.API
         public virtual void Destroy()
         {
             Exiled.Events.Handlers.Player.Dying -= OnDying;
+            Exiled.Events.Handlers.Player.Escaping -= OnEscaping;
             Exiled.Events.Handlers.Player.Handcuffing -= OnHandcuffing;
             Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
             Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUpItem;
