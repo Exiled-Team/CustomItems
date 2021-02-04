@@ -25,7 +25,7 @@ namespace CustomItems.Items
 
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.Shooting += OnShooting;
+            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             base.UnloadEvents();
         }
 
