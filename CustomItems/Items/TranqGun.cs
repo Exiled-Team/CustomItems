@@ -13,8 +13,10 @@ namespace CustomItems.Items
         {
         }
 
-        public override string ItemName { get; set; }
-        protected override string ItemDescription { get; set; }
+        public override string ItemName { get; set; } = "TG-119";
+
+        protected override string ItemDescription { get; set; } =
+            "This modifier USP fires non-lethal tranquilizing darts. Those affected will be rendered unconcious for a short duration. Unreliable against SCPs. Repeated tranquilizations of the same person will render them resistant to it's effect.";
 
         protected override void LoadEvents()
         {
@@ -28,17 +30,30 @@ namespace CustomItems.Items
             base.UnloadEvents();
         }
 
+        private Dictionary<Player, int> TranquilizedPlayers = new Dictionary<Player, int>();
+
         private void OnHurting(HurtingEventArgs ev)
         {
             if (CheckItem(ev.Attacker.CurrentItem))
             {
                 ev.Amount = 0;
+                
+                if (ev.Target.Team == Team.SCP)
+                    if (Plugin.Singleton.Rng.Next(100) > 40)
+                        return;
 
-                Timing.RunCoroutine(DoTranquilize(ev.Target));
+                float dur = 5f;
+                if (!TranquilizedPlayers.ContainsKey(ev.Target))
+                    TranquilizedPlayers.Add(ev.Target, 0);
+                
+                dur -= (TranquilizedPlayers[ev.Target] * 2);
+                
+                if (dur > 0f)
+                    Timing.RunCoroutine(DoTranquilize(ev.Target, dur));
             }
         }
 
-        private IEnumerator<float> DoTranquilize(Player player)
+        private IEnumerator<float> DoTranquilize(Player player, float duration)
         {
             Vector3 pos = player.Position;
             player.DropItems();
@@ -46,7 +61,7 @@ namespace CustomItems.Items
             Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
             player.Position = new Vector3(0, 0, 0);
 
-            yield return Timing.WaitForSeconds(3f);
+            yield return Timing.WaitForSeconds(duration);
 
             player.Position = pos;
         }
