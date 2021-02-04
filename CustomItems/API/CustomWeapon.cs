@@ -83,6 +83,6 @@ namespace CustomItems.API
             ItemGiven(player);
         }
         
-        private void Reload(Player player) => player.ReferenceHub.weaponManager.RpcReload(player.ReferenceHub.weaponManager.curWeapon);
+        protected void Reload(Player player) => player.ReferenceHub.weaponManager.RpcReload(player.ReferenceHub.weaponManager.curWeapon);
     }
 }

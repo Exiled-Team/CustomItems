@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using CustomItems.API;
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Grenades;
+using MEC;
 using Mirror;
 using UnityEngine;
 
@@ -16,7 +18,7 @@ namespace CustomItems.Items
         {
         }
         
-        public override string ItemName { get; set; } = "RL-119";
+        public override string ItemName { get; set; } = "GL-119";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
         protected override string ItemDescription { get; set; } =
@@ -32,6 +34,39 @@ namespace CustomItems.Items
         {
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             base.UnloadEvents();
+        }
+        
+        protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
+        {
+            if (CheckItem(ev.Player.CurrentItem))
+            {
+                if (Plugin.Singleton.Config.ItemConfigs.GlCfg.UseGrenades)
+                {
+                    ev.IsAllowed = false;
+                    Log.Debug($"{ev.Player.Nickname} is reloading a {ItemName}!", Plugin.Singleton.Config.Debug);
+                    foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items.ToList())
+                    {
+                        if (item.id == ItemType.GrenadeFrag)
+                        {
+                            ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
+                            Reload(ev.Player);
+
+                            ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
+                            Log.Debug($"{ev.Player.Nickname} successfully reloaded a {ItemName}.",
+                                Plugin.Singleton.Config.Debug);
+                            Timing.CallDelayed(4.5f, () => { Reload(ev.Player); });
+                            ev.Player.RemoveItem(item);
+
+                            break;
+                        }
+                    }
+
+                    Log.Debug($"{ev.Player.Nickname} was unable to reload their {ItemName} - No grenades in inventory.",
+                        Plugin.Singleton.Config.Debug);
+                }
+                else
+                    base.OnReloadingWeapon(ev);
+            }
         }
 
         private void OnShooting(ShootingEventArgs ev)

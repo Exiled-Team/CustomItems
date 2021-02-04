@@ -20,23 +20,32 @@ namespace CustomItems
         {
             if (first)
             {
-                new Shotgun(plugin.Config.ItemConfigs.ShotgunCfg.ItemType, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1).RegisterCustomItem();
+                if (plugin.Config.Shotgun)
+                    new Shotgun(plugin.Config.ItemConfigs.ShotgunCfg.ItemType, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, 1).RegisterCustomItem();
                 
-                new GrenadeLauncher(plugin.Config.ItemConfigs.GlCfg.ItemType, plugin.Config.ItemConfigs.GlCfg.ClipSize,  2).RegisterCustomItem();
+                if (plugin.Config.GrenadeLauncher)
+                    new GrenadeLauncher(plugin.Config.ItemConfigs.GlCfg.ItemType, plugin.Config.ItemConfigs.GlCfg.ClipSize,  2).RegisterCustomItem();
                 
-                new SniperRifle(plugin.Config.ItemConfigs.SniperCfg.ItemType, plugin.Config.ItemConfigs.SniperCfg.ClipSize, 3).RegisterCustomItem();
+                if (plugin.Config.SniperRifle)
+                    new SniperRifle(plugin.Config.ItemConfigs.SniperCfg.ItemType, plugin.Config.ItemConfigs.SniperCfg.ClipSize, 3).RegisterCustomItem();
                 
-                new Scp127(plugin.Config.ItemConfigs.Scp127Cfg.ItemType, plugin.Config.ItemConfigs.Scp127Cfg.ClipSize, 4).RegisterCustomItem();
+                if (plugin.Config.Scp127)
+                    new Scp127(plugin.Config.ItemConfigs.Scp127Cfg.ItemType, plugin.Config.ItemConfigs.Scp127Cfg.ClipSize, 4).RegisterCustomItem();
                 
-                new ImplosionGrenade(ItemType.GrenadeFrag, 5).RegisterCustomItem();
+                if (plugin.Config.ImplosionGrenade)
+                    new ImplosionGrenade(ItemType.GrenadeFrag, 5).RegisterCustomItem();
                 
-                new EmpGrenade(ItemType.GrenadeFlash, 6).RegisterCustomItem();
+                if (plugin.Config.EmpGrenade)
+                    new EmpGrenade(ItemType.GrenadeFlash, 6).RegisterCustomItem();
                 
-                new LethalInjection(ItemType.Adrenaline, 7).RegisterCustomItem();
+                if (plugin.Config.LethalInjection)
+                    new LethalInjection(ItemType.Adrenaline, 7).RegisterCustomItem();
                 
-                new MediGun(plugin.Config.ItemConfigs.MediCfg.ItemType, plugin.Config.ItemConfigs.MediCfg.ClipSize, 8).RegisterCustomItem();
+                if (plugin.Config.MediGun)
+                    new MediGun(plugin.Config.ItemConfigs.MediCfg.ItemType, plugin.Config.ItemConfigs.MediCfg.ClipSize, 8).RegisterCustomItem();
 
-                new TranqGun(plugin.Config.ItemConfigs.TranqCfg.ItemType, plugin.Config.ItemConfigs.TranqCfg.ClipSize, 9).RegisterCustomItem();
+                if (plugin.Config.TranqGun)
+                    new TranqGun(plugin.Config.ItemConfigs.TranqCfg.ItemType, plugin.Config.ItemConfigs.TranqCfg.ClipSize, 9).RegisterCustomItem();
                 
                 plugin.Config.ParseSubclassList();
                 

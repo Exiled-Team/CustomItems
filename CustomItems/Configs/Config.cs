@@ -26,6 +26,16 @@ namespace CustomItems.Configs
         public ItemConfigs ItemConfigs;
         public string CustomItemFolder { get; set; } = Path.Combine(Paths.Configs, "CustomItems");
         public string ConfigFileName { get; set; } = "global.yml";
+        public bool TranqGun { get; set; } = true;
+        public bool MediGun { get; set; } = true;
+        public bool LethalInjection { get; set; } = true;
+        public bool EmpGrenade { get; set; } = true;
+        public bool ImplosionGrenade { get; set; } = true;
+        public bool Scp127 { get; set; } = true;
+        public bool SniperRifle { get; set; } = true;
+        public bool GrenadeLauncher { get; set; } = true;
+        public bool Shotgun { get; set; } = true;
+
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         
         public void LoadConfigs()
