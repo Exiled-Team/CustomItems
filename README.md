@@ -23,7 +23,7 @@ TG-119 | 10 | This gun is also modified to fire self-injecting projectile darts.
 Config settings for the individual items will ***NOT*** be found in the default plugin config file. Instead they will be located in ~/.config/EXILED/Configs/CustomItems on Linux or %AppData%\EXILED\Configs\CustomItems on Winblows.
 The default config file will be named "global.yml" however, the file used can be changed for each SCP server via that server's normal plugin config file, if you wish to run multiple servers with different custom item config settings.
 
-Currently the item names, IDs and Descriptions are unable to be edited. I may add this ability in the future. The actual config values for the items should have descriptions and names that make them self-explanatory.
+The actual config values for the items should have descriptions and names that make them self-explanatory.
 
 ### Commands
 Command | Arguments | Permissions | Description
