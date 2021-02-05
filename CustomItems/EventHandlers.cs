@@ -46,6 +46,9 @@ namespace CustomItems
 
                 if (plugin.Config.TranqGun)
                     new TranqGun(plugin.Config.ItemConfigs.TranqCfg.ItemType, plugin.Config.ItemConfigs.TranqCfg.ClipSize, 9).RegisterCustomItem();
+
+                if (plugin.Config.LuckyCoin)
+                    new LuckyCoin(ItemType.Coin, 10).RegisterCustomItem();
                 
                 plugin.Config.ParseSubclassList();
                 

@@ -43,6 +43,7 @@ namespace CustomItems.Configs
         public bool SniperRifle { get; set; } = true;
         public bool GrenadeLauncher { get; set; } = true;
         public bool Shotgun { get; set; } = true;
+        public bool LuckyCoin { get; set; } = true;
 
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
         
