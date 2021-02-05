@@ -76,6 +76,8 @@ namespace CustomItems.Items
                             DoReviveZombie(player);
                     }
                 }
+
+                ev.IsAllowed = false;
             }
         }
 
