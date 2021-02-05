@@ -14,12 +14,16 @@ namespace CustomItems.ItemConfigs
         
         [Description("The type of weapon this one will be modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunLogicer;
-        
+
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.Inside049Armory, 50 }, 
+            { SpawnLocation.InsideHczArmory, 40 }
+        };
         
         [Description("The speed of grenades when they shoot out of the weapon.")]
-        public float GrenadeSpeed { get; set; } = 1f;
+        public float GrenadeSpeed { get; set; } = 1.5f;
         
         [Description("The max duration of the fuse of grenades shot from the weapon. Note, these grenades will always explode immediatly when they collide with something, but this can be used with slow-moving grenades to cause mid-air explosions.")]
         public float FuseTime { get; set; } = 1f;
@@ -28,7 +32,7 @@ namespace CustomItems.ItemConfigs
         public int Id { get; set; } = 2;
         
         [Description("The description of this item show to players when they obtain it.")]
-        public string Description { get; set; } = "This weapon will launch grenades in the direction you are firing, instead of bullets.";
+        public string Description { get; set; } = "This weapon will launch grenades in the direction you are firing, instead of bullets. Requires Frag Grenades in your inventory to reload.";
 
         [Description("The name of this item shown to players when they obtain it.")]
         public string Name { get; set; } = "GL-119";

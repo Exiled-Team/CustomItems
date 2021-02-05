@@ -7,7 +7,11 @@ namespace CustomItems.ItemConfigs
     public class LuckCoinConfig
     {
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.Inside012Locker, 100 }, 
+            { SpawnLocation.Inside173Armory, 50 }
+        };
 
         [Description("The Custom Item ID for this item.")]
         public int Id { get; set; } = 5;

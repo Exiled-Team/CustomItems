@@ -17,9 +17,12 @@ namespace CustomItems.ItemConfigs
         
         [Description("The base weapon this one will be modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunCOM15;
-        
+
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.Inside173Armory, 100 }
+        };
 
         [Description("The Custom Item ID for this item.")]
         public int Id { get; set; } = 7;

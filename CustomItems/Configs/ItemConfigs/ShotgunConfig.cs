@@ -19,7 +19,10 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunMP7;
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.InsideLczArmory, 60 }
+        };
         
         [Description("Damage is reduced for every 1f away from the shooter the target is. This number signifies how much damage is 'carried over'. By default (0.9), every 1f further away, the damage each pellet can deal is reduced by 10%.")]
         public float DamageFalloffModifier { get; set; } = 0.9f;

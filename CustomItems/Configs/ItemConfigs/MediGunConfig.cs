@@ -16,7 +16,12 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunProject90;
 
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.InsideGr18, 40 }, 
+            { SpawnLocation.InsideGateA, 50 }, 
+            { SpawnLocation.InsideGateB, 50 }
+        };
         
         [Description("Whether or not zombies can be 'cured' by this weapon.")]
         public bool HealZombies { get; set; } = true;

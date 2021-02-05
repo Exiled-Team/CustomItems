@@ -8,13 +8,11 @@ namespace CustomItems.ItemConfigs
     {
         [Description("How long the EMP effect should last on the rooms affected.")]
         public float Duration { get; set; } = 20f;
-        
+
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
         {
-            {
-                SpawnLocation.Inside173Gate, 100
-            }
+            { SpawnLocation.Inside173Gate, 100 }
         };
 
         [Description("Whether or not the grenade should explode immediately when it collides with something.")]

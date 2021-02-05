@@ -13,7 +13,11 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunUSP;
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.InsideGr18, 50 }, 
+            { SpawnLocation.Inside173Armory, 80}
+        };
         
         [Description("Whether or not SCPs should be resistant to tranquilizers. (Being resistant gives them a chance to not be tranquilized when shot).")]
         public bool ResistantScps { get; set; } = true;

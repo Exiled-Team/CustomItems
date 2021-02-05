@@ -7,10 +7,14 @@ namespace CustomItems.ItemConfigs
     public class ImplosionGrenadeConfig
     {
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.InsideHczArmory, 100 }, 
+            { SpawnLocation.Inside012Locker, 50 }
+        };
         
         [Description("The % of normal frag grenade damage this grenade will deal to those in it's radius.")]
-        public float DamageModifier { get; set; } = 0.1f;
+        public float DamageModifier { get; set; } = 0.05f;
         
         [Description("The amount of suction ticks each grenade will generate.")]
         public int SuctionCount { get; set; } = 90;

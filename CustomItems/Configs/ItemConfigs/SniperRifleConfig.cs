@@ -16,7 +16,11 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunE11SR;
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+        public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
+        {
+            { SpawnLocation.InsideHid, 100 }, 
+            { SpawnLocation.InsideHczArmory, 45 }
+        };
 
         [Description("The Custom Item ID for this item.")]
         public int Id { get; set; } = 9;
