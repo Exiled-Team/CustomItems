@@ -22,15 +22,16 @@ namespace CustomItems.Items
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
-                Exiled.Events.Handlers.Scp049.FinishingRecall += OnFinishingRecall;
+                Exiled.Events.Handlers.Player.Dying += OnDyingMG;
             base.LoadEvents();
         }
+        
 
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
-                Exiled.Events.Handlers.Scp049.FinishingRecall -= OnFinishingRecall;
+                Exiled.Events.Handlers.Player.Dying -= OnDyingMG;
             base.UnloadEvents();
         }
 
@@ -39,8 +40,19 @@ namespace CustomItems.Items
             previousRoles.Clear();
             base.OnWaitingForPlayers();
         }
+        
+        private Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
+        
+        private void OnDyingMG(DyingEventArgs ev)
+        {
+            if (ev.Target.IsHuman && ev.Killer.Role == RoleType.Scp049)
+            {
+                if (!previousRoles.ContainsKey(ev.Target))
+                    previousRoles.Add(ev.Target, RoleType.None);
 
-        Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
+                previousRoles[ev.Target] = ev.Target.Role;
+            }
+        }
 
         private void OnShooting(ShootingEventArgs ev)
         {
@@ -64,14 +76,6 @@ namespace CustomItems.Items
                     }
                 }
             }
-        }
-        
-        private void OnFinishingRecall(FinishingRecallEventArgs ev)
-        {
-            if (!previousRoles.ContainsKey(ev.Target))
-                previousRoles.Add(ev.Target, ev.Target.Role);
-            else
-                previousRoles[ev.Target] = ev.Target.Role;
         }
 
         private void DoReviveZombie(Player player)

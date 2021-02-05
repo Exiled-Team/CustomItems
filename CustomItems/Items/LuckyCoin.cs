@@ -20,7 +20,7 @@ namespace CustomItems.Items
 
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItemLC;
+            Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayersLC;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnterPocketDimension;
             base.LoadEvents();
@@ -28,7 +28,7 @@ namespace CustomItems.Items
 
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItemLC;
+            Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayersLC;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnterPocketDimension;
             base.UnloadEvents();
@@ -44,7 +44,7 @@ namespace CustomItems.Items
                 teleports.Add(teleport);
         }
 
-        private void OnDroppingItemLC(DroppingItemEventArgs ev)
+        protected override void OnDroppingItem(DroppingItemEventArgs ev)
         {
             if (CheckItem(ev.Item))
             {
@@ -53,6 +53,8 @@ namespace CustomItems.Items
                     Log.Debug($"{Name} has been dropped in the Pocket Dimension.", Plugin.Singleton.Config.Debug);
                     isDropped = true;
                 }
+                else
+                    base.OnDroppingItem(ev);
             }
         }
         
