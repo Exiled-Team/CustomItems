@@ -13,6 +13,8 @@ namespace CustomItems.Configs
     {
         [Description("Whether or not this plugin is enabled.")]
         public bool IsEnabled { get; set; } = true;
+        
+        [Description("Whether or not debug messages should be displayed in the server console.")]
         public bool Debug { get; set; } = false;
 
         [Description("A list of each item and the subclasses that can spawn with it, and the % chance of them receiving it. **This is only used if Advanced Subclassing is installed!**")]
@@ -24,8 +26,14 @@ namespace CustomItems.Configs
         };
 
         public ItemConfigs ItemConfigs;
+        
+        [Description("The folder location where CustomItems will look for and store it's item configurations.")]
         public string CustomItemFolder { get; set; } = Path.Combine(Paths.Configs, "CustomItems");
+        
+        [Description("The name of the config file this server will use for custom item configurations.")]
         public string ConfigFileName { get; set; } = "global.yml";
+        
+        [Description("The following configs determine whether or not that item is enabled on this server. If the item is disabled, it's configs are still loaded, however the item will not spawn on the map, cannot be used for subclasses, or given via commands.")]
         public bool TranqGun { get; set; } = true;
         public bool MediGun { get; set; } = true;
         public bool LethalInjection { get; set; } = true;

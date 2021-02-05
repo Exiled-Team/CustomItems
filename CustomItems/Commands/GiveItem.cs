@@ -3,6 +3,7 @@ using System.Linq;
 using CommandSystem;
 using CustomItems.API;
 using Exiled.API.Features;
+using Exiled.Permissions.Extensions;
 
 namespace CustomItems.Commands
 {
@@ -11,6 +12,13 @@ namespace CustomItems.Commands
     {
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
+            if (!sender.CheckPermission("citems.give"))
+            {
+                response = "Permission Denied.";
+
+                return false;
+            }
+            
             Player player = Player.Get(((CommandSender)sender).SenderId);
             string[] args = arguments.Array;
             if (args == null)
