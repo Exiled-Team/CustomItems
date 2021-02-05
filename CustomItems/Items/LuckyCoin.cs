@@ -16,7 +16,7 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "Lucky Coin";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnLocations;
-        protected override string Description { get; set; } =
+        public override string Description { get; set; } =
             "This coin has magical properties when it is dropped inside of SCP-106's pocket dimension.";
 
         protected override void LoadEvents()

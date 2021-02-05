@@ -13,7 +13,7 @@ namespace CustomItems.API
         }
 
         public abstract override string Name { get; set; }
-        protected abstract override string Description { get; set; }
+        public abstract override string Description { get; set; }
         protected virtual int ClipSize { get; set; }
         
         protected virtual int ModBarrel { get; set; } = 0;

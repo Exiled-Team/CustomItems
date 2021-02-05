@@ -17,7 +17,7 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "SG-119";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLocations;
-        protected override string Description { get; set; } =
+        public override string Description { get; set; } =
             "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles infront of you.";
 
         protected override void LoadEvents()

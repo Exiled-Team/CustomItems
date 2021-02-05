@@ -15,7 +15,7 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "LI-119";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.LethalCfg.SpawnLocations;
-        protected override string Description { get; set; } =
+        public override string Description { get; set; } =
             "This is a Lethal Injection that, when used, will cause SCP-096 to immediately leave his enrage, regardless of how many targets he currently has, if you are one of his current targets. You always die when using this, even if there's no enrage to break, or you are not a target.";
 
         protected override void LoadEvents()

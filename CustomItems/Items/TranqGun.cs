@@ -15,7 +15,7 @@ namespace CustomItems.Items
 
         public override string Name { get; set; } = "TG-119";
 
-        protected override string Description { get; set; } =
+        public override string Description { get; set; } =
             "This modifier USP fires non-lethal tranquilizing darts. Those affected will be rendered unconcious for a short duration. Unreliable against SCPs. Repeated tranquilizations of the same person will render them resistant to it's effect.";
 
         protected override void LoadEvents()

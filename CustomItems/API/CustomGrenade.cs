@@ -16,7 +16,7 @@ namespace CustomItems.API
         }
 
         public abstract override string Name { get; set; }
-        protected abstract override string Description { get; set; }
+        public abstract override string Description { get; set; }
         protected virtual bool ExplodeOnCollision { get; set; }
         protected virtual float FuseTime { get; set; } = 3f;
 

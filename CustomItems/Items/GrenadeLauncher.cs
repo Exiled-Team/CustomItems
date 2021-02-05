@@ -21,7 +21,7 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "GL-119";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
-        protected override string Description { get; set; } =
+        public override string Description { get; set; } =
             "This weapon will launch grenades in the direction you are firing, instead of bullets.";
 
         protected override void LoadEvents()

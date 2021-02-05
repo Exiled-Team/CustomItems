@@ -18,7 +18,7 @@ namespace CustomItems.Items
             Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
-        protected override string Description { get; set; } =
+        public override string Description { get; set; } =
             "SCP-127 is a pistol that slowly regenerates it's ammo over time but cannot be reloaded normally.";
 
         protected override void LoadEvents()
