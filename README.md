@@ -25,6 +25,13 @@ The default config file will be named "global.yml" however, the file used can be
 
 Currently the item names, IDs and Descriptions are unable to be edited. I may add this ability in the future. The actual config values for the items should have descriptions and names that make them self-explanatory.
 
+### Commands
+Command | Arguments | Permissions | Description
+:---: | :---: | :---: | :------
+cgive | (item name/id) [player] | citems.give | Gives the specified item to the indicated player. If no player is specified it gives it to the person running the command. IN-GAME RA COMMAND ONLY.
+cspawn | (item name/id) (location) | citems.spawn | Spawns the specified item at the specified location. This location can either be one of the valid Spawn Location's below, a player's name (it spawns at their feet), or in-game coordinates.
+clist | n/a | n/a | Lists the names and ID's of all installed and enabled custom items on the server.
+
 ### Valid Spawn Location names
 The following list of locations are the only ones that are able to be used in the SpawnLocation configs for each item:
 (Their names must be typed EXACTLY as they are listed, otherwise you will probably break your item config file)
