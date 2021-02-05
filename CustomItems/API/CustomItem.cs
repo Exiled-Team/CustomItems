@@ -20,6 +20,8 @@ namespace CustomItems.API
             Id = itemId;
         }
         
+        public int Id { get; set; }
+        public ItemType ItemType { get; set; }
         public abstract string Name { get; set; }
         public abstract string Description { get; set; }
         public virtual Dictionary<SpawnLocation, float> SpawnLocations { get; set; }
@@ -147,8 +149,6 @@ namespace CustomItems.API
             ItemGiven(player);
         }
 
-        public ItemType ItemType { get; set; }
-        public int Id { get; set; }
         protected List<int> ItemIds { get; } = new List<int>();
         protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
 
