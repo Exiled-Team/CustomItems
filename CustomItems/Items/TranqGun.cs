@@ -14,8 +14,8 @@ namespace CustomItems.Items
         }
 
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Name;
-
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.SpawnLimit;
 
         protected override void LoadEvents()
         {

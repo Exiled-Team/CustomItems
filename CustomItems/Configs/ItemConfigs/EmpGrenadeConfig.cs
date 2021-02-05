@@ -29,5 +29,8 @@ namespace CustomItems.ItemConfigs
 
         [Description("The name of this item shown to players when they obtain it.")]
         public string Name { get; set; } = "EM-119";
+
+        [Description("How many of this item are allowed to naturally spawn on the map when a round starts. 0 = unlimited")]
+        public int SpawnLimit { get; set; } = 1;
     }
 }

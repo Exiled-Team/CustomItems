@@ -20,10 +20,10 @@ namespace CustomItems.API
             Id = itemId;
         }
         
-        public int Id { get; set; }
-        public ItemType ItemType { get; set; }
         public abstract string Name { get; set; }
         public abstract string Description { get; set; }
+
+        public virtual int SpawnLimit { get; set; } = 0;
         public virtual Dictionary<SpawnLocation, float> SpawnLocations { get; set; }
         
         protected virtual void LoadEvents(){}
@@ -154,15 +154,9 @@ namespace CustomItems.API
 
         protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
         protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
-
-        public static Vector3 RoomLocation(string roomName)
-        {
-            foreach (Room room in Map.Rooms)
-                if (room.Name == roomName)
-                    return room.Position;
-            
-            return Vector3.zero;
-        }
+        
+        public int Id { get; set; }
+        public ItemType ItemType { get; set; }
 
         public virtual void Init()
         {
@@ -221,17 +215,16 @@ namespace CustomItems.API
 
         private void OnAddingClass(AddClassEventArgs ev)
         {
-            if (Plugin.Singleton.Config.SubclassItems.ContainsKey(ev.Subclass.Name))
+            if (!Plugin.Singleton.Config.SubclassItems.ContainsKey(ev.Subclass.Name)) 
+                return;
+            
+            foreach ((CustomItem item, float chance) in Plugin.Singleton.Config.SubclassItems[ev.Subclass.Name])
             {
-                foreach (Tuple<CustomItem, float> item in Plugin.Singleton.Config.SubclassItems[ev.Subclass.Name])
-                {
-                    if (item.Item1.Name == Name)
-                    {
-                        int r = Plugin.Singleton.Rng.Next(100);
-                        if (r < item.Item2)
-                            Timing.CallDelayed(1.5f, () => GiveItem(ev.Player));
-                    }
-                }
+                if (item.Name != Name) 
+                    continue;
+                int r = Plugin.Singleton.Rng.Next(100);
+                if (r < chance)
+                    Timing.CallDelayed(1.5f, () => GiveItem(ev.Player));
             }
         }
 

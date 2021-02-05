@@ -15,10 +15,9 @@ namespace CustomItems.Items
         }
 
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Name;
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
-            Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLocations;
-
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLocations;
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLimit;
 
         protected override void LoadEvents()
         {

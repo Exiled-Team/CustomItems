@@ -21,8 +21,8 @@ namespace CustomItems.Items
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
-
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLimit;
 
         protected override void LoadEvents()
         {

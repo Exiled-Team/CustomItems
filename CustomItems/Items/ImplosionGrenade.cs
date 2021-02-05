@@ -17,10 +17,9 @@ namespace CustomItems.Items
         }
 
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Name;
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
-            Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLocations;
-
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLocations;
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLimit;
 
         protected override bool ExplodeOnCollision { get; set; } = true;
 

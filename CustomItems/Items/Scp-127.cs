@@ -14,11 +14,9 @@ namespace CustomItems.Items
         }
 
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
-            Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
-        private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
-
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLimit;
 
         protected override void LoadEvents()
         {
@@ -52,7 +50,9 @@ namespace CustomItems.Items
                 Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
         }
 
-        IEnumerator<float> DoInventoryRegeneration(Player player)
+        private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
+        
+        private IEnumerator<float> DoInventoryRegeneration(Player player)
         {
             for (;;)
             {
@@ -80,7 +80,7 @@ namespace CustomItems.Items
             }
         }
 
-        IEnumerator<float> DoAmmoRegeneration()
+        private IEnumerator<float> DoAmmoRegeneration()
         {
             for (;;)
             {

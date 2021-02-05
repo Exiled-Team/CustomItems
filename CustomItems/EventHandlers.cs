@@ -66,17 +66,20 @@ namespace CustomItems
         {
             foreach (CustomItem item in plugin.ItemManagers)
             {
-                if (item.SpawnLocations != null)
+                if (item.SpawnLocations == null) 
+                    continue;
+
+                int count = 0;
+                
+                foreach (KeyValuePair<SpawnLocation, float> spawn in item.SpawnLocations)
                 {
-                    foreach (KeyValuePair<SpawnLocation, float> spawn in item.SpawnLocations)
-                    {
-                        Log.Debug($"Attempting to spawn {item.Name} at {spawn.Key}", plugin.Config.Debug);
-                        if (plugin.Rng.Next(100) <= spawn.Value)
-                        {
-                            item.SpawnItem(spawn.Key.TryGetLocation());
-                            Log.Debug($"Spawned {item.Name} at {spawn.Key}", plugin.Config.Debug);
-                        }
-                    }
+                    Log.Debug($"Attempting to spawn {item.Name} at {spawn.Key}", plugin.Config.Debug);
+                    if (plugin.Rng.Next(100) >= spawn.Value || (item.SpawnLimit > 0 && count >= item.SpawnLimit)) 
+                        continue;
+
+                    count++;
+                    item.SpawnItem(spawn.Key.TryGetLocation());
+                    Log.Debug($"Spawned {item.Name} at {spawn.Key}", plugin.Config.Debug);
                 }
             }
         }

@@ -11,7 +11,7 @@ namespace CustomItems.API
 {
     public abstract class CustomGrenade : CustomItem
     {
-        public CustomGrenade(ItemType type, int itemId) : base(type, itemId)
+        protected CustomGrenade(ItemType type, int itemId) : base(type, itemId)
         {
         }
 

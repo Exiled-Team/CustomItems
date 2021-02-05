@@ -18,8 +18,8 @@ namespace CustomItems.Items
         
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations;
-
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLimit;
 
         protected override bool ExplodeOnCollision { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.ExplodeOnCollision;
         protected override float FuseTime { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.FuseDuration;

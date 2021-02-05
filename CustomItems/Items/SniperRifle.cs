@@ -11,10 +11,9 @@ namespace CustomItems.Items
         }
 
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Name;
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
-            Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
-
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.SpawnLimit;
         
         protected override int ModBarrel { get; set; } = 3;
         
