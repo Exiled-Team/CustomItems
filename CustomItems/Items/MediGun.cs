@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CustomItems.API;
 using Exiled.API.Extensions;
@@ -65,7 +66,7 @@ namespace CustomItems.Items
                     float damage = num4 * ev.Shooter.ReferenceHub.weaponManager.weapons[ev.Shooter.ReferenceHub.weaponManager.curWeapon].allEffects.damageMultiplier * ev.Shooter.ReferenceHub.weaponManager.overallDamagerFactor;
                     
                     if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
-                        player.Health += (damage * Plugin.Singleton.Config.ItemConfigs.MediCfg.HealingModifier);
+                        player.Health += Math.Max(damage * Plugin.Singleton.Config.ItemConfigs.MediCfg.HealingModifier, player.MaxHealth);
                     else if (player.Role == RoleType.Scp0492 && Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                     {
                         player.MaxAdrenalineHealth = Plugin.Singleton.Config.ItemConfigs.MediCfg.ZombieHealingRequired;
