@@ -28,6 +28,7 @@ Currently the item names, IDs and Descriptions are unable to be edited. I may ad
 ### Valid Spawn Location names
 The following list of locations are the only ones that are able to be used in the SpawnLocation configs for each item:
 (Their names must be typed EXACTLY as they are listed, otherwise you will probably break your item config file)
+```
 Inside012
 Inside012Bottom
 Inside012Locker
@@ -56,6 +57,7 @@ InsideHidLeft
 InsideHidRight
 InsideLczWc
 InsideServersBottom
+```
 
 ### API Notes **(FOR DEVELOPERS ONLY)**
 Tl;dr - All you need to do is make a class that inherits CustomItem, CustomWeapon or CustomGrenade (depending on what kind of item you're making), override LoadEvents() and UnloadEvents() to register event handlers to the weapon, then inside the event handlers, start everything with
