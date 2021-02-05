@@ -12,8 +12,8 @@ namespace CustomItems.API
             ClipSize = clipSize;
         }
 
-        public abstract override string ItemName { get; set; }
-        protected abstract override string ItemDescription { get; set; }
+        public abstract override string Name { get; set; }
+        public abstract override string Description { get; set; }
         protected virtual int ClipSize { get; set; }
         
         protected virtual int ModBarrel { get; set; } = 0;
@@ -37,7 +37,7 @@ namespace CustomItems.API
             if (CheckItem(ev.Player.CurrentItem))
             {
                 ev.IsAllowed = false;
-                Log.Debug($"{ev.Player.Nickname} is reloading a {ItemName}!", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", Plugin.Singleton.Config.Debug);
                 int remainingInClip = ClipSize - (int) ev.Player.CurrentItem.durability;
                 int currentAmmoAmount = (int)ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType];
                 int amountToReload = ClipSize - remainingInClip;

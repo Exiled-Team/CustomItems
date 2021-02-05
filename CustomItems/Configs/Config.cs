@@ -77,7 +77,7 @@ namespace CustomItems.Configs
                 {
                     CustomItem item = null;
                     foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
-                        if (cItem.ItemName == itemChance.Key)
+                        if (cItem.Name == itemChance.Key)
                             item = cItem;
                     if (item == null)
                     {

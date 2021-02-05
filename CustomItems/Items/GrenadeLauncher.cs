@@ -18,10 +18,10 @@ namespace CustomItems.Items
         {
         }
         
-        public override string ItemName { get; set; } = "GL-119";
+        public override string Name { get; set; } = "GL-119";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
-        protected override string ItemDescription { get; set; } =
+        public override string Description { get; set; } =
             "This weapon will launch grenades in the direction you are firing, instead of bullets.";
 
         protected override void LoadEvents()
@@ -43,7 +43,7 @@ namespace CustomItems.Items
                 if (Plugin.Singleton.Config.ItemConfigs.GlCfg.UseGrenades)
                 {
                     ev.IsAllowed = false;
-                    Log.Debug($"{ev.Player.Nickname} is reloading a {ItemName}!", Plugin.Singleton.Config.Debug);
+                    Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", Plugin.Singleton.Config.Debug);
                     foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items.ToList())
                     {
                         if (item.id == ItemType.GrenadeFrag)
@@ -52,7 +52,7 @@ namespace CustomItems.Items
                             Reload(ev.Player);
 
                             ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
-                            Log.Debug($"{ev.Player.Nickname} successfully reloaded a {ItemName}.",
+                            Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.",
                                 Plugin.Singleton.Config.Debug);
                             Timing.CallDelayed(4.5f, () => { Reload(ev.Player); });
                             ev.Player.RemoveItem(item);
@@ -61,7 +61,7 @@ namespace CustomItems.Items
                         }
                     }
 
-                    Log.Debug($"{ev.Player.Nickname} was unable to reload their {ItemName} - No grenades in inventory.",
+                    Log.Debug($"{ev.Player.Nickname} was unable to reload their {Name} - No grenades in inventory.",
                         Plugin.Singleton.Config.Debug);
                 }
                 else

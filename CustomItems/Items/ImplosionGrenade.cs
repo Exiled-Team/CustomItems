@@ -16,10 +16,10 @@ namespace CustomItems.Items
         {
         }
         
-        public override string ItemName { get; set; } = "IG-119";
+        public override string Name { get; set; } = "IG-119";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLocations;
-        protected override string ItemDescription { get; set; } =
+        public override string Description { get; set; } =
             "This grenade does almost 0 damage, however it will succ nearby players towards the center of the implosion area.";
 
         protected override bool ExplodeOnCollision { get; set; } = true;
