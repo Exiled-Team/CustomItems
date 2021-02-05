@@ -13,11 +13,12 @@ namespace CustomItems.Commands
         {
             string message = string.Empty;
             foreach (CustomItem item in Plugin.Singleton.ItemManagers)
-                message += $"{item.ItemName}({item.ItemId})\n";
+                message += $"<color=#e6ac00>-</color> <color=#00d639>{item.ItemName}</color> <color=#05c4eb>({item.ItemId})</color>\n";
 
             if (string.IsNullOrEmpty(message))
                 response = "There are no custom items currently on this server.";
-            response = message;
+            else 
+                response = message;
 
             return true;
         }

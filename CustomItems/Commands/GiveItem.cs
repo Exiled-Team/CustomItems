@@ -50,15 +50,6 @@ namespace CustomItems.Commands
                     return false;
                 }
             }
-
-            if (int.TryParse(args[1], out int id))
-            {
-                player.GiveItem(id);
-
-                response = "Done.";
-
-                return true;
-            }
             
             if (player.GiveItem(args[1]))
             {

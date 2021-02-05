@@ -49,25 +49,13 @@ namespace CustomItems.API
         {
             foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
             {
-                if (cItem.ItemName == name)
+                if (cItem.ItemId.Equals(name, System.StringComparison.OrdinalIgnoreCase) || 
+                    cItem.ItemName.Equals(name, System.StringComparison.OrdinalIgnoreCase))
                 {
                     item = cItem;
                     return true;
                 }
             }
-
-            item = null;
-            return false;
-        }
-
-        public static bool TryGetItem(int id, out CustomItem item)
-        {
-            foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
-                if (cItem.ItemId == id)
-                {
-                    item = cItem;
-                    return true;
-                }
 
             item = null;
             return false;
@@ -85,31 +73,11 @@ namespace CustomItems.API
             return true;
         }
 
-        public static bool GiveItem(this Player player, int id)
-        {
-            if (!TryGetItem(id, out CustomItem item))
-                return false;
-            
-            item.GiveItem(player);
-
-            return true;
-        }
-
         public static void SpawnItem(this CustomItem item, Vector3 position) => item.SpawnItem(position);
 
         public static bool SpawnItem(string name, Vector3 position)
         {
             if (!TryGetItem(name, out CustomItem item)) 
-                return false;
-            
-            item.SpawnItem(position);
-
-            return true;
-        }
-
-        public static bool SpawnItem(int id, Vector3 position)
-        {
-            if (!TryGetItem(id, out CustomItem item))
                 return false;
             
             item.SpawnItem(position);

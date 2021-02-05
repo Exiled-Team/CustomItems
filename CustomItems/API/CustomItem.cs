@@ -9,20 +9,21 @@ using Interactables.Interobjects.DoorUtils;
 using MEC;
 using UnityEngine;
 using Utf8Json.Resolvers.Internal;
+using Exiled.API.Interfaces;
 
 namespace CustomItems.API
 {
     public abstract class CustomItem
     {
-        protected CustomItem(ItemType type, int itemId)
+        protected CustomItem(IPlugin<IConfig> plugin, ItemType type, string itemId)
         {
             ItemType = type;
-            ItemId = itemId;
+            ItemId = $"{plugin.Prefix}_{itemId}";
         }
         
         
         public abstract string ItemName { get; set; }
-        protected abstract string ItemDescription { get; set; }
+        public abstract string ItemDescription { get; set; }
         public virtual Dictionary<SpawnLocation, float> SpawnLocations { get; set; }
         
         protected virtual void LoadEvents(){}
@@ -149,7 +150,7 @@ namespace CustomItems.API
         }
 
         public ItemType ItemType { get; set; }
-        public int ItemId { get; set; }
+        public string ItemId { get; set; }
         protected List<int> ItemIds { get; } = new List<int>();
         protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
 
