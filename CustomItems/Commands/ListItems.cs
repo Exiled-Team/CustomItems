@@ -17,7 +17,8 @@ namespace CustomItems.Commands
 
             if (string.IsNullOrEmpty(message))
                 response = "There are no custom items currently on this server.";
-            response = message;
+            else
+                response = message;
 
             return true;
         }
