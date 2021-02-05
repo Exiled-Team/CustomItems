@@ -70,11 +70,11 @@ namespace CustomItems
                 {
                     foreach (KeyValuePair<SpawnLocation, float> spawn in item.SpawnLocations)
                     {
-                        Log.Debug($"Attempting to spawn {item.ItemName} at {spawn.Key}", plugin.Config.Debug);
+                        Log.Debug($"Attempting to spawn {item.Name} at {spawn.Key}", plugin.Config.Debug);
                         if (plugin.Rng.Next(100) <= spawn.Value)
                         {
                             item.SpawnItem(spawn.Key.TryGetLocation());
-                            Log.Debug($"Spawned {item.ItemName} at {spawn.Key}", plugin.Config.Debug);
+                            Log.Debug($"Spawned {item.Name} at {spawn.Key}", plugin.Config.Debug);
                         }
                     }
                 }

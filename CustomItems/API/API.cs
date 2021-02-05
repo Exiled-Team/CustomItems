@@ -12,23 +12,23 @@ namespace CustomItems.API
         {
             if (!Plugin.Singleton.ItemManagers.Contains(item))
             {
-                if (item.ItemName.Contains(":"))
+                if (item.Name.Contains(":"))
                 {
-                    string newName = item.ItemName.Replace(":", "");
-                    Log.Warn($"{item.ItemName} contains an invalid character and will be renamed to {newName}");
-                    item.ItemName = newName;
+                    string newName = item.Name.Replace(":", "");
+                    Log.Warn($"{item.Name} contains an invalid character and will be renamed to {newName}");
+                    item.Name = newName;
                 }
 
-                if (Plugin.Singleton.ItemManagers.Any(i => i.ItemId == item.ItemId))
+                if (Plugin.Singleton.ItemManagers.Any(i => i.Id == item.Id))
                 {
-                    Log.Error($"{item.ItemName} has tried to register with the same ItemID as another item: {item.ItemId}. It will not be registered.");
+                    Log.Error($"{item.Name} has tried to register with the same ItemID as another item: {item.Id}. It will not be registered.");
 
                     return false;
                 }
                 
                 Plugin.Singleton.ItemManagers.Add(item);
                 item.Init();
-                Log.Debug($"{item.ItemName} ({item.ItemId}) has been successfully registered.", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{item.Name} ({item.Id}) has been successfully registered.", Plugin.Singleton.Config.Debug);
                 return true;
             }
 
@@ -49,7 +49,7 @@ namespace CustomItems.API
         {
             foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
             {
-                if (cItem.ItemName == name)
+                if (cItem.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
                 {
                     item = cItem;
                     return true;
@@ -63,7 +63,7 @@ namespace CustomItems.API
         public static bool TryGetItem(int id, out CustomItem item)
         {
             foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
-                if (cItem.ItemId == id)
+                if (cItem.Id == id)
                 {
                     item = cItem;
                     return true;

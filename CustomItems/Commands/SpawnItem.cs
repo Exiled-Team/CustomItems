@@ -50,7 +50,7 @@ namespace CustomItems.Commands
             }
             
             item.SpawnItem(spawnPos);
-            response = $"{item.ItemName} has been spawned at {spawnPos}.";
+            response = $"{item.Name} has been spawned at {spawnPos}.";
             
             return true;
         }

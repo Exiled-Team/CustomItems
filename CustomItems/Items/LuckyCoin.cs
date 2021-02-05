@@ -13,10 +13,10 @@ namespace CustomItems.Items
         {
         }
 
-        public override string ItemName { get; set; } = "Lucky Coin";
+        public override string Name { get; set; } = "Lucky Coin";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnLocations;
-        protected override string ItemDescription { get; set; } =
+        protected override string Description { get; set; } =
             "This coin has magical properties when it is dropped inside of SCP-106's pocket dimension.";
 
         protected override void LoadEvents()
@@ -51,7 +51,7 @@ namespace CustomItems.Items
             {
                 if (ev.Player.CurrentRoom.Name == "PocketWorld")
                 {
-                    Log.Debug($"{ItemName} has been dropped in the Pocket Dimension.", Plugin.Singleton.Config.Debug);
+                    Log.Debug($"{Name} has been dropped in the Pocket Dimension.", Plugin.Singleton.Config.Debug);
                     isDropped = true;
                 }
             }

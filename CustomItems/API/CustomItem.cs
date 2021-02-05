@@ -17,12 +17,11 @@ namespace CustomItems.API
         protected CustomItem(ItemType type, int itemId)
         {
             ItemType = type;
-            ItemId = itemId;
+            Id = itemId;
         }
         
-        
-        public abstract string ItemName { get; set; }
-        protected abstract string ItemDescription { get; set; }
+        public abstract string Name { get; set; }
+        public abstract string Description { get; set; }
         public virtual Dictionary<SpawnLocation, float> SpawnLocations { get; set; }
         
         protected virtual void LoadEvents(){}
@@ -126,7 +125,7 @@ namespace CustomItems.API
                 }
         }
 
-        protected virtual void ShowMessage(Player player) => player.ShowHint($"You have picked up a {ItemName}\n{ItemDescription}", 10f);
+        protected virtual void ShowMessage(Player player) => player.ShowHint($"You have picked up a {Name}\n{Description}", 10f);
 
         protected virtual void ItemGiven(Player player){}
         
@@ -149,7 +148,7 @@ namespace CustomItems.API
         }
 
         public ItemType ItemType { get; set; }
-        public int ItemId { get; set; }
+        public int Id { get; set; }
         protected List<int> ItemIds { get; } = new List<int>();
         protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
 
@@ -226,7 +225,7 @@ namespace CustomItems.API
             {
                 foreach (Tuple<CustomItem, float> item in Plugin.Singleton.Config.SubclassItems[ev.Subclass.Name])
                 {
-                    if (item.Item1.ItemName == ItemName)
+                    if (item.Item1.Name == Name)
                     {
                         int r = Plugin.Singleton.Rng.Next(100);
                         if (r < item.Item2)
@@ -236,6 +235,6 @@ namespace CustomItems.API
             }
         }
 
-        public override string ToString() => $"[{ItemName}] {ItemDescription} {ItemType}";
+        public override string ToString() => $"[{Name} ({Id})] {Description} {ItemType}";
     }
 }

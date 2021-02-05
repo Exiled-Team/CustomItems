@@ -13,12 +13,12 @@ namespace CustomItems.Items
             Coroutines.Add(Timing.RunCoroutine(DoAmmoRegeneration()));
         }
         
-        public override string ItemName { get; set; } = "SCP-127";
+        public override string Name { get; set; } = "SCP-127";
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
-        protected override string ItemDescription { get; set; } =
+        protected override string Description { get; set; } =
             "SCP-127 is a pistol that slowly regenerates it's ammo over time but cannot be reloaded normally.";
 
         protected override void LoadEvents()
