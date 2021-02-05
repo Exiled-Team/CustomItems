@@ -22,8 +22,8 @@ namespace CustomItems
         public override string Author { get; } = "Galaxy119";
         public override string Name { get; } = "CustomItems";
         public override string Prefix { get; } = "CustomItems";
-        public override Version Version { get; } = new Version(1, 3, 1);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 29);
+        public override Version Version { get; } = new Version(1, 4, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 30);
 
         public Methods Methods { get; private set; }
         public EventHandlers EventHandlers { get; private set; }

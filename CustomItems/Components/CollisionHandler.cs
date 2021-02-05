@@ -1,3 +1,5 @@
+using System;
+using Exiled.API.Features;
 using Grenades;
 using UnityEngine;
 
@@ -10,9 +12,16 @@ namespace CustomItems
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject == owner || collision.gameObject.GetComponent<Grenade>() != null)
-                return;
-            grenade.NetworkfuseTime = 0.1f;
+            try
+            {
+                if (collision.gameObject == owner || collision.gameObject.GetComponent<Grenade>() != null)
+                    return;
+                grenade.NetworkfuseTime = 0.1f;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"CollisionHandler: {e.Message}\n{e.StackTrace}");
+            }
         }
     }
 }
