@@ -20,5 +20,14 @@ namespace CustomItems.ItemConfigs
         
         [Description("How often each suction tick will occus. Note: Setting the tick-rate and suction-per-tick to lower numbers maks for a 'smoother' suction movement, however causes more stress on your server. Adjust accordingly.")]
         public float SuctionTickRate { get; set; } = 0.025f;
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 3;
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "This grenade does almost 0 damage, however it will succ nearby players towards the center of the implosion area.";
+
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "IG-119";
     }
 }

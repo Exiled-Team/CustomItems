@@ -23,5 +23,14 @@ namespace CustomItems.ItemConfigs
         
         [Description("The max duration of the fuse of grenades shot from the weapon. Note, these grenades will always explode immediatly when they collide with something, but this can be used with slow-moving grenades to cause mid-air explosions.")]
         public float FuseTime { get; set; } = 1f;
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 2;
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "This weapon will launch grenades in the direction you are firing, instead of bullets.";
+
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "GL-119";
     }
 }

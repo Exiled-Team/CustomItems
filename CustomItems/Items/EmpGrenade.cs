@@ -16,10 +16,10 @@ namespace CustomItems.Items
         {
         }
         
-        public override string Name { get; set; } = "EM-119";
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations;
-        public override string Description { get; set; } =
-            "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
+
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Description;
 
         protected override bool ExplodeOnCollision { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.ExplodeOnCollision;
         protected override float FuseTime { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.FuseDuration;

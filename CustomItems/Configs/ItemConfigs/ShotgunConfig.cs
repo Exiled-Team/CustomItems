@@ -23,5 +23,14 @@ namespace CustomItems.ItemConfigs
         
         [Description("Damage is reduced for every 1f away from the shooter the target is. This number signifies how much damage is 'carried over'. By default (0.9), every 1f further away, the damage each pellet can deal is reduced by 10%.")]
         public float DamageFalloffModifier { get; set; } = 0.9f;
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 8;
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles in front of you.";
+
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "SG-119";
     }
 }

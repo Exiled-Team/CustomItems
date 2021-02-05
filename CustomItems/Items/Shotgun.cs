@@ -13,12 +13,12 @@ namespace CustomItems.Items
         public Shotgun(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
         {
         }
-        
-        public override string Name { get; set; } = "SG-119";
+
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLocations;
-        public override string Description { get; set; } =
-            "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles infront of you.";
+
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
 
         protected override void LoadEvents()
         {

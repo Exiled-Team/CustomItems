@@ -8,8 +8,7 @@ using UnityEngine;
 
 namespace CustomItems.Commands
 {
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler)),CommandHandler(typeof(GameConsoleCommandHandler))]
     public class SpawnItem : ICommand
     {
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

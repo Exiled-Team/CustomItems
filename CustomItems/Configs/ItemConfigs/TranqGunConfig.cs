@@ -29,5 +29,14 @@ namespace CustomItems.ItemConfigs
         
         [Description("The percent chance an SCP will resist being tranquilized. This has no effect if ResistantScps is false.")]
         public int ScpResistChance { get; set; } = 40;
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 10;
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "This modifier USP fires non-lethal tranquilizing darts. Those affected will be rendered unconscious for a short duration. Unreliable against SCPs. Repeated tranquilizing of the same person will render them resistant to it's effect.";
+
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "TG-119";
     }
 }

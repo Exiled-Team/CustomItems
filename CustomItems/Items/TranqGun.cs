@@ -13,10 +13,9 @@ namespace CustomItems.Items
         {
         }
 
-        public override string Name { get; set; } = "TG-119";
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Name;
 
-        public override string Description { get; set; } =
-            "This modifier USP fires non-lethal tranquilizing darts. Those affected will be rendered unconcious for a short duration. Unreliable against SCPs. Repeated tranquilizations of the same person will render them resistant to it's effect.";
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Description;
 
         protected override void LoadEvents()
         {

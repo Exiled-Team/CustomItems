@@ -5,8 +5,7 @@ using Exiled.Permissions.Extensions;
 
 namespace CustomItems.Commands
 {
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler)),CommandHandler(typeof(GameConsoleCommandHandler))]
     public class ListItems : ICommand
     {
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -15,10 +14,7 @@ namespace CustomItems.Commands
             foreach (CustomItem item in Plugin.Singleton.ItemManagers)
                 message += $"{item.Name}({item.Id})\n";
 
-            if (string.IsNullOrEmpty(message))
-                response = "There are no custom items currently on this server.";
-            else
-                response = message;
+            response = string.IsNullOrEmpty(message) ? "There are no custom items currently on this server." : message;
 
             return true;
         }

@@ -17,12 +17,12 @@ namespace CustomItems.Items
         public GrenadeLauncher(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
         {
         }
-        
-        public override string Name { get; set; } = "GL-119";
+
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
-        public override string Description { get; set; } =
-            "This weapon will launch grenades in the direction you are firing, instead of bullets.";
+
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
 
         protected override void LoadEvents()
         {

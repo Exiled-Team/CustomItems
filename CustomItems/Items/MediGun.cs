@@ -13,11 +13,11 @@ namespace CustomItems.Items
         {
         }
 
-        public override string Name { get; set; } = "MG-119";
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnLocations;
-        public override string Description { get; set; } =
-            "A specialized weapon that fires darts filled with a special mixture of Painkillers, Antibiotics, Antiseptics and other medicines. When fires at friendly targets, they will be healed. When fired at instances of SCP-049-2, they will be slowly converted back to human form. Does nothing when fired at anyone else.";
+
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
 
         protected override void LoadEvents()
         {

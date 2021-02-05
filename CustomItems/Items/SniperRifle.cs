@@ -9,13 +9,15 @@ namespace CustomItems.Items
         public SniperRifle(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
         {
         }
-        
-        public override string Name { get; set; } = "SR-119";
+
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
-        public override string Description { get; set; } =
-            "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
+
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;
+        
         protected override int ModBarrel { get; set; } = 3;
+        
         protected override int ModSight { get; set; } = 4;
 
         protected override void LoadEvents()

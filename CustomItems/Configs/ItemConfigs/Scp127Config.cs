@@ -20,5 +20,14 @@ namespace CustomItems.ItemConfigs
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 7;
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "SCP-127 is a pistol that slowly regenerates it's ammo over time but cannot be reloaded normally.";
+
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "SCP-127";
     }
 }

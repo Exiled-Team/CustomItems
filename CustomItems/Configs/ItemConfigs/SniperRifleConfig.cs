@@ -17,5 +17,14 @@ namespace CustomItems.ItemConfigs
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>();
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 9;
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
+
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "SR-119";
     }
 }

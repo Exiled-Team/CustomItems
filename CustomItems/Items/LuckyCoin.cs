@@ -13,11 +13,11 @@ namespace CustomItems.Items
         {
         }
 
-        public override string Name { get; set; } = "Lucky Coin";
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Name;
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } =
             Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnLocations;
-        public override string Description { get; set; } =
-            "This coin has magical properties when it is dropped inside of SCP-106's pocket dimension.";
+
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Description;
 
         protected override void LoadEvents()
         {
