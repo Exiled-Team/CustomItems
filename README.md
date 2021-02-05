@@ -8,16 +8,16 @@ Secondly, This plugin also provides a very powerful API for other developers to 
 ### Item list
 ItemName | ItemID | Description
 :---: | :---: | :------
-SG-119 | 1 | A shotgun. Fairly self-explanatory.
+EM-119 | 1 | An EMP Grenade. This grenade acts similar to an Implosion grenade, however when it detonates, all of the doors in the room it is in are locked open, and the lights disabled for a few seconds. If SCP-079 is present in the room, it will send him back to his spawn camera. Also disabled all speakers in the facility temporarily. 
 GL-119 | 2 | A grenade launcher. This weapon shoots grenades that explode on impact with anything, instead of bullets.
-SR-119 | 3 | A sniper rifle. Also self-explanatory.
-SCP-127 | 4 | A gun that slowly regenerates it's clip over time, but trying to reload it normally has no effect.
-IM-119 | 5 | An Implosion Grenade. This grenade will act similar to a normal Frag grenade, however it has an extremely short fuse, and does very low damage. Upon exploding, anyone within the explosion will be quickly drawn in towards the center of the explosion for a few seconds.
-EM-119 | 6 | An EMP Grenade. This grenade acts similar to an Implosion grenade, however when it detonates, all of the doors in the room it is in are locked open, and the lights disabled for a few seconds. If SCP-079 is present in the room, it will send him back to his spawn camera. Also disabled all speakers in the facility temporarily. 
-LJ-119 | 7 | An injection of lethal chemicals that, when injected, immediately kills the user. If the user happens to be the target of a currently enraged SCP-096, the SCP-096 will immediately calm down, regardless of how many other targets they may or may not have.
-MG-119 | 8 | This gun is modified to fire self-injecting projectile darts. When fired at friendly targets, it will heal them. When fired at SCP-049-2, it will slowly begin to 'cure' them, repeated applications will eventually revert the SCP-049-2 to their human state. Has no effect on other hostile targets.
-TG-119 | 9 | This gun is also modified to fire self-injecting projectile darts. When fired at a hostile target, it will tranquilize them, rendering them unconcious for several seconds.
-LC-119 | 10 | This coin, when dropped while inside the Pocket Dimension, will immediately vanish. For the remainder of the round, whenever a player enters the Pocket Dimension, the coin will spawn infront of one of the correct entrances for a few seconds before vanishing again. This effect has a cooldown.
+IG-119 | 3 | An Implosion Grenade. This grenade will act similar to a normal Frag grenade, however it has an extremely short fuse, and does very low damage. Upon exploding, anyone within the explosion will be quickly drawn in towards the center of the explosion for a few seconds.
+LJ-119 | 4 | An injection of lethal chemicals that, when injected, immediately kills the user. If the user happens to be the target of a currently enraged SCP-096, the SCP-096 will immediately calm down, regardless of how many other targets they may or may not have.
+LC-119 | 5 | This coin, when dropped while inside the Pocket Dimension, will immediately vanish. For the remainder of the round, whenever a player enters the Pocket Dimension, the coin will spawn infront of one of the correct entrances for a few seconds before vanishing again. This effect has a cooldown.
+MG-119 | 6 | This gun is modified to fire self-injecting projectile darts. When fired at friendly targets, it will heal them. When fired at SCP-049-2, it will slowly begin to 'cure' them, repeated applications will eventually revert the SCP-049-2 to their human state. Has no effect on other hostile targets.
+SCP-127 | 7 | A gun that slowly regenerates it's clip over time, but trying to reload it normally has no effect.
+SG-119 | 8 | A shotgun. Fairly self-explanatory.
+SR-119 | 9 | A sniper rifle. Also self-explanatory.
+TG-119 | 10 | This gun is also modified to fire self-injecting projectile darts. When fired at a hostile target, it will tranquilize them, rendering them unconcious for several seconds.
 
 ### Item Configs
 Config settings for the individual items will ***NOT*** be found in the default plugin config file. Instead they will be located in ~/.config/EXILED/Configs/CustomItems on Linux or %AppData%\EXILED\Configs\CustomItems on Winblows.
@@ -30,6 +30,7 @@ Command | Arguments | Permissions | Description
 :---: | :---: | :---: | :------
 cgive | (item name/id) [player] | citems.give | Gives the specified item to the indicated player. If no player is specified it gives it to the person running the command. IN-GAME RA COMMAND ONLY.
 cspawn | (item name/id) (location) | citems.spawn | Spawns the specified item at the specified location. This location can either be one of the valid Spawn Location's below, a player's name (it spawns at their feet), or in-game coordinates.
+cinfo | (item name/id) | n/a | Prints a more detailed list of info about a specific item, including name, id, description and spawn locations + chances.
 clist | n/a | n/a | Lists the names and ID's of all installed and enabled custom items on the server.
 
 ### Valid Spawn Location names
