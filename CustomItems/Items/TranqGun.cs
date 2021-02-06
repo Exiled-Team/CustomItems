@@ -59,12 +59,13 @@ namespace CustomItems.Items
             if (Plugin.Singleton.Config.ItemConfigs.TranqCfg.DropItems)
                 player.DropItems();
 
-            Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
+            Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
             player.Position = new Vector3(0, 0, 0);
 
             yield return Timing.WaitForSeconds(duration);
 
             player.Position = pos;
+            Object.Destroy(ragdoll.gameObject);
         }
     }
 }

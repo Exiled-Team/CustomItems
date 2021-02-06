@@ -50,8 +50,10 @@ namespace CustomItems.Items
             {
                 if (ev.Player.CurrentRoom.Name == "PocketWorld")
                 {
+                    ev.IsAllowed = false;
                     Log.Debug($"{Name} has been dropped in the Pocket Dimension.", Plugin.Singleton.Config.Debug);
                     isDropped = true;
+                    ev.Player.RemoveItem(ev.Item);
                 }
                 else
                     base.OnDroppingItem(ev);

@@ -73,8 +73,8 @@
         <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\References\Mirror.dll</HintPath>
         </Reference>
-        <Reference Include="Subclass-1.3.2, Version=1.3.2.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\..\Desktop\Subclass-1.3.2.dll</HintPath>
+        <Reference Include="Subclass, Version=1.3.3.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\..\Drivers\Subclass.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
