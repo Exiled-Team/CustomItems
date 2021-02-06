@@ -114,6 +114,7 @@
         <Compile Include="Configs\ItemConfigs\LuckCoinConfig.cs" />
         <Compile Include="Configs\ItemConfigs\MediGunConfig.cs" />
         <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
+        <Compile Include="Configs\ItemConfigs\Scp1499Config.cs" />
         <Compile Include="Configs\ItemConfigs\ShotgunConfig.cs" />
         <Compile Include="Configs\ItemConfigs\SniperRifleConfig.cs" />
         <Compile Include="Configs\ItemConfigs\TranqGunConfig.cs" />
@@ -125,6 +126,7 @@
         <Compile Include="Items\LuckyCoin.cs" />
         <Compile Include="Items\MediGun.cs" />
         <Compile Include="Items\Scp-127.cs" />
+        <Compile Include="Items\Scp1499.cs" />
         <Compile Include="Items\Shotgun.cs" />
         <Compile Include="Items\SniperRifle.cs" />
         <Compile Include="Items\ImplosionGrenade.cs" />
