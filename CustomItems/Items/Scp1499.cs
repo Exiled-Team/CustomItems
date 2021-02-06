@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CustomItems.Items
 {
-    class Scp1499 : CustomItem
+    public class Scp1499 : CustomItem
     {
         public Scp1499(ItemType type, int itemId) : base(type, itemId)
         {
@@ -53,14 +53,17 @@ namespace CustomItems.Items
                 ev.Player.Position = new UnityEngine.Vector3(152.93f, 978.03f, 93.64f);
                 ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
 
-                Timing.CallDelayed(15f, () =>
+                if (Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
                 {
-                    if (scp1499Players.ContainsKey(ev.Player))
+                    Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration, () =>
                     {
-                        ev.Player.Position = scp1499Players[ev.Player];
-                        scp1499Players.Remove(ev.Player);
-                    }
-                });
+                        if (scp1499Players.ContainsKey(ev.Player))
+                        {
+                            ev.Player.Position = scp1499Players[ev.Player];
+                            scp1499Players.Remove(ev.Player);
+                        }
+                    });
+                }
             }
         }
 
