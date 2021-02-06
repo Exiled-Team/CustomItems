@@ -1,149 +1,141 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{68FA2E9D-7C31-4906-8E65-075F119A29D9}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>CustomItems</RootNamespace>
-        <AssemblyName>CustomItems</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="0Harmony, Version=2.0.1.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\0Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\Assembly-CSharp-Publicized.dll</HintPath>
-        </Reference>
-        <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\Assembly-CSharp-firstpass.dll</HintPath>
-        </Reference>
-        <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\CommandSystem.Core.dll</HintPath>
-        </Reference>
-        <Reference Include="Exiled.API, Version=2.1.28.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\EXILED.2.1.28\lib\net472\Exiled.API.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="Exiled.Bootstrap, Version=2.1.28.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\EXILED.2.1.28\lib\net472\Exiled.Bootstrap.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="Exiled.Events, Version=2.1.28.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\EXILED.2.1.28\lib\net472\Exiled.Events.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="Exiled.Loader, Version=2.1.28.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\EXILED.2.1.28\lib\net472\Exiled.Loader.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="Exiled.Permissions, Version=2.1.28.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\EXILED.2.1.28\lib\net472\Exiled.Permissions.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="Exiled.Updater, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\EXILED.2.1.28\lib\net472\Exiled.Updater.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\Mirror.dll</HintPath>
-        </Reference>
-        <Reference Include="Subclass, Version=1.3.3.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\..\Drivers\Subclass.dll</HintPath>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\UnityEngine.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\References\UnityEngine.PhysicsModule.dll</HintPath>
-        </Reference>
-        <Reference Include="YamlDotNet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
-          <HintPath>..\..\EXILED\bin\Release\YamlDotNet.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="API\API.cs" />
-        <Compile Include="API\CustomGrenade.cs" />
-        <Compile Include="API\CustomItem.cs" />
-        <Compile Include="API\CustomWeapon.cs" />
-        <Compile Include="API\SpawnLocation.cs" />
-        <Compile Include="API\SpawnLocationData.cs" />
-        <Compile Include="Commands\GiveItem.cs" />
-        <Compile Include="Commands\ItemInfo.cs" />
-        <Compile Include="Commands\ListItems.cs" />
-        <Compile Include="Commands\SpawnItem.cs" />
-        <Compile Include="Components\CollisionHandler.cs" />
-        <Compile Include="Configs\Config.cs" />
-        <Compile Include="Configs\ItemConfigs.cs" />
-        <Compile Include="Configs\ItemConfigs\EmpGrenadeConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\GrenadeLauncherConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\ImplosionGrenadeConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\LethalInjectionConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\LuckCoinConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\MediGunConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
-        <Compile Include="Configs\ItemConfigs\ShotgunConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\SniperRifleConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\TranqGunConfig.cs" />
-        <Compile Include="EventHandlers.cs" />
-        <Compile Include="Events\AddClassEvent.cs" />
-        <Compile Include="Items\EmpGrenade.cs" />
-        <Compile Include="Items\GrenadeLauncher.cs" />
-        <Compile Include="Items\LethalInjection.cs" />
-        <Compile Include="Items\LuckyCoin.cs" />
-        <Compile Include="Items\MediGun.cs" />
-        <Compile Include="Items\Scp-127.cs" />
-        <Compile Include="Items\Shotgun.cs" />
-        <Compile Include="Items\SniperRifle.cs" />
-        <Compile Include="Items\ImplosionGrenade.cs" />
-        <Compile Include="Items\TranqGun.cs" />
-        <Compile Include="Methods.cs" />
-        <Compile Include="Patches\AddClass.cs" />
-        <Compile Include="Plugin.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="packages.config" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{68FA2E9D-7C31-4906-8E65-075F119A29D9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CustomItems</RootNamespace>
+    <AssemblyName>CustomItems</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-Publicized">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Assembly-CSharp-Publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandSystem.Core">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\CommandSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.API">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Events">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Loader">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Updater">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Updater.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Subclass">
+      <HintPath>..\..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\Subclass.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
+      <HintPath>..\..\..\Exiled Stuff\Exiled dll\YamlDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\API.cs" />
+    <Compile Include="API\CustomGrenade.cs" />
+    <Compile Include="API\CustomItem.cs" />
+    <Compile Include="API\CustomWeapon.cs" />
+    <Compile Include="API\SpawnLocation.cs" />
+    <Compile Include="API\SpawnLocationData.cs" />
+    <Compile Include="Commands\GiveItem.cs" />
+    <Compile Include="Commands\ItemInfo.cs" />
+    <Compile Include="Commands\ListItems.cs" />
+    <Compile Include="Commands\SpawnItem.cs" />
+    <Compile Include="Components\CollisionHandler.cs" />
+    <Compile Include="Configs\Config.cs" />
+    <Compile Include="Configs\ItemConfigs.cs" />
+    <Compile Include="Configs\ItemConfigs\EmpGrenadeConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\GrenadeLauncherConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\ImplosionGrenadeConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\LethalInjectionConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\LuckCoinConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\MediGunConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
+    <Compile Include="Configs\ItemConfigs\Scp1499Config.cs" />
+    <Compile Include="Configs\ItemConfigs\ShotgunConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\SniperRifleConfig.cs" />
+    <Compile Include="Configs\ItemConfigs\TranqGunConfig.cs" />
+    <Compile Include="EventHandlers.cs" />
+    <Compile Include="Events\AddClassEvent.cs" />
+    <Compile Include="Items\EmpGrenade.cs" />
+    <Compile Include="Items\GrenadeLauncher.cs" />
+    <Compile Include="Items\LethalInjection.cs" />
+    <Compile Include="Items\LuckyCoin.cs" />
+    <Compile Include="Items\MediGun.cs" />
+    <Compile Include="Items\Scp-127.cs" />
+    <Compile Include="Items\Scp1499.cs" />
+    <Compile Include="Items\Shotgun.cs" />
+    <Compile Include="Items\SniperRifle.cs" />
+    <Compile Include="Items\ImplosionGrenade.cs" />
+    <Compile Include="Items\TranqGun.cs" />
+    <Compile Include="Methods.cs" />
+    <Compile Include="Patches\AddClass.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
     </Target>
     -->
-
 </Project>
