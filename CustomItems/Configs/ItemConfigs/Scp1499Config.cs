@@ -6,10 +6,13 @@ namespace CustomItems.ItemConfigs
 {
     public class Scp1499Config
     {
+        [Description("How long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit)")]
+        public float Duration { get; set; } = 15f;
+        
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
         {
-            { SpawnLocation.Inside173Armory, 100 }
+            { SpawnLocation.InsideHid, 10 }
         };
 
         [Description("The Custom Item ID for this item.")]
