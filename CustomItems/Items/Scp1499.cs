@@ -17,8 +17,10 @@ namespace CustomItems.Items
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLocations;
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Description;
         public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLimit;
+        
 
-
+        private Vector3 Scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); //This position is where is unused terain on the Surface
+        
         private Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
 
 
@@ -50,7 +52,7 @@ namespace CustomItems.Items
             {
                 scp1499Players.Add(ev.Player, ev.Player.Position);
 
-                ev.Player.Position = new UnityEngine.Vector3(152.93f, 978.03f, 93.64f);
+                ev.Player.Position = new Vector3(Scp1499DimensionPos);
                 ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
 
                 if (Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
