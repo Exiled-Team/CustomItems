@@ -53,6 +53,9 @@ namespace CustomItems
                 if (plugin.Config.Rock)
                     new Items.Rock(ItemType.SCP018, plugin.Config.ItemConfigs.RockCfg.Id).RegisterCustomItem();
                 
+                if (plugin.Config.Scp1499)
+                    new Scp1499(ItemType.SCP268, Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Id).RegisterCustomItem();
+                
                 plugin.Config.ParseSubclassList();
                 
                 first = false;

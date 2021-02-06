@@ -34,6 +34,9 @@ namespace CustomItems.Configs
         
         [Description("Tranquilizer Gun configs.")]
         public TranqGunConfig TranqCfg { get; set; } = new TranqGunConfig();
+        
+        [Description("SCP-1499 configs.")]
+        public Scp1499Config Scp1499Cfg { get; set; } = new Scp1499Config();
 
         [Description("Rock configs.")]
         public RockConfig RockCfg { get; set; } = new RockConfig();
