@@ -16,10 +16,10 @@ namespace CustomItems.ItemConfigs
         };
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 11;
+        public int Id { get; set; } = 12;
 
         [Description("The description of this item show to players when they obtain it.")]
-        public string Description { get; set; } = "The gas mask that teleports you to another dimmension, when you put it on.";
+        public string Description { get; set; } = "The gas mask that temporarily teleports you to another dimension, when you put it on.";
 
         [Description("The name of this item shown to players when they obtain it.")]
         public string Name { get; set; } = "SCP-1499";

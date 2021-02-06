@@ -19,31 +19,43 @@ namespace CustomItems.Items
         public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLimit;
         
 
-        private Vector3 Scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); //This position is where is unused terain on the Surface
+        private Vector3 Scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); //This position is where is unused terrain on the Surface
         
         private Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
 
 
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers1499;
             Exiled.Events.Handlers.Player.MedicalItemUsed += OnUsedMedicalItem;
-            Exiled.Events.Handlers.Player.DroppingItem += OnItemDropping;
             base.LoadEvents();
         }
 
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers1499;
             Exiled.Events.Handlers.Player.MedicalItemUsed -= OnUsedMedicalItem;
-            Exiled.Events.Handlers.Player.DroppingItem -= OnItemDropping;
             base.UnloadEvents();
         }
+        
+        protected override void OnDroppingItem(DroppingItemEventArgs ev)
+        {
+            if (CheckItem(ev.Item))
+            {
+                if (scp1499Players.ContainsKey(ev.Player))
+                {
+                    ev.IsAllowed = false;
+                    ev.Player.Position = scp1499Players[ev.Player];
 
-
-        private void OnWaitingForPlayers1499()
+                    scp1499Players.Remove(ev.Player);
+                }
+                else
+                    base.OnDroppingItem(ev);
+            }
+        }
+        
+        protected override void OnWaitingForPlayers()
         {
             scp1499Players.Clear();
+            base.OnWaitingForPlayers();
         }
 
         private void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
@@ -52,7 +64,7 @@ namespace CustomItems.Items
             {
                 scp1499Players.Add(ev.Player, ev.Player.Position);
 
-                ev.Player.Position = new Vector3(Scp1499DimensionPos);
+                ev.Player.Position = Scp1499DimensionPos;
                 ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
 
                 if (Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
@@ -65,24 +77,6 @@ namespace CustomItems.Items
                             scp1499Players.Remove(ev.Player);
                         }
                     });
-                }
-            }
-        }
-
-        private void OnItemDropping(DroppingItemEventArgs ev)
-        {
-            if (scp1499Players.ContainsKey(ev.Player))
-            {
-                ev.IsAllowed = false;
-
-                if(CheckItem(ev.Item))
-                {
-                    ev.Player.RemoveItem(ev.Item);
-
-                    ev.Player.Position = scp1499Players[ev.Player];
-                    GiveItem(ev.Player);
-
-                    scp1499Players.Remove(ev.Player);
                 }
             }
         }
