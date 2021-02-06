@@ -50,7 +50,8 @@ namespace CustomItems
                 if (plugin.Config.LuckyCoin)
                     new LuckyCoin(ItemType.Coin, Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Id).RegisterCustomItem();
 
-                new Items.Rock(ItemType.SCP018, 12).RegisterCustomItem();
+                if (plugin.Config.Rock)
+                    new Items.Rock(ItemType.SCP018, plugin.Config.ItemConfigs.RockCfg.Id).RegisterCustomItem();
                 
                 plugin.Config.ParseSubclassList();
                 

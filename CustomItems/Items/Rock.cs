@@ -14,8 +14,9 @@ namespace CustomItems.Items
         {
         }
 
-        public override string Name { get; set; } = "Rock";
-        public override string Description { get; set; } = "It's a rock.";
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Name;
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Description;
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.SpawnLimit;
 
         public int PlayerLayerMask = 1208246273;
 

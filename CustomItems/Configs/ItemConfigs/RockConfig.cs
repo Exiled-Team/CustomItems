@@ -15,5 +15,17 @@ namespace CustomItems.ItemConfigs
         
         [Description("Whether or not rocks will deal damage to friendly targets.")]
         public bool FriendlyFire { get; set; } = false;
+
+        [Description("The Custom Item ID for this item.")]
+        public int Id { get; set; } = 11;
+        
+        [Description("The name of this item shown to players when they obtain it.")]
+        public string Name { get; set; } = "Rock";
+        
+        [Description("The description of this item show to players when they obtain it.")]
+        public string Description { get; set; } = "It's a rock.";
+        
+        [Description("How many of this item are allowed to naturally spawn on the map when a round starts. 0 = unlimited")]
+        public int SpawnLimit { get; set; } = 1;
     }
 }
