@@ -105,6 +105,7 @@
         <Compile Include="Commands\ListItems.cs" />
         <Compile Include="Commands\SpawnItem.cs" />
         <Compile Include="Components\CollisionHandler.cs" />
+        <Compile Include="Components\Rock.cs" />
         <Compile Include="Configs\Config.cs" />
         <Compile Include="Configs\ItemConfigs.cs" />
         <Compile Include="Configs\ItemConfigs\EmpGrenadeConfig.cs" />
@@ -113,6 +114,7 @@
         <Compile Include="Configs\ItemConfigs\LethalInjectionConfig.cs" />
         <Compile Include="Configs\ItemConfigs\LuckCoinConfig.cs" />
         <Compile Include="Configs\ItemConfigs\MediGunConfig.cs" />
+        <Compile Include="Configs\ItemConfigs\RockConfig.cs" />
         <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
         <Compile Include="Configs\ItemConfigs\ShotgunConfig.cs" />
         <Compile Include="Configs\ItemConfigs\SniperRifleConfig.cs" />
@@ -124,6 +126,7 @@
         <Compile Include="Items\LethalInjection.cs" />
         <Compile Include="Items\LuckyCoin.cs" />
         <Compile Include="Items\MediGun.cs" />
+        <Compile Include="Items\Rock.cs" />
         <Compile Include="Items\Scp-127.cs" />
         <Compile Include="Items\Shotgun.cs" />
         <Compile Include="Items\SniperRifle.cs" />

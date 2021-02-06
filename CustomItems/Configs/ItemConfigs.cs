@@ -34,5 +34,8 @@ namespace CustomItems.Configs
         
         [Description("Tranquilizer Gun configs.")]
         public TranqGunConfig TranqCfg { get; set; } = new TranqGunConfig();
+
+        [Description("Rock configs.")]
+        public RockConfig RockCfg { get; set; } = new RockConfig();
     }
 }
