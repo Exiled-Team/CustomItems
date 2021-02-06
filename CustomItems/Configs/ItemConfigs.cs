@@ -37,5 +37,8 @@ namespace CustomItems.Configs
         
         [Description("SCP-1499 configs.")]
         public Scp1499Config Scp1499Cfg { get; set; } = new Scp1499Config();
+
+        [Description("Rock configs.")]
+        public RockConfig RockCfg { get; set; } = new RockConfig();
     }
 }

@@ -19,42 +19,8 @@ namespace CustomItems.API
         public abstract override string Description { get; set; }
         protected virtual bool ExplodeOnCollision { get; set; }
         protected virtual float FuseTime { get; set; } = 3f;
-
-        public override void Init()
-        {
-            Exiled.Events.Handlers.Player.ThrowingGrenade += OnThrowingGrenade;
-            base.Init();
-        }
         
-        public override void Destroy()
-        {
-            Exiled.Events.Handlers.Player.ThrowingGrenade -= OnThrowingGrenade;
-            base.Destroy();
-        }
-
-        protected override void OnWaitingForPlayers()
-        {
-            TrackedGrenades.Clear();
-            base.OnWaitingForPlayers();
-        }
-        
-        private List<GameObject> TrackedGrenades { get; } = new List<GameObject>();
-        public bool CheckGrenade(GameObject grenade) => TrackedGrenades.Contains(grenade);
-
-        public GrenadeType GetGrenadeType(ItemType type)
-        {
-            switch (type)
-            {
-                case ItemType.GrenadeFlash:
-                    return GrenadeType.Flashbang;
-                case ItemType.SCP018:
-                    return GrenadeType.Scp018;
-                default:
-                    return GrenadeType.FragGrenade; ;
-            }
-        }
-        
-        private void OnThrowingGrenade(ThrowingGrenadeEventArgs ev)
+        protected virtual void OnThrowingGrenade(ThrowingGrenadeEventArgs ev)
         {
             if (CheckItem(ev.Player.CurrentItem))
             {
@@ -80,7 +46,41 @@ namespace CustomItems.API
                 });
             }
         }
+
+        public override void Init()
+        {
+            Exiled.Events.Handlers.Player.ThrowingGrenade += OnThrowingGrenade;
+            base.Init();
+        }
         
+        public override void Destroy()
+        {
+            Exiled.Events.Handlers.Player.ThrowingGrenade -= OnThrowingGrenade;
+            base.Destroy();
+        }
+
+        protected override void OnWaitingForPlayers()
+        {
+            TrackedGrenades.Clear();
+            base.OnWaitingForPlayers();
+        }
+
+        protected List<GameObject> TrackedGrenades { get; } = new List<GameObject>();
+        public bool CheckGrenade(GameObject grenade) => TrackedGrenades.Contains(grenade);
+
+        public GrenadeType GetGrenadeType(ItemType type)
+        {
+            switch (type)
+            {
+                case ItemType.GrenadeFlash:
+                    return GrenadeType.Flashbang;
+                case ItemType.SCP018:
+                    return GrenadeType.Scp018;
+                default:
+                    return GrenadeType.FragGrenade; ;
+            }
+        }
+
         public Grenades.Grenade SpawnGrenade(Vector3 position, Vector3 velocity, float fusetime = 3f, GrenadeType grenadeType = GrenadeType.FragGrenade, Player player = null)
         {
             if (player == null)

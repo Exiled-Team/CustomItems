@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
     <PropertyGroup>
@@ -105,6 +105,7 @@
         <Compile Include="Commands\ListItems.cs" />
         <Compile Include="Commands\SpawnItem.cs" />
         <Compile Include="Components\CollisionHandler.cs" />
+        <Compile Include="Components\Rock.cs" />
         <Compile Include="Configs\Config.cs" />
         <Compile Include="Configs\ItemConfigs.cs" />
         <Compile Include="Configs\ItemConfigs\EmpGrenadeConfig.cs" />
@@ -113,8 +114,9 @@
         <Compile Include="Configs\ItemConfigs\LethalInjectionConfig.cs" />
         <Compile Include="Configs\ItemConfigs\LuckCoinConfig.cs" />
         <Compile Include="Configs\ItemConfigs\MediGunConfig.cs" />
-        <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
         <Compile Include="Configs\ItemConfigs\Scp1499Config.cs" />
+        <Compile Include="Configs\ItemConfigs\RockConfig.cs" />
+        <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
         <Compile Include="Configs\ItemConfigs\ShotgunConfig.cs" />
         <Compile Include="Configs\ItemConfigs\SniperRifleConfig.cs" />
         <Compile Include="Configs\ItemConfigs\TranqGunConfig.cs" />
@@ -125,6 +127,7 @@
         <Compile Include="Items\LethalInjection.cs" />
         <Compile Include="Items\LuckyCoin.cs" />
         <Compile Include="Items\MediGun.cs" />
+        <Compile Include="Items\Rock.cs" />
         <Compile Include="Items\Scp-127.cs" />
         <Compile Include="Items\Scp1499.cs" />
         <Compile Include="Items\Shotgun.cs" />
