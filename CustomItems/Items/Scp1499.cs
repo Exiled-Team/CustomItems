@@ -54,13 +54,11 @@ namespace CustomItems.Items
                     base.OnDroppingItem(ev);
             }
         }
-
-        protected override void OnDying(DyingEventArgs ev)
+        
+        protected override void OnWaitingForPlayers()
         {
-            if (scp1499Players.ContainsKey(ev.Target))
-                scp1499Players.Remove(ev.Target);
-            
-            base.OnDying(ev);
+            scp1499Players.Clear();
+            base.OnWaitingForPlayers();
         }
 
         private void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
