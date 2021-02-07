@@ -38,6 +38,9 @@ namespace CustomItems.Items
         
         protected override void OnDroppingItem(DroppingItemEventArgs ev)
         {
+            if (scp1499Players.ContainsKey(ev.Player))
+                ev.IsAllowed = false;
+            
             if (CheckItem(ev.Item))
             {
                 if (scp1499Players.ContainsKey(ev.Player))
