@@ -51,18 +51,23 @@ namespace CustomItems.Items
                     base.OnDroppingItem(ev);
             }
         }
-        
-        protected override void OnWaitingForPlayers()
+
+        protected override void OnDying(DyingEventArgs ev)
         {
-            scp1499Players.Clear();
-            base.OnWaitingForPlayers();
+            if (scp1499Players.ContainsKey(ev.Target))
+                scp1499Players.Remove(ev.Target);
+            
+            base.OnDying(ev);
         }
 
         private void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
         {
             if(CheckItem(ev.Player.CurrentItem))
             {
-                scp1499Players.Add(ev.Player, ev.Player.Position);
+                if (scp1499Players.ContainsKey(ev.Player))
+                    scp1499Players[ev.Player] = ev.Player.Position;
+                else
+                    scp1499Players.Add(ev.Player, ev.Player.Position);
 
                 ev.Player.Position = Scp1499DimensionPos;
                 ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
