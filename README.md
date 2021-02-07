@@ -18,7 +18,8 @@ SCP-127 | 7 | A gun that slowly regenerates it's clip over time, but trying to r
 SG-119 | 8 | A shotgun. Fairly self-explanatory.
 SR-119 | 9 | A sniper rifle. Also self-explanatory.
 TG-119 | 10 | This gun is also modified to fire self-injecting projectile darts. When fired at a hostile target, it will tranquilize them, rendering them unconcious for several seconds.
-SCP-1499 | 11 | The gas mask that teleports you to another dimmension, when you put it on.
+Rock | 11 | This is a rock. Left-click to melee someone in the face with it. Left-click to toss it a short distance.
+SCP-1499 | 12 | The gas mask that teleports you to another dimmension, when you put it on.
 
 ### Item Configs
 Config settings for the individual items will ***NOT*** be found in the default plugin config file. Instead they will be located in ~/.config/EXILED/Configs/CustomItems on Linux or %AppData%\EXILED\Configs\CustomItems on Winblows.
