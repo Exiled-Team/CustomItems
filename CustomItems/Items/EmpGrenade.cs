@@ -26,14 +26,31 @@ namespace CustomItems.Items
 
         protected override void LoadEvents()
         {
+            Exiled.Events.Handlers.Scp079.ChangingCamera += OnChangingCamera;
+            Exiled.Events.Handlers.Scp079.InteractingDoor += OnInteractingDoor;
             Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
             base.LoadEvents();
+        }
+
+
+        private List<DoorVariant> lockedDoors = new List<DoorVariant>();
+        private void OnInteractingDoor(InteractingDoorEventArgs ev)
+        {
+            if (lockedDoors.Contains(ev.Door))
+                ev.IsAllowed = false;
         }
 
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Map.ExplodingGrenade -= OnExplodingGrenade;
             base.UnloadEvents();
+        }
+        
+        private void OnChangingCamera(ChangingCameraEventArgs ev)
+        {
+            Room room = ev.Camera.Room();
+            if (room != null && room.LightsOff)
+                ev.IsAllowed = false;
         }
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
@@ -51,30 +68,24 @@ namespace CustomItems.Items
                     Log.Debug($"Opening a door!", Plugin.Singleton.Config.Debug);
                     door.NetworkTargetState = true;
                     door.ServerChangeLock(DoorLockReason.NoPower, true);
+                    if (lockedDoors.Contains(door))
+                        lockedDoors.Add(door);
 
-                    Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration, () => door.ServerChangeLock(DoorLockReason.NoPower, false));
-                    
-                    foreach (Player player in Player.List)
-                        if (player.Role == RoleType.Scp079)
-                        {
-                            if (player.Camera.Room() == room)
-                            {
-                                Room homeRoom = Map.Rooms.FirstOrDefault(r => r.Name.Contains("079"));
-                                if (homeRoom == null)
-                                {
-                                    Log.Error($"HAH ROOM IS NULL BITCH");
-                                    continue;
-                                }
-
-                                player.Camera = homeRoom.GetComponentInParent<Camera079>();
-                            }
-
-                            if (!string.IsNullOrEmpty(player.Speaker))
-                                player.Speaker = string.Empty;
-
-                            break;
-                        }
+                    Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration, () =>
+                    {
+                        door.ServerChangeLock(DoorLockReason.NoPower, false);
+                        lockedDoors.Remove(door);
+                    });
                 }
+                
+                foreach (Player player in Player.List)
+                    if (player.Role == RoleType.Scp079)
+                    {
+                        if (player.Camera.Room() == room)
+                            player.SetCamera(198);
+
+                        break;
+                    }
             }
         }
     }

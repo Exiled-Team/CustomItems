@@ -108,7 +108,7 @@ namespace CustomItems.Items
                             Quaternion.FromToRotation(Vector3.up, hits[i].normal));
                     }
 
-                    for (int i = 0; i < bullets; i++)
+                    for (int i = 0; i < Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BoomCount; i++)
                         component.RpcConfirmShot(confirm, component.curWeapon);
 
                     ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int) ev.Shooter.CurrentItem.durability - bullets);

@@ -14,6 +14,9 @@ namespace CustomItems.ItemConfigs
         
         [Description("The base damage each pellet should deal on a body shot.")]
         public float BaseDamage { get; set; } = 13.5f;
+
+        [Description("The number of shots that are registered by other clients. (Used for shooting sound volume, setting this higher than default is not recommended.")]
+        public int BoomCount { get; set; } = 5;
         
         [Description("The base weapon this one will be modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunMP7;
