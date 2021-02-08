@@ -6,6 +6,9 @@ namespace CustomItems.ItemConfigs
 {
     public class LuckCoinConfig
     {
+        [Description("How long the coin will stay spawned inside the PD.")]
+        public float Duration { get; set; } = 2;
+        
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
         {

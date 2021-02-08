@@ -4,6 +4,7 @@ using CustomItems.API;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Mirror;
 using UnityEngine;
 
 namespace CustomItems.Items
@@ -52,7 +53,7 @@ namespace CustomItems.Items
                     RaycastHit[] hits = new RaycastHit[bullets];
                     bool[] didHit = new bool[hits.Length];
                     for (int i = 0; i < hits.Length; i++)
-                        didHit[i] = Physics.Raycast(rays[i], out hits[i], 500f, 1208246273);
+                        didHit[i] = Physics.Raycast(rays[i], out hits[i], 500f, ev.Shooter.ReferenceHub.weaponManager.raycastMask);
 
                     WeaponManager component = ev.Shooter.ReferenceHub.weaponManager;
                     bool confirm = false;
@@ -60,30 +61,37 @@ namespace CustomItems.Items
                     {
                         try
                         {
-                            if (!didHit[i]) continue;
+                            if (!didHit[i])
+                            {
+                                continue;
+                            }
 
                             HitboxIdentity hitbox = hits[i].collider.GetComponent<HitboxIdentity>();
                             if (hitbox != null)
                             {
-                                Player target = Player.Get(hits[i].collider.GetComponentInParent<ReferenceHub>());
+                                var parent = hits[i].collider.GetComponentInParent<NetworkIdentity>().gameObject;
+                                var hitCcm = parent.GetComponent<CharacterClassManager>();
+                                Player target = Player.Get(hitCcm._hub);
 
                                 if (target == null)
+                                {
                                     continue;
-                                
+                                }
+
                                 if (component.GetShootPermission(target.ReferenceHub.characterClassManager, Server.FriendlyFire))
                                 {
                                     float damage = HitHandler(hitbox);
                                     if (target.Role == RoleType.Scp106)
+                                    {
                                         damage /= 10;
+                                    }
 
                                     float distance = Vector3.Distance(ev.Shooter.Position, target.Position);
 
                                     for (int f = 0; f < (int)distance; f++)
                                         damage *= Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.DamageFalloffModifier;
 
-                                    target.Hurt(damage,
-                                        DamageTypes.FromWeaponId(ev.Shooter.ReferenceHub.weaponManager.curWeapon),
-                                        ev.Shooter.Nickname, ev.Shooter.Id);
+                                    target.Hurt(damage, DamageTypes.Wall, ev.Shooter.Nickname, ev.Shooter.Id);
                                     component.RpcPlaceDecal(true, (sbyte) target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role).bloodType, hits[i].point + hits[i].normal * 0.01f, Quaternion.FromToRotation(Vector3.up, hits[i].normal));
                                     confirm = true;
                                 }
@@ -93,7 +101,7 @@ namespace CustomItems.Items
                         }
                         catch (Exception e)
                         {
-                            Log.Error($"{e}\n{e.StackTrace}");
+                            Log.Error($"{e} - {e.Message}\n{e.StackTrace}");
                         }
 
                         BreakableWindow window = hits[i].collider.GetComponent<BreakableWindow>();
@@ -115,7 +123,7 @@ namespace CustomItems.Items
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.ToString());
+                    Log.Error($"{e}\n{e.StackTrace}");
                 }
             }
         }

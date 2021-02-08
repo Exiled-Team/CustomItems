@@ -21,7 +21,7 @@ namespace CustomItems.Items
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayersLC;
+            Exiled.Events.Handlers.Server.RoundStarted += OnRoundStart;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnterPocketDimension;
             base.LoadEvents();
         }
@@ -29,7 +29,7 @@ namespace CustomItems.Items
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayersLC;
+            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStart;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnterPocketDimension;
             base.UnloadEvents();
         }
@@ -38,10 +38,21 @@ namespace CustomItems.Items
         private bool isDropped = false;
         private bool onCooldown = false;
         
-        private void OnWaitingForPlayersLC()
+        private void OnRoundStart()
         {
             foreach (PocketDimensionTeleport teleport in Object.FindObjectsOfType<PocketDimensionTeleport>())
+            {
                 teleports.Add(teleport);
+                Log.Debug("Adding PD Teleport..");
+            }
+        }
+
+        protected override void OnPickingUpItem(PickingUpItemEventArgs ev)
+        {
+            if (ev.Pickup.itemId == ItemType.Coin && ev.Player.CurrentRoom.name == "PocketWorld")
+                ev.IsAllowed = false;
+
+            base.OnPickingUpItem(ev);
         }
 
         protected override void OnDroppingItem(DroppingItemEventArgs ev)
@@ -81,13 +92,14 @@ namespace CustomItems.Items
                         Log.Debug($"{ev.Player.Nickname} - Valid exit found..", Plugin.Singleton.Config.Debug);
                         Vector3 tpPos = teleport.transform.position;
                         float dist = Vector3.Distance(tpPos, ev.Position);
-                        Vector3 spawnPos = Vector3.MoveTowards(tpPos, ev.Position, dist / 2);
+                        Vector3 spawnPos = Vector3.MoveTowards(tpPos, ev.Position, 15);
                         Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}", Plugin.Singleton.Config.Debug);
 
                         Pickup coin = Exiled.API.Extensions.Item.Spawn(ItemType.Coin, 0f, spawnPos);
 
-                        Timing.CallDelayed(2f, () => coin.Delete());
+                        Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Duration, () => coin.Delete());
                         Timing.CallDelayed(120f, () => onCooldown = false);
+                        break;
                     }
                 }
             }
