@@ -148,16 +148,7 @@ namespace CustomItems.API
             
             ItemGiven(player);
         }
-
-        protected List<int> ItemIds { get; } = new List<int>();
-        protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
-
-        protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
-        protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
         
-        public int Id { get; set; }
-        public ItemType ItemType { get; set; }
-
         public virtual void Init()
         {
             Exiled.Events.Handlers.Player.Dying += OnDying;
@@ -201,6 +192,16 @@ namespace CustomItems.API
 
             UnloadEvents();
         }
+
+        protected List<int> ItemIds { get; } = new List<int>();
+        protected List<Pickup> ItemPickups { get; } = new List<Pickup>();
+
+        protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
+        protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
+        
+        public int Id { get; set; }
+        public ItemType ItemType { get; set; }
+        
 
         private void CheckAndLoadSubclassEvent()
         {

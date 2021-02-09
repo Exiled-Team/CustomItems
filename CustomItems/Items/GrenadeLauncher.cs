@@ -79,7 +79,7 @@ namespace CustomItems.Items
                 Vector3 velocity = (ev.Position - ev.Shooter.Position) * Plugin.Singleton.Config.ItemConfigs.GlCfg.GrenadeSpeed;
                 Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
                 Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-                var grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
+                Grenade grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
                 CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
                 collisionHandler.owner = ev.Shooter.GameObject;
                 collisionHandler.grenade = grenadeComponent;

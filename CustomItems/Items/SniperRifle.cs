@@ -14,11 +14,10 @@ namespace CustomItems.Items
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;
         public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.SpawnLimit;
-        
         protected override int ModBarrel { get; set; } = 3;
-        
         protected override int ModSight { get; set; } = 4;
 
+        
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
