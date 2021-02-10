@@ -1,9 +1,19 @@
-using System.Collections.Generic;
+// <copyright file="SpawnLocationData.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems.API
 {
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// All of the data related to spawn locations.
+    /// </summary>
     public struct SpawnLocationData
     {
+        /// <summary>
+        /// The names of the doors attached to each spawn location.
+        /// </summary>
         public static Dictionary<SpawnLocation, string> DoorNames = new Dictionary<SpawnLocation, string>
         {
             { SpawnLocation.Inside012, "012" },
@@ -33,9 +43,12 @@ namespace CustomItems.API
             { SpawnLocation.Inside173Connector, "173_CONNECTOR" },
             { SpawnLocation.InsideServersBottom, "SERVERS_BOTTOM" },
             { SpawnLocation.InsideEscapePrimary, "ESCAPE_PRIMARY" },
-            { SpawnLocation.InsideEscapeSecondary, "ESCAPE_SECONDARY" }
+            { SpawnLocation.InsideEscapeSecondary, "ESCAPE_SECONDARY" },
         };
 
+        /// <summary>
+        /// The names of spawn locations who's positions are on the opposite side of their door, and must be corrected.
+        /// </summary>
         public static List<SpawnLocation> ReversedLocations = new List<SpawnLocation>
         {
             SpawnLocation.InsideServersBottom,
@@ -49,7 +62,7 @@ namespace CustomItems.API
             SpawnLocation.InsideLczWc,
             SpawnLocation.InsideGr18,
             SpawnLocation.Inside914,
-            SpawnLocation.InsideHid
+            SpawnLocation.InsideHid,
         };
     }
 }

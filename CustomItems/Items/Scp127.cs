@@ -1,29 +1,47 @@
-using System.Collections.Generic;
-using CustomItems.API;
-using Exiled.API.Features;
-using Exiled.Events.EventArgs;
-using MEC;
+// <copyright file="Scp127.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems.Items
 {
+    using System.Collections.Generic;
+    using CustomItems.API;
+    using Exiled.API.Features;
+    using Exiled.Events.EventArgs;
+    using MEC;
+
+    /// <inheritdoc />
     public class Scp127 : CustomWeapon
     {
-        public Scp127(ItemType type, int clipSize, int itemId) : base(type, clipSize, itemId)
+        /// <inheritdoc />
+        public Scp127(ItemType type, int clipSize, int itemId)
+            : base(type, clipSize, itemId)
         {
             Coroutines.Add(Timing.RunCoroutine(DoAmmoRegeneration()));
         }
 
+        /// <inheritdoc/>
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
+
+        /// <inheritdoc/>
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
+
+        /// <inheritdoc/>
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
+
+        /// <inheritdoc/>
         public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLimit;
 
+        private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
+
+        /// <inheritdoc/>
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUp;
             base.LoadEvents();
         }
 
+        /// <inheritdoc/>
         protected override void UnloadEvents()
         {
             foreach (CoroutineHandle handle in Coroutines)
@@ -33,12 +51,14 @@ namespace CustomItems.Items
             base.UnloadEvents();
         }
 
+        /// <inheritdoc/>
         protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
             if (CheckItem(ev.Player.CurrentItem))
                 ev.IsAllowed = false;
         }
 
+        /// <inheritdoc/>
         protected override void ItemGiven(Player player)
         {
             Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(player)));
@@ -50,11 +70,9 @@ namespace CustomItems.Items
                 Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
         }
 
-        private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
-        
         private IEnumerator<float> DoInventoryRegeneration(Player player)
         {
-            for (;;)
+            for (; ;)
             {
                 yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 
@@ -62,17 +80,17 @@ namespace CustomItems.Items
 
                 for (int i = 0; i < player.Inventory.items.Count; i++)
                 {
-                    if (CheckItem(player.Inventory.items[i]))
-                    {
-                        hasItem = true;
+                    if (!CheckItem(player.Inventory.items[i]))
+                        continue;
 
-                        if (player.Inventory.items[i].durability < ClipSize)
-                        {
-                            Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
-                            newInfo.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
-                            player.Inventory.items[i] = newInfo;
-                        }
-                    }
+                    hasItem = true;
+
+                    if (!(player.Inventory.items[i].durability < ClipSize))
+                        continue;
+
+                    Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
+                    newInfo.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
+                    player.Inventory.items[i] = newInfo;
                 }
 
                 if (!hasItem)
@@ -82,7 +100,7 @@ namespace CustomItems.Items
 
         private IEnumerator<float> DoAmmoRegeneration()
         {
-            for (;;)
+            for (; ;)
             {
                 yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 

@@ -1,37 +1,58 @@
-using System;
-using System.Collections.Generic;
-using CustomItems.API;
-using Exiled.API.Features;
-using Exiled.Events.EventArgs;
-using Grenades;
-using MEC;
-using UnityEngine;
-using Player = Exiled.API.Features.Player;
+// <copyright file="ImplosionGrenade.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems.Items
 {
+    using System;
+    using System.Collections.Generic;
+    using CustomItems.API;
+    using Exiled.API.Features;
+    using Exiled.Events.EventArgs;
+    using Grenades;
+    using MEC;
+    using UnityEngine;
+    using Player = Exiled.API.Features.Player;
+
+    /// <inheritdoc />
     public class ImplosionGrenade : CustomGrenade
     {
-        public ImplosionGrenade(ItemType type, int itemId) : base(type, itemId)
+        /// <summary>
+        /// The layer mask used.
+        /// </summary>
+        private int layerMask;
+
+        /// <inheritdoc />
+        public ImplosionGrenade(ItemType type, int itemId)
+            : base(type, itemId)
         {
         }
 
+        /// <inheritdoc/>
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Name;
+
+        /// <inheritdoc/>
         public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLocations;
+
+        /// <inheritdoc/>
         public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Description;
+
+        /// <inheritdoc/>
         public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLimit;
 
+        /// <inheritdoc/>
         protected override bool ExplodeOnCollision { get; set; } = true;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
-        private int layerMask = 0;
 
+        /// <inheritdoc/>
         protected override void LoadEvents()
         {
             Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
             base.LoadEvents();
         }
-        
+
+        /// <inheritdoc/>
         protected override void UnloadEvents()
         {
             Exiled.Events.Handlers.Map.ExplodingGrenade -= OnExplodingGrenade;
@@ -39,6 +60,18 @@ namespace CustomItems.Items
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
             base.UnloadEvents();
+        }
+
+        private static IEnumerator<float> DoSuction(Player player, Vector3 position)
+        {
+            Log.Debug($"{player.Nickname} Suction begin", Plugin.Singleton.Config.Debug);
+            for (int i = 0; i < Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionCount; i++)
+            {
+                Log.Debug($"{player.Nickname} suctioned?", Plugin.Singleton.Config.Debug);
+                player.Position = Vector3.MoveTowards(player.Position, position, Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionPerTick);
+
+                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionTickRate);
+            }
         }
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
@@ -66,7 +99,7 @@ namespace CustomItems.Items
                     {
                         if (layerMask == 0)
                             layerMask = ev.Grenade.GetComponent<FragGrenade>().hurtLayerMask;
-                        
+
                         foreach (Transform grenadePoint in player.ReferenceHub.playerStats.grenadePoints)
                         {
                             bool line = Physics.Linecast(ev.Grenade.transform.position, grenadePoint.position, layerMask);
@@ -83,18 +116,6 @@ namespace CustomItems.Items
                         Log.Error($"REEEE: {e.Message}\n{e.StackTrace}");
                     }
                 }
-            }
-        }
-
-        IEnumerator<float> DoSuction(Player player, Vector3 position)
-        {
-            Log.Debug($"{player.Nickname} Suction begin", Plugin.Singleton.Config.Debug);
-            for (int i = 0; i < Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionCount; i++)
-            {
-                Log.Debug($"{player.Nickname} suctioned?", Plugin.Singleton.Config.Debug);
-                player.Position = Vector3.MoveTowards(player.Position, position, Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionPerTick);
-                
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.ImpCfg.SuctionTickRate);
             }
         }
     }

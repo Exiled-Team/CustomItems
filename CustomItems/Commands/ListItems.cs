@@ -1,13 +1,30 @@
-using System;
-using CommandSystem;
-using CustomItems.API;
-using Exiled.Permissions.Extensions;
+// <copyright file="ListItems.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems.Commands
 {
-    [CommandHandler(typeof(RemoteAdminCommandHandler)),CommandHandler(typeof(GameConsoleCommandHandler))]
+    using System;
+    using CommandSystem;
+    using CustomItems.API;
+
+    /// <summary>
+    /// The command to list all installed items.
+    /// </summary>
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
     public class ListItems : ICommand
     {
+        /// <inheritdoc/>
+        public string Command { get; } = "citemlist";
+
+        /// <inheritdoc/>
+        public string[] Aliases { get; } = new[] { "clist" };
+
+        /// <inheritdoc/>
+        public string Description { get; } = "Gets a list of all custom items currently installed and enabled on the server.";
+
+        /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             string message = string.Empty;
@@ -18,11 +35,5 @@ namespace CustomItems.Commands
 
             return true;
         }
-
-        public string Command { get; } = "citemlist";
-        public string[] Aliases { get; } = new[] { "clist" };
-
-        public string Description { get; } =
-            "Gets a list of all custom items currently installed and enabled on the server.";
     }
 }

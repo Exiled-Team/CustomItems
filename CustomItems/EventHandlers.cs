@@ -1,46 +1,58 @@
-using System.Collections.Generic;
-using System.Linq;
-using CustomItems.Items;
-using CustomItems.API;
-using Exiled.API.Features;
-using MEC;
-using UnityEngine;
+// <copyright file="EventHandlers.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems
 {
+    using System.Collections.Generic;
+    using CustomItems.API;
+    using CustomItems.Items;
+    using Exiled.API.Features;
+
+    /// <summary>
+    /// Event Handlers.
+    /// </summary>
     public class EventHandlers
     {
         private readonly Plugin plugin;
-        public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
-        //This is to prevent making more new item managers when they aren't needed, that could get messy.
+        // This is to prevent making more new item managers when they aren't needed, that could get messy.
         private bool first = true;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventHandlers"/> class.
+        /// </summary>
+        /// <param name="plugin">The <see cref="Plugin"/> class.</param>
+        public EventHandlers(Plugin plugin) => this.plugin = plugin;
+
+        /// <summary>
+        /// WaitingForPlayers Handler.
+        /// </summary>
         public void OnWaitingForPlayers()
         {
             if (first)
             {
                 if (plugin.Config.Shotgun)
                     new Shotgun(plugin.Config.ItemConfigs.ShotgunCfg.ItemType, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.GrenadeLauncher)
                     new GrenadeLauncher(plugin.Config.ItemConfigs.GlCfg.ItemType, plugin.Config.ItemConfigs.GlCfg.ClipSize,  Plugin.Singleton.Config.ItemConfigs.GlCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.SniperRifle)
                     new SniperRifle(plugin.Config.ItemConfigs.SniperCfg.ItemType, plugin.Config.ItemConfigs.SniperCfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.SniperCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.Scp127)
                     new Scp127(plugin.Config.ItemConfigs.Scp127Cfg.ItemType, plugin.Config.ItemConfigs.Scp127Cfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.ImplosionGrenade)
                     new ImplosionGrenade(ItemType.GrenadeFrag, Plugin.Singleton.Config.ItemConfigs.ImpCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.EmpGrenade)
                     new EmpGrenade(ItemType.GrenadeFlash, Plugin.Singleton.Config.ItemConfigs.EmpCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.LethalInjection)
                     new LethalInjection(ItemType.Adrenaline, Plugin.Singleton.Config.ItemConfigs.LethalCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.MediGun)
                     new MediGun(plugin.Config.ItemConfigs.MediCfg.ItemType, plugin.Config.ItemConfigs.MediCfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.MediCfg.Id).RegisterCustomItem();
 
@@ -52,35 +64,41 @@ namespace CustomItems
 
                 if (plugin.Config.Rock)
                     new Items.Rock(ItemType.SCP018, plugin.Config.ItemConfigs.RockCfg.Id).RegisterCustomItem();
-                
+
                 if (plugin.Config.Scp1499)
                     new Scp1499(ItemType.SCP268, Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Id).RegisterCustomItem();
-                
+
                 plugin.Config.ParseSubclassList();
-                
+
                 first = false;
             }
         }
 
+        /// <summary>
+        /// OnReloadingConfigs handler.
+        /// </summary>
         public void OnReloadingConfigs()
         {
             plugin.Config.ParseSubclassList();
             plugin.Config.LoadConfigs();
         }
 
+        /// <summary>
+        /// OnRoundStart handlers.
+        /// </summary>
         public void OnRoundStart()
         {
             foreach (CustomItem item in plugin.ItemManagers)
             {
-                if (item.SpawnLocations == null) 
+                if (item.SpawnLocations == null)
                     continue;
 
                 int count = 0;
-                
+
                 foreach (KeyValuePair<SpawnLocation, float> spawn in item.SpawnLocations)
                 {
                     Log.Debug($"Attempting to spawn {item.Name} at {spawn.Key}", plugin.Config.Debug);
-                    if (plugin.Rng.Next(100) >= spawn.Value || (item.SpawnLimit > 0 && count >= item.SpawnLimit)) 
+                    if (plugin.Rng.Next(100) >= spawn.Value || (item.SpawnLimit > 0 && count >= item.SpawnLimit))
                         continue;
 
                     count++;

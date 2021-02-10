@@ -1,25 +1,28 @@
-using System;
-using Exiled.API.Features;
-using Exiled.Events.Extensions;
-using Subclass;
+// <copyright file="AddClassEvent.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems.Events
 {
+    using System;
+    using Exiled.API.Features;
+    using Exiled.Events.Extensions;
+    using Subclass;
+
+    /// <summary>
+    /// Event for <see cref="TrackingAndMethods.AddClass"/>.
+    /// </summary>
     public class AddClassEvent
     {
+        /// <summary>
+        /// The event.
+        /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<AddClassEventArgs> AddClass;
-        public static void OnAddingClass(AddClassEventArgs ev) => AddClass.InvokeSafely(ev);
-    }
 
-    public class AddClassEventArgs : EventArgs
-    {
-        public AddClassEventArgs(Player player, SubClass subClass)
-        {
-            Player = player;
-            Subclass = subClass;
-        }
-        
-        public Player Player { get; }
-        public SubClass Subclass { get; }
+        /// <summary>
+        /// The method for calling the event safely.
+        /// </summary>
+        /// <param name="ev"><see cref="AddClassEventArgs"/>.</param>
+        public static void OnAddingClass(AddClassEventArgs ev) => AddClass.InvokeSafely(ev);
     }
 }

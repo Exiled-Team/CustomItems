@@ -1,22 +1,36 @@
-using System;
-using Exiled.API.Features;
-using Grenades;
-using UnityEngine;
+// <copyright file="CollisionHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems
 {
+    using System;
+    using Exiled.API.Features;
+    using Grenades;
+    using UnityEngine;
+
+    /// <summary>
+    /// Collision Handler for grenades.
+    /// </summary>
     public class CollisionHandler : MonoBehaviour
     {
-        public GameObject owner;
-        public Grenade grenade;
+        /// <summary>
+        /// The thrower of the grenade.
+        /// </summary>
+        public GameObject Owner;
+
+        /// <summary>
+        /// The grenade itself.
+        /// </summary>
+        public Grenade Grenade;
 
         private void OnCollisionEnter(Collision collision)
         {
             try
             {
-                if (collision.gameObject == owner || collision.gameObject.GetComponent<Grenade>() != null)
+                if (collision.gameObject == Owner || collision.gameObject.GetComponent<Grenade>() != null)
                     return;
-                grenade.NetworkfuseTime = 0.1f;
+                Grenade.NetworkfuseTime = 0.1f;
             }
             catch (Exception e)
             {

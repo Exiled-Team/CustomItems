@@ -1,15 +1,32 @@
-using System;
-using System.Linq;
-using CommandSystem;
-using CustomItems.API;
-using Exiled.API.Features;
-using Exiled.Permissions.Extensions;
+// <copyright file="GiveItem.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems.Commands
 {
+    using System;
+    using System.Linq;
+    using CommandSystem;
+    using CustomItems.API;
+    using Exiled.API.Features;
+    using Exiled.Permissions.Extensions;
+
+    /// <summary>
+    /// The command to give a player an item.
+    /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class GiveItem : ICommand
     {
+        /// <inheritdoc/>
+        public string Command { get; } = "customgive";
+
+        /// <inheritdoc/>
+        public string[] Aliases { get; } = new[] { "cgive" };
+
+        /// <inheritdoc/>
+        public string Description { get; } = "Gives a custom item!";
+
+        /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("citems.give"))
@@ -18,7 +35,7 @@ namespace CustomItems.Commands
 
                 return false;
             }
-            
+
             Player player = Player.Get(((CommandSender)sender).SenderId);
             string[] args = arguments.Array;
             if (args == null)
@@ -27,21 +44,21 @@ namespace CustomItems.Commands
 
                 return false;
             }
-            
+
             if (args.Length < 2)
             {
                 response = "You must define an item name.";
-                
+
                 return false;
             }
-            
+
             if (args.Length > 2)
             {
                 string identifier = string.Empty;
                 foreach (string s in args.Skip(2))
                     identifier += $"{s} ";
                 identifier = identifier.Trim();
-                
+
                 player = Player.Get(identifier);
                 if (player == null)
                 {
@@ -59,21 +76,17 @@ namespace CustomItems.Commands
 
                 return true;
             }
-            
+
             if (player.GiveItem(args[1]))
             {
                 response = "Done.";
-                
+
                 return true;
             }
 
             response = "Item not found.";
-            
+
             return false;
         }
-
-        public string Command { get; } = "customgive";
-        public string[] Aliases { get; } = new[] { "cgive" };
-        public string Description { get; } = "Gives a custom item!";
     }
 }

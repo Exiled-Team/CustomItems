@@ -145,3 +145,10 @@ public Plugin : Plugin<Config>
 ```
 
 Do note, if you're registering your item in your plugin's OnEnabled() method, you MUST add a minimum of 5sec delay before registering, to ensure all other plugins are loaded and that the server process has initialized all of it's components and such.
+
+### Credits
+ - NeonWizard for the original TranqGun
+ - Killer0992 for the original Shotgun
+ - Dimenzio for the SpawnGrenade method
+ - Michal78900 for SCP-1499
+ - SebasCapo for slight API rework.

@@ -1,17 +1,36 @@
-using System;
-using System.Linq;
-using Exiled.API.Enums;
-using Exiled.API.Features;
-using Grenades;
-using UnityEngine;
+// <copyright file="Rock.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CustomItems
 {
+    using System;
+    using System.Linq;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Grenades;
+    using UnityEngine;
+
+    /// <summary>
+    /// Special collision handler for rocks.
+    /// </summary>
     public class Rock : Scp018Grenade
     {
+        /// <summary>
+        /// Gets or sets the owner of the 'rock'.
+        /// </summary>
         public GameObject Owner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="Side"/> of the rock, for determining friendly fire.
+        /// </summary>
         public Side Side { get; set; }
 
+        /// <summary>
+        /// The collision handler.
+        /// </summary>
+        /// <param name="collision">The <see cref="Collision"/> occuring.</param>
+        /// <param name="relativeSpeed">The <see cref="float"/> indicating the speed.</param>
         public override void OnSpeedCollisionEnter(Collision collision, float relativeSpeed)
         {
             try
