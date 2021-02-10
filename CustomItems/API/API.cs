@@ -217,5 +217,83 @@ namespace CustomItems.API
 
             return pos;
         }
+
+        /// <summary>
+        /// Checks to see if the player's current item is a custom item.
+        /// </summary>
+        /// <param name="player">The <see cref="Player"/> to check.</param>
+        /// <param name="item">The <see cref="CustomItem"/> in their hand.</param>
+        /// <returns>True if the player has a custom item in their hand.</returns>
+        public static bool HasCustomItemInHand(this Player player, out CustomItem item)
+        {
+            foreach (CustomItem cItem in GetInstalledItems())
+                if (cItem.CheckItem(player.CurrentItem))
+                {
+                    item = cItem;
+                    return true;
+                }
+
+            item = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Checks to see if the player has any custom items in their inventory.
+        /// </summary>
+        /// <param name="player">The <see cref="Player"/> to check.</param>
+        /// <param name="cItems">A <see cref="IEnumerable{T}"/> of custom items in their possession.</param>
+        /// <returns>True if they have any custom items.</returns>
+        public static bool HasCustomItem(this Player player, out IEnumerable<CustomItem> cItems)
+        {
+            List<CustomItem> items = new List<CustomItem>();
+            foreach (Inventory.SyncItemInfo item in player.Inventory.items)
+            {
+                foreach (CustomItem cItem in GetInstalledItems())
+                {
+                    items.Add(cItem);
+                }
+            }
+
+            cItems = items;
+            return items.Count > 0;
+        }
+
+        /// <summary>
+        /// Checks to see if this item is a custom item.
+        /// </summary>
+        /// <param name="item">The <see cref="Inventory.SyncItemInfo"/> to check.</param>
+        /// <param name="cItem">The <see cref="CustomItem"/> this item is.</param>
+        /// <returns>True if the item is a custom item.</returns>
+        public static bool IsCustomItem(this Inventory.SyncItemInfo item, out CustomItem cItem)
+        {
+            foreach (CustomItem customItem in GetInstalledItems())
+                if (customItem.CheckItem(item))
+                {
+                    cItem = customItem;
+                    return true;
+                }
+
+            cItem = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if this pickup is a custom item.
+        /// </summary>
+        /// <param name="pickup">The <see cref="Pickup"/> to check.</param>
+        /// <param name="item">The <see cref="CustomItem"/> this pickup is.</param>
+        /// <returns>True if the pickup is a custom item.</returns>
+        public static bool IsCustomItem(this Pickup pickup, out CustomItem item)
+        {
+            foreach (CustomItem cItem in GetInstalledItems())
+                if (cItem.CheckItem(pickup))
+                {
+                    item = cItem;
+                    return true;
+                }
+
+            item = null;
+            return false;
+        }
     }
 }

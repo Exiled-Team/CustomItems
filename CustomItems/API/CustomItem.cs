@@ -146,6 +146,20 @@ namespace CustomItems.API
             UnloadEvents();
         }
 
+        /// <summary>
+        /// Checks the specified pickup to see if it is a custom item.
+        /// </summary>
+        /// <param name="pickup">The <see cref="Pickup"/> to check.</param>
+        /// <returns>True if it is a custom item.</returns>
+        public bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
+
+        /// <summary>
+        /// Checks the specified inventory item to see if it is a custom item.
+        /// </summary>
+        /// <param name="item">The <see cref="Inventory.SyncItemInfo"/> to check.</param>
+        /// <returns>True if it is a custom item.</returns>
+        public bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
+
         /// <inheritdoc/>
         public override string ToString() => $"[{Name} ({Id})] {Description} {ItemType}";
 
@@ -301,20 +315,6 @@ namespace CustomItems.API
         protected virtual void ItemGiven(Player player)
         {
         }
-
-        /// <summary>
-        /// Checks the specified pickup to see if it is a custom item.
-        /// </summary>
-        /// <param name="pickup">The <see cref="Pickup"/> to check.</param>
-        /// <returns>True if it is a custom item.</returns>
-        protected bool CheckItem(Pickup pickup) => ItemPickups.Contains(pickup);
-
-        /// <summary>
-        /// Checks the specified inventory item to see if it is a custom item.
-        /// </summary>
-        /// <param name="item">The <see cref="Inventory.SyncItemInfo"/> to check.</param>
-        /// <returns>True if it is a custom item.</returns>
-        protected bool CheckItem(Inventory.SyncItemInfo item) => ItemIds.Contains(item.uniq);
 
         /// <summary>
         /// Checks to see if Subclassing is loaded, and register the event for it if it is.
