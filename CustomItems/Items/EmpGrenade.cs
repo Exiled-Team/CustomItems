@@ -87,6 +87,12 @@ namespace CustomItems.Items
             Log.Debug($"{room.Doors.Count()} - {room.Type}");
             foreach (DoorVariant door in room.Doors)
             {
+                if (door.NetworkActiveLocks > 0 && !Plugin.Singleton.Config.ItemConfigs.EmpCfg.OpenLockedDoors)
+                    continue;
+
+                if (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !Plugin.Singleton.Config.ItemConfigs.EmpCfg.OpenKeycardDoors)
+                    continue;
+
                 Log.Debug($"Opening a door!", Plugin.Singleton.Config.Debug);
                 door.NetworkTargetState = true;
                 door.ServerChangeLock(DoorLockReason.NoPower, true);

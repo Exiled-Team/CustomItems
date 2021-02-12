@@ -38,5 +38,11 @@ namespace CustomItems.ItemConfigs
 
         [Description("How many of this item are allowed to naturally spawn on the map when a round starts. 0 = unlimited")]
         public int SpawnLimit { get; set; } = 1;
+
+        [Description("Whether or not EMP grenades will open doors that are currently locked.")]
+        public bool OpenLockedDoors { get; set; } = true;
+
+        [Description("Whether or not EMP grenades will open doors that require keycard permissions.")]
+        public bool OpenKeycardDoors { get; set; } = true;
     }
 }
