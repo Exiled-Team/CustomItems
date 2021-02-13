@@ -16,6 +16,8 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class EmpGrenade : CustomGrenade
     {
+        private static List<Room> lockedRooms079 = new List<Room>();
+
         /// <summary>
         /// A list of doors locked by the EMP Grenades.
         /// </summary>
@@ -64,7 +66,7 @@ namespace CustomItems.Items
         private static void OnChangingCamera(ChangingCameraEventArgs ev)
         {
             Room room = ev.Camera.Room();
-            if (room != null && room.LightsOff)
+            if (room != null && lockedRooms079.Contains(room))
                 ev.IsAllowed = false;
         }
 
@@ -83,6 +85,7 @@ namespace CustomItems.Items
 
             Room room = Map.FindParentRoom(ev.Grenade);
 
+            lockedRooms079.Add(room);
             room.TurnOffLights(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration);
             Log.Debug($"{room.Doors.Count()} - {room.Type}");
             foreach (DoorVariant door in room.Doors)
@@ -114,6 +117,8 @@ namespace CustomItems.Items
 
                     break;
                 }
+
+            Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration, () => lockedRooms079.Remove(room));
         }
     }
 }

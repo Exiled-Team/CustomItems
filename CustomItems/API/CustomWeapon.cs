@@ -100,28 +100,46 @@ namespace CustomItems.API
                 return;
 
             ev.IsAllowed = false;
-            Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", Plugin.Singleton.Config.Debug);
-            int remainingInClip = ClipSize - (int)ev.Player.CurrentItem.durability;
-            int currentAmmoAmount = (int)ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType];
-            int amountToReload = ClipSize - remainingInClip;
-            if (currentAmmoAmount < 0)
+
+            int remainingInClip = (int)ev.Player.CurrentItem.durability;
+            if (remainingInClip >= ClipSize)
                 return;
 
-            ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
-            Reload(ev.Player);
-
-            int amountAfterReload = currentAmmoAmount - amountToReload;
-            if (amountAfterReload < 0)
-                ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = 0;
-            else
-                ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType] = (uint)(currentAmmoAmount - amountToReload);
-
-            ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
-            Log.Debug($"{ev.Player.Nickname} - {ev.Player.CurrentItem.durability} - {ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType]}", Plugin.Singleton.Config.Debug);
-            Timing.CallDelayed(4.5f, () =>
+            Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", Plugin.Singleton.Config.Debug);
+            if (ev.IsAnimationOnly)
             {
                 Reload(ev.Player);
-            });
+            }
+            else
+            {
+                int currentAmmoAmount =
+                    (int)ev.Player.Ammo[
+                        ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon]
+                            .ammoType];
+                int amountToReload = ClipSize - remainingInClip;
+                if (currentAmmoAmount < 0)
+                {
+                    Log.Debug($"Returning!");
+                    return;
+                }
+
+                ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
+
+                int amountAfterReload = currentAmmoAmount - amountToReload;
+                if (amountAfterReload < 0)
+                    ev.Player.Ammo[
+                        ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon]
+                            .ammoType] = 0;
+                else
+                    ev.Player.Ammo[
+                        ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon]
+                            .ammoType] = (uint)(currentAmmoAmount - amountToReload);
+
+                Log.Debug($"{remainingInClip} - {currentAmmoAmount} - {amountToReload} - {amountAfterReload} - {ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType]}");
+                ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
+            }
+
+            Log.Debug($"{ev.Player.Nickname} - {ev.Player.CurrentItem.durability} - {ev.Player.Ammo[ev.Player.ReferenceHub.weaponManager.weapons[ev.Player.ReferenceHub.weaponManager.curWeapon].ammoType]}", Plugin.Singleton.Config.Debug);
         }
     }
 }
