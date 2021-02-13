@@ -79,7 +79,7 @@ namespace CustomItems.API
 
                     if (ExplodeOnCollision)
                     {
-                        GameObject grenade = SpawnGrenade(pos, ev.Player.CameraTransform.forward * 9f, 1.5f, GetGrenadeType(ItemType)).gameObject;
+                        GameObject grenade = SpawnGrenade(pos, ev.Player.CameraTransform.forward * 9f, 1.5f, GetGrenadeType(ItemType), ev.Player).gameObject;
                         CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
                         collisionHandler.Owner = ev.Player.GameObject;
                         collisionHandler.Grenade = grenadeComponent;
@@ -87,7 +87,7 @@ namespace CustomItems.API
                     }
                     else
                     {
-                        SpawnGrenade(pos, ev.Player.CameraTransform.forward * 9f, FuseTime, GetGrenadeType(ItemType));
+                        SpawnGrenade(pos, ev.Player.CameraTransform.forward * 9f, FuseTime, GetGrenadeType(ItemType), ev.Player);
                     }
 
                     ev.Player.RemoveItem(ev.Player.CurrentItem);
