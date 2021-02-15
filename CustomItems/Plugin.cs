@@ -49,9 +49,6 @@ namespace CustomItems
         public override string Prefix { get; } = "CustomItems";
 
         /// <inheritdoc/>
-        public override Version Version { get; } = new Version(1, 8, 1);
-
-        /// <inheritdoc/>
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 30);
 
         /// <summary>

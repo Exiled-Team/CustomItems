@@ -84,10 +84,11 @@ namespace CustomItems.Items
             ev.IsAllowed = false;
 
             Room room = Map.FindParentRoom(ev.Grenade);
+            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Map.Rooms.Count}", Plugin.Singleton.Config.Debug);
 
             lockedRooms079.Add(room);
             room.TurnOffLights(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration);
-            Log.Debug($"{room.Doors.Count()} - {room.Type}");
+            Log.Debug($"{room.Doors.Count()} - {room.Type}", Plugin.Singleton.Config.Debug);
             foreach (DoorVariant door in room.Doors)
             {
                 if (door.NetworkActiveLocks > 0 && !Plugin.Singleton.Config.ItemConfigs.EmpCfg.OpenLockedDoors)
@@ -109,14 +110,9 @@ namespace CustomItems.Items
                 });
             }
 
-            foreach (Player player in Player.List)
-                if (player.Role == RoleType.Scp079)
-                {
-                    if (player.Camera.Room() == room)
+            foreach (Player player in Player.Get(RoleType.Scp079))
+                if (player.Camera != null && player.Camera.Room() == room)
                         player.SetCamera(198);
-
-                    break;
-                }
 
             Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration, () => lockedRooms079.Remove(room));
         }

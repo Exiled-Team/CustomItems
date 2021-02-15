@@ -57,7 +57,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnPickingUpItem(PickingUpItemEventArgs ev)
         {
-            if (ev.Pickup.itemId == ItemType.Coin && ev.Player.CurrentRoom.name == "PocketWorld")
+            if (ev.Pickup.itemId == ItemType.Coin && ev.Player.CurrentRoom.Name == "PocketWorld")
                 ev.IsAllowed = false;
 
             base.OnPickingUpItem(ev);

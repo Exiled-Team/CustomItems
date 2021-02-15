@@ -91,7 +91,31 @@ namespace CustomItems.API
             };
             player.Inventory.items.Add(syncItemInfo);
             ItemIds.Add(syncItemInfo.uniq);
+
             ShowMessage(player);
+
+            ItemGiven(player);
+        }
+
+        /// <summary>
+        /// Gives the item to a player.
+        /// </summary>
+        /// <param name="player">The <see cref="Player"/> who will recieve the item.</param>
+        /// <param name="displayMessage">Indicates whether or not <see cref="ShowMessage"/> will be called when the player received the item.</param>
+        public virtual void GiveItem(Player player, bool displayMessage)
+        {
+            ++Inventory._uniqId;
+            Inventory.SyncItemInfo syncItemInfo = new Inventory.SyncItemInfo()
+            {
+                durability = 1,
+                id = ItemType,
+                uniq = Inventory._uniqId,
+            };
+            player.Inventory.items.Add(syncItemInfo);
+            ItemIds.Add(syncItemInfo.uniq);
+
+            if (displayMessage)
+                ShowMessage(player);
 
             ItemGiven(player);
         }
