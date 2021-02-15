@@ -109,6 +109,15 @@ namespace CustomItems.API
         public static void GiveItem(this Player player, CustomItem item) => item.GiveItem(player);
 
         /// <summary>
+        /// Gives the specified item to a player.
+        /// </summary>
+        /// <param name="player">The <see cref="Player"/> to give the item to.</param>
+        /// <param name="item">The <see cref="CustomItem"/> to give to the player.</param>
+        /// <param name="displayMessage">Whether or not to show a message when the item is given.</param>
+        public static void GiveItem(this Player player, CustomItem item, bool displayMessage) =>
+            item.GiveItem(player, displayMessage);
+
+        /// <summary>
         /// Gives the player a specified item.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to give the item to.</param>
