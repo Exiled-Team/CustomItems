@@ -61,6 +61,11 @@ namespace CustomItems
         /// </summary>
         public EventHandlers EventHandlers { get; private set; }
 
+        /// <summary>
+        /// Gets the Internal list of item managers.
+        /// </summary>
+        internal List<CustomItem> ItemManagers { get; } = new List<CustomItem>();
+
         /// <inheritdoc/>
         public override void OnEnabled()
         {
@@ -89,6 +94,9 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnDisabled()
         {
+            foreach (CustomItem item in ItemManagers)
+                item.UnregisterCustomItem();
+
             Exiled.Events.Handlers.Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
 
