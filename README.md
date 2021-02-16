@@ -1,4 +1,4 @@
-# CustimItems
+# CustomItems
 ======
 ## Description
 This plugin has 2 parts, all contained in a single DLL with no needed dependencies.
