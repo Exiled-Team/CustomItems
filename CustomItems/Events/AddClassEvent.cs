@@ -4,8 +4,6 @@
 
 namespace CustomItems.Events
 {
-    using System;
-    using Exiled.API.Features;
     using Exiled.Events.Extensions;
     using Subclass;
 

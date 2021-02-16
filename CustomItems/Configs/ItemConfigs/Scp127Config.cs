@@ -8,7 +8,7 @@ namespace CustomItems.ItemConfigs
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using CustomItems.API;
+    using Exiled.CustomItems.API;
 
     public class Scp127Config
     {

@@ -5,7 +5,7 @@
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
-    using CustomItems.API;
+    using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
 
     /// <inheritdoc />

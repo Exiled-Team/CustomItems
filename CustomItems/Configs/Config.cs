@@ -8,9 +8,9 @@ namespace CustomItems.Configs
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-    using CustomItems.API;
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
+    using Exiled.CustomItems.API;
     using Exiled.Loader;
 
     /// <summary>
@@ -157,7 +157,7 @@ namespace CustomItems.Configs
                 foreach (KeyValuePair<string, float> itemChance in list.Value)
                 {
                     CustomItem item = null;
-                    foreach (CustomItem cItem in Plugin.Singleton.ItemManagers)
+                    foreach (CustomItem cItem in Exiled.CustomItems.CustomItems.Singleton.ItemManagers)
                         if (cItem.Name == itemChance.Key)
                             item = cItem;
                     if (item == null)

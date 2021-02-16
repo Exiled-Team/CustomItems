@@ -6,9 +6,9 @@ namespace CustomItems.Items
 {
     using System;
     using System.Collections.Generic;
-    using CustomItems.API;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
     using Mirror;
     using UnityEngine;

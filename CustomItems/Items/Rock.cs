@@ -4,8 +4,8 @@
 
 namespace CustomItems.Items
 {
-    using CustomItems.API;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
     using Grenades;
     using MEC;

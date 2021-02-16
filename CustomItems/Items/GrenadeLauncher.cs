@@ -6,10 +6,11 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.Linq;
-    using CustomItems.API;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.Components;
     using Exiled.Events.EventArgs;
     using Grenades;
     using MEC;

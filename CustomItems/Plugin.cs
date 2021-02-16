@@ -6,9 +6,9 @@ namespace CustomItems
 {
     using System;
     using System.Collections.Generic;
-    using CustomItems.API;
     using CustomItems.Configs;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using HarmonyLib;
     using MapEvents = Exiled.Events.Handlers.Map;
     using PlayerEvents = Exiled.Events.Handlers.Player;
@@ -61,11 +61,6 @@ namespace CustomItems
         /// </summary>
         public EventHandlers EventHandlers { get; private set; }
 
-        /// <summary>
-        /// Gets the list of current Item Managers.
-        /// </summary>
-        public List<CustomItem> ItemManagers { get; } = new List<CustomItem>();
-
         /// <inheritdoc/>
         public override void OnEnabled()
         {
@@ -85,7 +80,6 @@ namespace CustomItems
                 Log.Debug($"Subclassing not installed.", Config.Debug);
             }
 
-            Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
             Exiled.Events.Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
 
@@ -95,11 +89,6 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            foreach (CustomItem item in ItemManagers)
-                item.Destroy();
-            ItemManagers.Clear();
-
-            Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
 

@@ -6,9 +6,9 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.Linq;
-    using CustomItems.API;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
     using Interactables.Interobjects.DoorUtils;
     using MEC;
