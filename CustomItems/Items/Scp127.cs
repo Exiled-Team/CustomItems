@@ -21,16 +21,13 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
@@ -54,7 +51,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
-            if (CheckItem(ev.Player.CurrentItem))
+            if (Check(ev.Player.CurrentItem))
                 ev.IsAllowed = false;
         }
 
@@ -66,7 +63,7 @@ namespace CustomItems.Items
 
         private void OnPickingUp(PickingUpItemEventArgs ev)
         {
-            if (CheckItem(ev.Pickup))
+            if (Check(ev.Pickup))
                 Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
         }
 
@@ -80,7 +77,7 @@ namespace CustomItems.Items
 
                 for (int i = 0; i < player.Inventory.items.Count; i++)
                 {
-                    if (!CheckItem(player.Inventory.items[i]))
+                    if (!Check(player.Inventory.items[i]))
                         continue;
 
                     hasItem = true;
@@ -105,7 +102,7 @@ namespace CustomItems.Items
                 yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 
                 foreach (Pickup pickup in ItemPickups)
-                    if (CheckItem(pickup) && pickup.durability < ClipSize)
+                    if (Check(pickup) && pickup.durability < ClipSize)
                     {
                         pickup.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
 

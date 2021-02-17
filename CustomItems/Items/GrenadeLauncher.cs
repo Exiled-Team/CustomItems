@@ -4,7 +4,6 @@
 
 namespace CustomItems.Items
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
@@ -27,16 +26,13 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
@@ -55,7 +51,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
         {
-            if (!CheckItem(ev.Player.CurrentItem))
+            if (!Check(ev.Player.CurrentItem))
                 return;
 
             if (Plugin.Singleton.Config.ItemConfigs.GlCfg.UseGrenades)
@@ -97,13 +93,13 @@ namespace CustomItems.Items
         /// <returns>The <see cref="Grenade"/> being spawned.</returns>
         ///
         /// I stole this from Synapse.Api.Map.SpawnGrenade -- Thanks Dimenzio, I was dreading having to find my super old version and adapting it to the new game version.
-        private static Grenades.Grenade SpawnGrenade(Vector3 position, Vector3 velocity, float fuseTime = 3f, GrenadeType grenadeType = GrenadeType.FragGrenade, Player player = null)
+        private static Grenade SpawnGrenade(Vector3 position, Vector3 velocity, float fuseTime = 3f, GrenadeType grenadeType = GrenadeType.FragGrenade, Player player = null)
         {
             if (player == null)
                 player = Server.Host;
 
             GrenadeManager component = player.GrenadeManager;
-            Grenade component2 = GameObject.Instantiate(component.availableGrenades[(int)grenadeType].grenadeInstance).GetComponent<Grenades.Grenade>();
+            Grenade component2 = GameObject.Instantiate(component.availableGrenades[(int)grenadeType].grenadeInstance).GetComponent<Grenade>();
             component2.FullInitData(component, position, Quaternion.Euler(component2.throwStartAngle), velocity, component2.throwAngularVelocity, player == Server.Host ? Team.RIP : player.Team);
             component2.NetworkfuseTime = NetworkTime.time + fuseTime;
             NetworkServer.Spawn(component2.gameObject);
@@ -113,7 +109,7 @@ namespace CustomItems.Items
 
         private void OnShooting(ShootingEventArgs ev)
         {
-            if (!CheckItem(ev.Shooter.CurrentItem))
+            if (!Check(ev.Shooter.CurrentItem))
                 return;
 
             ev.IsAllowed = false;

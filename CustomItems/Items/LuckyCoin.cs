@@ -10,6 +10,8 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
     using MEC;
     using UnityEngine;
+    using Player = Exiled.Events.Handlers.Player;
+    using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
     public class LuckyCoin : CustomItem
@@ -25,32 +27,29 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Description;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
-            Exiled.Events.Handlers.Server.RoundStarted += OnRoundStart;
-            Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnterPocketDimension;
+            Player.DroppingItem += OnDroppingItem;
+            Server.RoundStarted += OnRoundStart;
+            Player.EnteringPocketDimension += OnEnterPocketDimension;
             base.LoadEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
-            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStart;
-            Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnterPocketDimension;
+            Player.DroppingItem -= OnDroppingItem;
+            Server.RoundStarted -= OnRoundStart;
+            Player.EnteringPocketDimension -= OnEnterPocketDimension;
             base.UnloadEvents();
         }
 
@@ -66,7 +65,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnDroppingItem(DroppingItemEventArgs ev)
         {
-            if (!CheckItem(ev.Item))
+            if (!Check(ev.Item))
                 return;
 
             if (ev.Player.CurrentRoom.Name == "PocketWorld")

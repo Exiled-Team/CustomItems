@@ -4,12 +4,13 @@
 
 namespace CustomItems.Items
 {
-    using System.Collections.Generic;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
     using MEC;
     using PlayableScps;
+    using Player = Exiled.Events.Handlers.Player;
+    using Scp096 = PlayableScps.Scp096;
 
     /// <inheritdoc />
     public class LethalInjection : CustomItem
@@ -21,43 +22,40 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Description;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.UsingMedicalItem += OnMedicalItemUsed;
+            Player.UsingMedicalItem += OnMedicalItemUsed;
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.UsingMedicalItem -= OnMedicalItemUsed;
+            Player.UsingMedicalItem -= OnMedicalItemUsed;
         }
 
         private void OnMedicalItemUsed(UsingMedicalItemEventArgs ev)
         {
             Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}", Plugin.Singleton.Config.Debug);
-            if (!CheckItem(ev.Player.CurrentItem))
+            if (!Check(ev.Player.CurrentItem))
                 return;
 
             Timing.CallDelayed(1.5f, () =>
             {
                 Log.Debug($"{ev.Player.Nickname} used a {Name}", Plugin.Singleton.Config.Debug);
-                foreach (Player player in Player.List)
+                foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
                     if (player.Role == RoleType.Scp096)
                     {
                         Log.Debug($"{ev.Player.Nickname} - {Name} found an 096: {player.Nickname}", Plugin.Singleton.Config.Debug);
-                        if (!(player.CurrentScp is PlayableScps.Scp096 scp096))
+                        if (!(player.CurrentScp is Scp096 scp096))
                             continue;
 
                         Log.Debug($"{player.Nickname} 096 component found.", Plugin.Singleton.Config.Debug);

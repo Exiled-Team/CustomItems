@@ -12,7 +12,7 @@ namespace CustomItems.Items
     using Grenades;
     using MEC;
     using UnityEngine;
-    using Player = Exiled.API.Features.Player;
+    using Map = Exiled.Events.Handlers.Map;
 
     /// <inheritdoc />
     public class ImplosionGrenade : CustomGrenade
@@ -29,33 +29,30 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Description;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Description;
 
         /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnLimit;
-
-        /// <inheritdoc/>
-        protected override bool ExplodeOnCollision { get; set; } = true;
+        protected override bool ExplodeOnCollision { get; } = true;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
+            Map.ExplodingGrenade += OnExplodingGrenade;
             base.LoadEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Map.ExplodingGrenade -= OnExplodingGrenade;
+            Map.ExplodingGrenade -= OnExplodingGrenade;
 
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
@@ -89,7 +86,7 @@ namespace CustomItems.Items
                 }
 
                 ev.TargetToDamages.Clear();
-                Log.Debug($"IG: List cleared.", Plugin.Singleton.Config.Debug);
+                Log.Debug("IG: List cleared.", Plugin.Singleton.Config.Debug);
                 foreach (Player player in copiedList.Keys)
                 {
                     ev.TargetToDamages.Add(player, copiedList[player] * Plugin.Singleton.Config.ItemConfigs.ImpCfg.DamageModifier);

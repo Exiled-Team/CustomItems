@@ -10,16 +10,8 @@ namespace CustomItems
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using HarmonyLib;
-    using MapEvents = Exiled.Events.Handlers.Map;
-    using PlayerEvents = Exiled.Events.Handlers.Player;
-    using Random = System.Random;
-    using Scp049Events = Exiled.Events.Handlers.Scp049;
-    using Scp079Events = Exiled.Events.Handlers.Scp079;
-    using Scp096Events = Exiled.Events.Handlers.Scp096;
-    using Scp106Events = Exiled.Events.Handlers.Scp106;
     using Scp914Events = Exiled.Events.Handlers.Scp914;
-    using ServerEvents = Exiled.Events.Handlers.Server;
-    using WarheadEvents = Exiled.Events.Handlers.Warhead;
+    using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
     public class Plugin : Plugin<Config>
@@ -75,18 +67,18 @@ namespace CustomItems
 
             Config.LoadConfigs();
 
-            Log.Debug($"Checking for Subclassing..", Config.Debug);
+            Log.Debug("Checking for Subclassing..", Config.Debug);
             try
             {
                 Methods.CheckAndPatchSubclassing();
             }
             catch (Exception)
             {
-                Log.Debug($"Subclassing not installed.", Config.Debug);
+                Log.Debug("Subclassing not installed.", Config.Debug);
             }
 
-            Exiled.Events.Handlers.Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
+            Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
+            Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
 
             base.OnEnabled();
         }
@@ -97,8 +89,8 @@ namespace CustomItems
             foreach (CustomItem item in ItemManagers)
                 item.UnregisterCustomItem();
 
-            Exiled.Events.Handlers.Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
+            Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
+            Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
 
             HarmonyInstance?.UnpatchAll();
             EventHandlers = null;

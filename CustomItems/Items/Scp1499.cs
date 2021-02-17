@@ -5,6 +5,7 @@
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
+    using CustomPlayerEffects;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
@@ -24,16 +25,13 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Description;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
@@ -55,7 +53,7 @@ namespace CustomItems.Items
             if (scp1499Players.ContainsKey(ev.Player))
                 ev.IsAllowed = false;
 
-            if (!CheckItem(ev.Item))
+            if (!Check(ev.Item))
                 return;
 
             if (scp1499Players.ContainsKey(ev.Player))
@@ -80,7 +78,7 @@ namespace CustomItems.Items
 
         private void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
         {
-            if (!CheckItem(ev.Player.CurrentItem))
+            if (!Check(ev.Player.CurrentItem))
                 return;
 
             if (scp1499Players.ContainsKey(ev.Player))
@@ -89,7 +87,7 @@ namespace CustomItems.Items
                 scp1499Players.Add(ev.Player, ev.Player.Position);
 
             ev.Player.Position = scp1499DimensionPos;
-            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
+            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Scp268>();
 
             if (Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
             {

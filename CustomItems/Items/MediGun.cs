@@ -23,16 +23,13 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
@@ -63,7 +60,7 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (CheckItem(ev.Attacker.CurrentItem))
+            if (Check(ev.Attacker.CurrentItem))
                 ev.Amount = 0f;
         }
 
@@ -80,7 +77,7 @@ namespace CustomItems.Items
 
         private void OnShooting(ShootingEventArgs ev)
         {
-            if (!CheckItem(ev.Shooter.CurrentItem))
+            if (!Check(ev.Shooter.CurrentItem))
                 return;
 
             if (!(Player.Get(ev.Target) is Player player))

@@ -10,8 +10,11 @@ namespace CustomItems.Items
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.Handlers;
     using Interactables.Interobjects.DoorUtils;
     using MEC;
+    using Map = Exiled.Events.Handlers.Map;
+    using Player = Exiled.API.Features.Player;
 
     /// <inheritdoc />
     public class EmpGrenade : CustomGrenade
@@ -30,36 +33,34 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } =
+            Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Description;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.Description;
 
         /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.SpawnLimit;
+        protected override bool ExplodeOnCollision { get; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.ExplodeOnCollision;
 
         /// <inheritdoc/>
-        protected override bool ExplodeOnCollision { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.ExplodeOnCollision;
-
-        /// <inheritdoc/>
-        protected override float FuseTime { get; set; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.FuseDuration;
+        protected override float FuseTime { get; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.FuseDuration;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Scp079.ChangingCamera += OnChangingCamera;
-            Exiled.Events.Handlers.Scp079.InteractingDoor += OnInteractingDoor;
-            Exiled.Events.Handlers.Map.ExplodingGrenade += OnExplodingGrenade;
+            Scp079.ChangingCamera += OnChangingCamera;
+            Scp079.InteractingDoor += OnInteractingDoor;
+            Map.ExplodingGrenade += OnExplodingGrenade;
             base.LoadEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Map.ExplodingGrenade -= OnExplodingGrenade;
+            Map.ExplodingGrenade -= OnExplodingGrenade;
             base.UnloadEvents();
         }
 
@@ -83,8 +84,8 @@ namespace CustomItems.Items
 
             ev.IsAllowed = false;
 
-            Room room = Map.FindParentRoom(ev.Grenade);
-            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Map.Rooms.Count}", Plugin.Singleton.Config.Debug);
+            Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade);
+            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Exiled.API.Features.Map.Rooms.Count}", Plugin.Singleton.Config.Debug);
 
             lockedRooms079.Add(room);
             room.TurnOffLights(Plugin.Singleton.Config.ItemConfigs.EmpCfg.Duration);
@@ -97,7 +98,7 @@ namespace CustomItems.Items
                 if (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !Plugin.Singleton.Config.ItemConfigs.EmpCfg.OpenKeycardDoors)
                     continue;
 
-                Log.Debug($"Opening a door!", Plugin.Singleton.Config.Debug);
+                Log.Debug("Opening a door!", Plugin.Singleton.Config.Debug);
                 door.NetworkTargetState = true;
                 door.ServerChangeLock(DoorLockReason.NoPower, true);
                 if (lockedDoors.Contains(door))

@@ -23,13 +23,13 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Name;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Description;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Description;
 
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.SpawnLimit;
+        /// <inheritdoc />
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.SpawnProperties;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
@@ -63,7 +63,7 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (!CheckItem(ev.Attacker.CurrentItem))
+            if (!Check(ev.Attacker.CurrentItem))
                 return;
 
             ev.Amount = 0;

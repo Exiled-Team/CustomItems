@@ -4,9 +4,9 @@
 
 namespace CustomItems.Items
 {
-    using System.Collections.Generic;
     using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.Handlers;
 
     /// <inheritdoc />
     public class SniperRifle : CustomWeapon
@@ -18,40 +18,34 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;
 
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.SpawnLimit;
-
-        /// <inheritdoc/>
-        protected override int ModBarrel { get; set; } = 3;
-
-        /// <inheritdoc/>
-        protected override int ModSight { get; set; } = 4;
+        /// <inheritdoc />
+        public override Modifiers Modifiers { get; } = new Modifiers(3, 4, 0);
 
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.Hurting += OnHurting;
+            Player.Hurting += OnHurting;
             base.LoadEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.Hurting -= OnHurting;
+            Player.Hurting -= OnHurting;
             base.UnloadEvents();
         }
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (CheckItem(ev.Attacker.CurrentItem))
+            if (Check(ev.Attacker.CurrentItem))
                 ev.Amount *= Plugin.Singleton.Config.ItemConfigs.SniperCfg.DamageMultiplier;
         }
     }

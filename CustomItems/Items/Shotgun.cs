@@ -5,13 +5,15 @@
 namespace CustomItems.Items
 {
     using System;
-    using System.Collections.Generic;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.Events.EventArgs;
     using Mirror;
     using UnityEngine;
+    using Player = Exiled.Events.Handlers.Player;
+    using Random = UnityEngine.Random;
+    using Server = Exiled.API.Features.Server;
 
     /// <inheritdoc />
     public class Shotgun : CustomWeapon
@@ -23,28 +25,25 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Name;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLocations;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
 
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.Shooting += OnShooting;
+            Player.Shooting += OnShooting;
             base.LoadEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
+            Player.Shooting -= OnShooting;
             base.UnloadEvents();
         }
 
@@ -65,19 +64,19 @@ namespace CustomItems.Items
 
         private static Quaternion RandomAimCone() =>
             Quaternion.Euler(
-                UnityEngine.Random.Range(
+                Random.Range(
                     -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
                     Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
-                UnityEngine.Random.Range(
+                Random.Range(
                     -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
                     Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
-                UnityEngine.Random.Range(
+                Random.Range(
                     -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
                     Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity));
 
         private void OnShooting(ShootingEventArgs ev)
         {
-            if (!CheckItem(ev.Shooter.CurrentItem))
+            if (!Check(ev.Shooter.CurrentItem))
                 return;
 
             ev.IsAllowed = false;
@@ -115,7 +114,7 @@ namespace CustomItems.Items
                         {
                             var parent = hits[i].collider.GetComponentInParent<NetworkIdentity>().gameObject;
                             var hitCcm = parent.GetComponent<CharacterClassManager>();
-                            Player target = Player.Get(hitCcm._hub);
+                            Exiled.API.Features.Player target = Exiled.API.Features.Player.Get(hitCcm._hub);
 
                             if (target == null)
                             {

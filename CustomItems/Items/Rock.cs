@@ -26,18 +26,15 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Name;
+        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Name;
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Description;
-
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.SpawnLimit;
+        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Description;
 
         /// <inheritdoc/>
         protected override void OnThrowingGrenade(ThrowingGrenadeEventArgs ev)
         {
-            if (!CheckItem(ev.Player.CurrentItem))
+            if (!Check(ev.Player.CurrentItem))
                 return;
 
             ev.IsAllowed = false;
@@ -48,7 +45,7 @@ namespace CustomItems.Items
                 Timing.CallDelayed(1f, () =>
                 {
                     Vector3 pos = ev.Player.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-                    GameObject grenade = SpawnGrenade(pos, ev.Player.CameraTransform.forward * Plugin.Singleton.Config.ItemConfigs.RockCfg.ThrowSpeed, 3f, GetGrenadeType(ItemType)).gameObject;
+                    GameObject grenade = SpawnGrenade(pos, ev.Player.CameraTransform.forward * Plugin.Singleton.Config.ItemConfigs.RockCfg.ThrowSpeed, 3f, GetGrenadeType(Type)).gameObject;
                     Object.Destroy(grenade.GetComponent<Scp018Grenade>());
 
                     CustomItems.Rock rock = grenade.AddComponent<CustomItems.Rock>();

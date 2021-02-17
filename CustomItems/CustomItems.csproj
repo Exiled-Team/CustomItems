@@ -60,7 +60,7 @@
           <HintPath>..\packages\EXILED.2.1.30\lib\net472\Exiled.Bootstrap.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Exiled.CustomItems, Version=2.1.35.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="Exiled.CustomItems, Version=2.1.36.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\EXILED\bin\Release\Exiled.CustomItems.dll</HintPath>
         </Reference>
         <Reference Include="Exiled.Events, Version=2.1.30.0, Culture=neutral, PublicKeyToken=null">
