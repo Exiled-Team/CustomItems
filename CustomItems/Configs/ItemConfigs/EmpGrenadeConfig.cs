@@ -17,11 +17,27 @@ namespace CustomItems.ItemConfigs
         public float Duration { get; set; } = 20f;
 
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
-            new DynamicSpawn(SpawnLocation.Inside173Gate, 100),
-            new StaticItemSpawn(new Vector(100, 25, 40), 50, "somewhere")
-        }, 1);
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            {
+                new DynamicItemSpawn
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.Inside173Gate
+                },
+            },
+            StaticSpawnLocations = new List<StaticItemSpawn>
+            {
+                new StaticItemSpawn
+                {
+                    Chance = 50,
+                    Name = "somewhere",
+                    Position = new Vector(100, 25, 40)
+                }
+            }
+        };
 
         [Description("Whether or not the grenade should explode immediately when it collides with something.")]
         public bool ExplodeOnCollision { get; set; } = true;

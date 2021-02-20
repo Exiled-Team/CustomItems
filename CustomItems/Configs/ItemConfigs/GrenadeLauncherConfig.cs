@@ -23,12 +23,23 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunLogicer;
 
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.Inside049Armory, 50),
-                new DynamicSpawn(SpawnLocation.InsideHczArmory, 40),
-            }, 1);
+                new DynamicItemSpawn
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.Inside049Armory
+                },
+                new DynamicItemSpawn
+                {
+                    Chance = 40,
+                    Location = SpawnLocation.InsideHczArmory
+                }
+            }
+        };
         
         [Description("The speed of grenades when they shoot out of the weapon.")]
         public float GrenadeSpeed { get; set; } = 1.5f;

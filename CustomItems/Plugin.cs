@@ -41,7 +41,7 @@ namespace CustomItems
         public override string Prefix { get; } = "CustomItems";
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 30);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 3, 0);
 
         /// <summary>
         /// Gets the Methods class.

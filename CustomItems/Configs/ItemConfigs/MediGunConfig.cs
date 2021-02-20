@@ -23,13 +23,28 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunProject90;
 
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.InsideGr18, 40),
-                new DynamicSpawn(SpawnLocation.InsideGateA, 50),
-                new DynamicSpawn(SpawnLocation.InsideGateB, 50),
-            }, 1);
+                new DynamicItemSpawn
+                {
+                    Chance = 40,
+                    Location = SpawnLocation.InsideGr18
+                },
+                new DynamicItemSpawn
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.InsideGateA
+                },
+                new DynamicItemSpawn
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.InsideGateB
+                }
+            }
+        };
         
         [Description("Whether or not zombies can be 'cured' by this weapon.")]
         public bool HealZombies { get; set; } = true;

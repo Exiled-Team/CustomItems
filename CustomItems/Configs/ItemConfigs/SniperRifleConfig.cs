@@ -23,12 +23,23 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunE11SR;
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.InsideHid, 100),
-                new DynamicSpawn(SpawnLocation.InsideHczArmory, 40),
-            }, 1);
+                new DynamicItemSpawn
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.InsideHid
+                },
+                new DynamicItemSpawn
+                {
+                    Chance = 40,
+                    Location = SpawnLocation.InsideHczArmory
+                }
+            }
+        };
 
         [Description("The Custom Item ID for this item.")]
         public int Id { get; set; } = 9;

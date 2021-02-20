@@ -17,11 +17,18 @@ namespace CustomItems.ItemConfigs
         public float Duration { get; set; } = 15f;
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.InsideHid, 10),
-            }, 1);
+                new DynamicItemSpawn
+                {
+                    Chance = 10,
+                    Location = SpawnLocation.InsideHid
+                },
+            }
+        };
 
         [Description("The Custom Item ID for this item.")]
         public int Id { get; set; } = 12;

@@ -14,12 +14,23 @@ namespace CustomItems.ItemConfigs
     public class ImplosionGrenadeConfig
     {
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.InsideHczArmory, 100),
-                new DynamicSpawn(SpawnLocation.Inside012Locker, 50),
-            }, 1);
+                new DynamicItemSpawn
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.Inside012Locker
+                },
+                new DynamicItemSpawn
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.InsideHczArmory
+                }
+            }
+        };
         
         [Description("The % of normal frag grenade damage this grenade will deal to those in it's radius.")]
         public float DamageModifier { get; set; } = 0.05f;

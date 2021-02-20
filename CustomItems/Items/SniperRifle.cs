@@ -21,7 +21,7 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;

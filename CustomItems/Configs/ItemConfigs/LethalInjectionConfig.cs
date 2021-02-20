@@ -14,12 +14,19 @@ namespace CustomItems.ItemConfigs
     public class LethalInjectionConfig
     {
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.Inside096, 100),
-            }, 1);
-        
+                new DynamicItemSpawn
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.Inside096
+                },
+            }
+        };
+
         [Description("Whether the Lethal Injection shoudl always kill the user, regardless of if they stop SCP-096's enrage.")]
         public bool KillOnFail { get; set; } = true;
 

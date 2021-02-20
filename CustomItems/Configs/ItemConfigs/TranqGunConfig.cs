@@ -20,12 +20,23 @@ namespace CustomItems.ItemConfigs
         public ItemType ItemType { get; set; } = ItemType.GunUSP;
         
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
-        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties(
-            new List<CustomItemSpawn>
+        public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnLocations = new List<DynamicItemSpawn>
             {
-                new DynamicSpawn(SpawnLocation.InsideGr18, 50),
-                new DynamicSpawn(SpawnLocation.Inside173Armory, 80),
-            }, 1);
+                new DynamicItemSpawn
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.InsideGr18
+                },
+                new DynamicItemSpawn
+                {
+                    Chance = 80,
+                    Location = SpawnLocation.Inside173Armory
+                }
+            }
+        };
         
         [Description("Whether or not SCPs should be resistant to tranquilizers. (Being resistant gives them a chance to not be tranquilized when shot).")]
         public bool ResistantScps { get; set; } = true;
