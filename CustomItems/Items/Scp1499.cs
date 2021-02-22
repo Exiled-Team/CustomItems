@@ -38,14 +38,14 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemUsed += OnUsedMedicalItem;
+            Exiled.Events.Handlers.Player.MedicalItemDequipped += OnDequippedMedicalItem;
             base.LoadEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemUsed -= OnUsedMedicalItem;
+            Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnDequippedMedicalItem;
             base.UnloadEvents();
         }
 
@@ -63,6 +63,16 @@ namespace CustomItems.Items
                 ev.IsAllowed = false;
                 ev.Player.Position = scp1499Players[ev.Player];
 
+                if (Warhead.IsDetonated && scp1499Players[ev.Player].y < 800)
+                {
+                    ev.Player.Kill(DamageTypes.Nuke);
+                }
+                else
+                if (Map.IsLCZDecontaminated && scp1499Players[ev.Player].y > -500)
+                {
+                    ev.Player.Kill(DamageTypes.Decont);
+                }
+
                 scp1499Players.Remove(ev.Player);
             }
             else
@@ -78,7 +88,7 @@ namespace CustomItems.Items
             base.OnWaitingForPlayers();
         }
 
-        private void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
+        private void OnDequippedMedicalItem(DequippedMedicalItemEventArgs ev)
         {
             if (!CheckItem(ev.Player.CurrentItem))
                 return;
@@ -99,6 +109,17 @@ namespace CustomItems.Items
                         return;
 
                     ev.Player.Position = scp1499Players[ev.Player];
+
+                    if (Warhead.IsDetonated && scp1499Players[ev.Player].y < 800)
+                    {
+                        ev.Player.Kill(DamageTypes.Nuke);
+                    }
+                    else
+                    if (Map.IsLCZDecontaminated && scp1499Players[ev.Player].y > -500)
+                    {
+                        ev.Player.Kill(DamageTypes.Decont);
+                    }
+
                     scp1499Players.Remove(ev.Player);
                 });
             }
