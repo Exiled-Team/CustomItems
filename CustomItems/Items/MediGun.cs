@@ -63,7 +63,7 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (CheckItem(ev.Attacker.CurrentItem))
+            if (CheckItem(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target)
                 ev.Amount = 0f;
         }
 
