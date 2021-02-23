@@ -6,6 +6,7 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using CustomItems.API;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using MEC;
@@ -114,19 +115,46 @@ namespace CustomItems.Items
 
                     ev.Player.Position = Scp1499Players[ev.Player];
 
-                    if (Warhead.IsDetonated && Scp1499Players[ev.Player].y < 800)
+                    bool shouldKill = false;
+                    if (Warhead.IsDetonated)
                     {
-                        ev.Player.Kill(DamageTypes.Nuke);
+                        if (ev.Player.CurrentRoom.Zone != ZoneType.Surface)
+                        {
+                            shouldKill = true;
+                        }
+                        else
+                        {
+                            foreach (Lift lift in Map.Lifts)
+                                if (lift.elevatorName.Contains("Gate"))
+                                    if (Vector3.Distance(ev.Player.Position, lift.transform.position) <= 4.5f)
+                                    {
+                                        shouldKill = true;
+                                        break;
+                                    }
+                        }
+
+                        if (shouldKill)
+                            ev.Player.Kill(DamageTypes.Nuke);
                     }
-                    else if (Map.IsLCZDecontaminated && Scp1499Players[ev.Player].y > -500)
+                    else if (Map.IsLCZDecontaminated)
                     {
-                        ev.Player.Kill(DamageTypes.Decont);
-                    }
-                    else if (Warhead.IsDetonated || Map.IsLCZDecontaminated)
-                    {
-                        foreach (Lift lift in Map.Lifts)
-                            if (Vector3.Distance(Scp1499Players[ev.Player], lift.transform.position) <= 4.5f)
-                                ev.Player.Kill();
+                        if (ev.Player.CurrentRoom.Zone == ZoneType.LightContainment)
+                        {
+                            shouldKill = true;
+                        }
+                        else
+                        {
+                            foreach (Lift lift in Map.Lifts)
+                                if (lift.elevatorName.Contains("El"))
+                                    if (Vector3.Distance(ev.Player.Position, lift.transform.position) <= 4.5f)
+                                    {
+                                        shouldKill = true;
+                                        break;
+                                    }
+                        }
+
+                        if (shouldKill)
+                            ev.Player.Kill(DamageTypes.Decont);
                     }
 
                     Scp1499Players.Remove(ev.Player);
