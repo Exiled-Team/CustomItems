@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -20,14 +21,14 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 100,
                     Location = SpawnLocation.Inside012Locker
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside173Armory
@@ -36,7 +37,7 @@ namespace CustomItems.ItemConfigs
         };
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 5;
+        public uint Id { get; set; } = 5;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This coin has magical properties when it is dropped inside of SCP-106's pocket dimension.";

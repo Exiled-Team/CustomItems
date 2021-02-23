@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -17,7 +18,7 @@ namespace CustomItems.ItemConfigs
         public int ZombieHealingRequired { get; set; } = 200;
         
         [Description("How many rounds are usable after a single reload.")]
-        public int ClipSize { get; set; } = 30;
+        public uint ClipSize { get; set; } = 30;
         
         [Description("The base weapon this one will be modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunProject90;
@@ -26,19 +27,19 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideGr18
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideGateA
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideGateB
@@ -53,7 +54,7 @@ namespace CustomItems.ItemConfigs
         public float HealingModifier { get; set; } = 1f;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 6;
+        public uint Id { get; set; } = 6;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "A specialized weapon that fires darts filled with a special mixture of Painkillers, Antibiotics, Antiseptics and other medicines. When fires at friendly targets, they will be healed. When fired at instances of SCP-049-2, they will be slowly converted back to human form. Does nothing when fired at anyone else.";

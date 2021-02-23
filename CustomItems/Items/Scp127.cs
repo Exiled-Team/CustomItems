@@ -6,7 +6,8 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
 
@@ -14,8 +15,8 @@ namespace CustomItems.Items
     public class Scp127 : CustomWeapon
     {
         /// <inheritdoc />
-        public Scp127(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        public Scp127(ItemType type, uint clipSize, uint itemId)
+            : base(type, itemId, clipSize)
         {
             Coroutines.Add(Timing.RunCoroutine(DoAmmoRegeneration()));
         }
@@ -32,24 +33,16 @@ namespace CustomItems.Items
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
-        {
-            Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUp;
-            base.LoadEvents();
-        }
-
-        /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
 
-            Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUp;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
+        protected override void OnReloading(ReloadingWeaponEventArgs ev)
         {
             if (Check(ev.Player.CurrentItem))
                 ev.IsAllowed = false;
@@ -61,10 +54,12 @@ namespace CustomItems.Items
             Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(player)));
         }
 
-        private void OnPickingUp(PickingUpItemEventArgs ev)
+        /// <inheritdoc/>
+        protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {
             if (Check(ev.Pickup))
                 Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
+            base.OnPickingUp(ev);
         }
 
         private IEnumerator<float> DoInventoryRegeneration(Player player)
@@ -101,7 +96,7 @@ namespace CustomItems.Items
             {
                 yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 
-                foreach (Pickup pickup in ItemPickups)
+                foreach (Pickup pickup in Pickups)
                     if (Check(pickup) && pickup.durability < ClipSize)
                     {
                         pickup.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;

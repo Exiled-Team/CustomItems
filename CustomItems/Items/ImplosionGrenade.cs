@@ -7,7 +7,8 @@ namespace CustomItems.Items
     using System;
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Grenades;
     using MEC;
@@ -23,7 +24,7 @@ namespace CustomItems.Items
         private int layerMask;
 
         /// <inheritdoc />
-        public ImplosionGrenade(ItemType type, int itemId)
+        public ImplosionGrenade(ItemType type, uint itemId)
             : base(type, itemId)
         {
         }
@@ -43,20 +44,20 @@ namespace CustomItems.Items
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Map.ExplodingGrenade += OnExplodingGrenade;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Map.ExplodingGrenade -= OnExplodingGrenade;
 
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         private static IEnumerator<float> DoSuction(Player player, Vector3 position)
@@ -73,7 +74,7 @@ namespace CustomItems.Items
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
         {
-            if (CheckGrenade(ev.Grenade))
+            if (Check(ev.Grenade))
             {
                 Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", Plugin.Singleton.Config.Debug);
                 Dictionary<Player, float> copiedList = new Dictionary<Player, float>();

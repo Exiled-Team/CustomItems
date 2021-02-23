@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -17,7 +18,7 @@ namespace CustomItems.ItemConfigs
         public float DamageMultiplier { get; set; } = 7.5f;
         
         [Description("How many rounds are usable after a single reload.")]
-        public int ClipSize { get; set; } = 1;
+        public uint ClipSize { get; set; } = 1;
         
         [Description("The base weapon this one is modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunE11SR;
@@ -26,14 +27,14 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideHid
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideHczArmory
@@ -42,7 +43,7 @@ namespace CustomItems.ItemConfigs
         };
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 9;
+        public uint Id { get; set; } = 9;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";

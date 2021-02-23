@@ -7,7 +7,8 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using CustomPlayerEffects;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
     using UnityEngine;
@@ -19,7 +20,7 @@ namespace CustomItems.Items
         private readonly Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
 
         /// <inheritdoc />
-        public Scp1499(ItemType type, int itemId)
+        public Scp1499(ItemType type, uint itemId)
             : base(type, itemId)
         {
         }
@@ -34,21 +35,21 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Description;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.MedicalItemUsed += OnUsedMedicalItem;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.MedicalItemUsed -= OnUsedMedicalItem;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void OnDroppingItem(DroppingItemEventArgs ev)
+        protected override void OnDropping(DroppingItemEventArgs ev)
         {
             if (scp1499Players.ContainsKey(ev.Player))
                 ev.IsAllowed = false;
@@ -65,7 +66,7 @@ namespace CustomItems.Items
             }
             else
             {
-                base.OnDroppingItem(ev);
+                base.OnDropping(ev);
             }
         }
 

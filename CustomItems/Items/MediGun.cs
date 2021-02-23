@@ -7,7 +7,8 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using UnityEngine;
 
@@ -17,8 +18,8 @@ namespace CustomItems.Items
         private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
 
         /// <inheritdoc />
-        public MediGun(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        public MediGun(ItemType type, uint clipSize, uint itemId)
+            : base(type, itemId, clipSize)
         {
         }
 
@@ -32,23 +33,23 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Player.Dying += OnDyingMG;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Player.Dying -= OnDyingMG;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         /// <inheritdoc/>

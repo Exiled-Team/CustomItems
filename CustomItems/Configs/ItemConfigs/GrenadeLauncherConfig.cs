@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -17,7 +18,7 @@ namespace CustomItems.ItemConfigs
         public bool UseGrenades { get; set; } = true;
         
         [Description("How many rounds a single reload should give. Note that weapons that fire more quickly than others will want lower clip sizes to prevent a nightmare of explosions. Unless that's your thing.. No judgement.")]
-        public int ClipSize { get; set; } = 1;
+        public uint ClipSize { get; set; } = 1;
         
         [Description("The type of weapon this one will be modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunLogicer;
@@ -26,14 +27,14 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside049Armory
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideHczArmory
@@ -48,7 +49,7 @@ namespace CustomItems.ItemConfigs
         public float FuseTime { get; set; } = 1f;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 2;
+        public uint Id { get; set; } = 2;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This weapon will launch grenades in the direction you are firing, instead of bullets. Requires Frag Grenades in your inventory to reload.";

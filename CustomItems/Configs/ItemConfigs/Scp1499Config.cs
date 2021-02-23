@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -20,9 +21,9 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 10,
                     Location = SpawnLocation.InsideHid
@@ -31,7 +32,7 @@ namespace CustomItems.ItemConfigs
         };
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 12;
+        public uint Id { get; set; } = 12;
 
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "The gas mask that temporarily teleports you to another dimension, when you put it on.";

@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -17,14 +18,14 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside012Locker
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideHczArmory
@@ -45,7 +46,7 @@ namespace CustomItems.ItemConfigs
         public float SuctionTickRate { get; set; } = 0.025f;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 3;
+        public uint Id { get; set; } = 3;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This grenade does almost 0 damage, however it will succ nearby players towards the center of the implosion area.";

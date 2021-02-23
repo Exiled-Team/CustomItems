@@ -5,7 +5,8 @@
 namespace CustomItems.Items
 {
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
     using PlayableScps;
@@ -16,7 +17,7 @@ namespace CustomItems.Items
     public class LethalInjection : CustomItem
     {
         /// <inheritdoc />
-        public LethalInjection(ItemType type, int itemId)
+        public LethalInjection(ItemType type, uint itemId)
             : base(type, itemId)
         {
         }
@@ -31,15 +32,17 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Description;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Player.UsingMedicalItem += OnMedicalItemUsed;
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Player.UsingMedicalItem -= OnMedicalItemUsed;
+            base.UnsubscribeEvents();
         }
 
         private void OnMedicalItemUsed(UsingMedicalItemEventArgs ev)

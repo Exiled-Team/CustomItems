@@ -9,6 +9,8 @@ namespace CustomItems.Items
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.CustomItems.Components;
     using Exiled.Events.EventArgs;
     using Grenades;
@@ -20,8 +22,8 @@ namespace CustomItems.Items
     public class GrenadeLauncher : CustomWeapon
     {
         /// <inheritdoc />
-        public GrenadeLauncher(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        public GrenadeLauncher(ItemType type, uint clipSize, uint itemId)
+            : base(type, itemId, clipSize)
         {
         }
 
@@ -35,21 +37,21 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
+        protected override void OnReloading(ReloadingWeaponEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
@@ -64,11 +66,11 @@ namespace CustomItems.Items
                         continue;
 
                     ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
-                    Reload(ev.Player);
+                    ev.Player.ReloadWeapon();
 
                     ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
                     Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", Plugin.Singleton.Config.Debug);
-                    Timing.CallDelayed(4.5f, () => { Reload(ev.Player); });
+                    Timing.CallDelayed(4.5f, () => { ev.Player.ReloadWeapon(); });
                     ev.Player.RemoveItem(item);
 
                     break;
@@ -78,7 +80,7 @@ namespace CustomItems.Items
             }
             else
             {
-                base.OnReloadingWeapon(ev);
+                base.OnReloading(ev);
             }
         }
 
@@ -120,8 +122,7 @@ namespace CustomItems.Items
             Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
             Grenade grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
             CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
-            collisionHandler.Owner = ev.Shooter.GameObject;
-            collisionHandler.Grenade = grenadeComponent;
+            collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
         }
     }
 }

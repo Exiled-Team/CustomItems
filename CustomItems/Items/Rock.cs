@@ -5,7 +5,7 @@
 namespace CustomItems.Items
 {
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
     using Grenades;
     using MEC;
@@ -20,7 +20,7 @@ namespace CustomItems.Items
         public int PlayerLayerMask = 1208246273;
 
         /// <inheritdoc />
-        public Rock(ItemType type, int itemId)
+        public Rock(ItemType type, uint itemId)
             : base(type, itemId)
         {
         }
@@ -32,7 +32,7 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.RockCfg.Description;
 
         /// <inheritdoc/>
-        protected override void OnThrowingGrenade(ThrowingGrenadeEventArgs ev)
+        protected override void OnThrowing(ThrowingGrenadeEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
@@ -45,13 +45,13 @@ namespace CustomItems.Items
                 Timing.CallDelayed(1f, () =>
                 {
                     Vector3 pos = ev.Player.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-                    GameObject grenade = SpawnGrenade(pos, ev.Player.CameraTransform.forward * Plugin.Singleton.Config.ItemConfigs.RockCfg.ThrowSpeed, 3f, GetGrenadeType(Type)).gameObject;
+                    GameObject grenade = Spawn(pos, ev.Player.CameraTransform.forward * Plugin.Singleton.Config.ItemConfigs.RockCfg.ThrowSpeed, 3f, GetGrenadeType(Type)).gameObject;
                     Object.Destroy(grenade.GetComponent<Scp018Grenade>());
 
                     CustomItems.Rock rock = grenade.AddComponent<CustomItems.Rock>();
                     rock.Owner = ev.Player.GameObject;
                     rock.Side = ev.Player.Side;
-                    TrackedGrenades.Add(grenade);
+                    Tracked.Add(grenade);
                     ev.Player.RemoveItem(ev.Player.CurrentItem);
                 });
             }

@@ -7,7 +7,8 @@ namespace CustomItems.Items
     using System;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Mirror;
     using UnityEngine;
@@ -19,8 +20,8 @@ namespace CustomItems.Items
     public class Shotgun : CustomWeapon
     {
         /// <inheritdoc />
-        public Shotgun(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        public Shotgun(ItemType type, uint clipSize, uint itemId)
+            : base(type, itemId, clipSize)
         {
         }
 
@@ -34,17 +35,17 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Player.Shooting += OnShooting;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Player.Shooting -= OnShooting;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         private static float HitHandler(HitboxIdentity box)
@@ -83,9 +84,9 @@ namespace CustomItems.Items
 
             try
             {
-                int bullets = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpreadCount;
+                uint bullets = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpreadCount;
                 if (ev.Shooter.CurrentItem.durability <= bullets)
-                    bullets = (int)ev.Shooter.CurrentItem.durability;
+                    bullets = (uint)ev.Shooter.CurrentItem.durability;
                 Ray[] rays = new Ray[bullets];
                 for (int i = 0; i < rays.Length; i++)
                 {
@@ -161,7 +162,7 @@ namespace CustomItems.Items
                 for (int i = 0; i < Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BoomCount; i++)
                     component.RpcConfirmShot(confirm, component.curWeapon);
 
-                ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - bullets);
+                ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)bullets);
             }
             catch (Exception e)
             {

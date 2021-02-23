@@ -24,7 +24,7 @@ namespace CustomItems.ItemConfigs
         public bool FriendlyFire { get; set; } = false;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 11;
+        public uint Id { get; set; } = 11;
         
         [Description("The name of this item shown to players when they obtain it.")]
         public string Name { get; set; } = "Rock";

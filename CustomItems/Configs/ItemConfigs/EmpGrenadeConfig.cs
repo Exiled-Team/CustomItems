@@ -6,6 +6,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Features;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -20,17 +22,17 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 100,
                     Location = SpawnLocation.Inside173Gate
                 },
             },
-            StaticSpawnLocations = new List<StaticItemSpawn>
+            StaticSpawnPoints = new List<StaticSpawnPoint>
             {
-                new StaticItemSpawn
+                new StaticSpawnPoint
                 {
                     Chance = 50,
                     Name = "somewhere",
@@ -46,7 +48,7 @@ namespace CustomItems.ItemConfigs
         public float FuseDuration { get; set; } = 3f;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 1;
+        public uint Id { get; set; } = 1;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";

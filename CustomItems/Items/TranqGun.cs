@@ -6,7 +6,8 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
     using UnityEngine;
@@ -17,8 +18,8 @@ namespace CustomItems.Items
         private readonly Dictionary<Player, int> tranquilizedPlayers = new Dictionary<Player, int>();
 
         /// <inheritdoc />
-        public TranqGun(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        public TranqGun(ItemType type, uint clipSize, uint itemId)
+            : base(type, itemId, clipSize)
         {
         }
 
@@ -32,17 +33,17 @@ namespace CustomItems.Items
         public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         private static IEnumerator<float> DoTranquilize(Player player, float duration)

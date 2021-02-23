@@ -6,7 +6,8 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
     using UnityEngine;
@@ -21,7 +22,7 @@ namespace CustomItems.Items
         private bool onCooldown;
 
         /// <inheritdoc />
-        public LuckyCoin(ItemType type, int itemId)
+        public LuckyCoin(ItemType type, uint itemId)
             : base(type, itemId)
         {
         }
@@ -36,34 +37,32 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Description;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
-            Player.DroppingItem += OnDroppingItem;
             Server.RoundStarted += OnRoundStart;
             Player.EnteringPocketDimension += OnEnterPocketDimension;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
-            Player.DroppingItem -= OnDroppingItem;
             Server.RoundStarted -= OnRoundStart;
             Player.EnteringPocketDimension -= OnEnterPocketDimension;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void OnPickingUpItem(PickingUpItemEventArgs ev)
+        protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {
             if (ev.Pickup.itemId == ItemType.Coin && ev.Player.CurrentRoom.Name == "PocketWorld")
                 ev.IsAllowed = false;
 
-            base.OnPickingUpItem(ev);
+            base.OnPickingUp(ev);
         }
 
         /// <inheritdoc/>
-        protected override void OnDroppingItem(DroppingItemEventArgs ev)
+        protected override void OnDropping(DroppingItemEventArgs ev)
         {
             if (!Check(ev.Item))
                 return;
@@ -77,7 +76,7 @@ namespace CustomItems.Items
             }
             else
             {
-                base.OnDroppingItem(ev);
+                base.OnDropping(ev);
             }
         }
 

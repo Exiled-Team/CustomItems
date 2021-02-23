@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -14,7 +15,7 @@ namespace CustomItems.ItemConfigs
     public class ShotgunConfig
     {
         [Description("The amount of pellets fired at once. This amount of ammo will also be consumed from the weapons current clip. If the clip is lower than this amount, the amount in the clip is used instead.")]
-        public int SpreadCount { get; set; } = 12;
+        public uint SpreadCount { get; set; } = 12;
         
         [Description("The 'randomness' factor used for the aimcone. Higher numbers = wider aimcone, which means less accuracy.")]
         public int AimconeSeverity { get; set; } = 5;
@@ -32,9 +33,9 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 60,
                     Location = SpawnLocation.InsideLczArmory
@@ -46,7 +47,7 @@ namespace CustomItems.ItemConfigs
         public float DamageFalloffModifier { get; set; } = 0.9f;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 8;
+        public uint Id { get; set; } = 8;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This modified MP-7 fires anti-personnel self-fragmenting rounds, that spreads into a cone of multiple projectiles in front of you.";

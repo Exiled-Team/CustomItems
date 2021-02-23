@@ -61,7 +61,7 @@
         <Reference Include="Exiled.CreditTags, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\EXILED\bin\Release\Exiled.CreditTags.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.CustomItems, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="Exiled.CustomItems, Version=2.4.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\EXILED\bin\Release\Exiled.CustomItems.dll</HintPath>
         </Reference>
         <Reference Include="Exiled.Events, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
@@ -70,7 +70,7 @@
         <Reference Include="Exiled.Example, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\EXILED\bin\Release\Exiled.Example.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.Loader, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="Exiled.Loader, Version=2.4.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\EXILED\bin\Release\Exiled.Loader.dll</HintPath>
         </Reference>
         <Reference Include="Exiled.Permissions, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">

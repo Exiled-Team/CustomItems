@@ -4,7 +4,8 @@
 
 namespace CustomItems.Items
 {
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Exiled.Events.Handlers;
 
@@ -12,8 +13,8 @@ namespace CustomItems.Items
     public class SniperRifle : CustomWeapon
     {
         /// <inheritdoc />
-        public SniperRifle(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        public SniperRifle(ItemType type, uint clipSize, uint itemId)
+            : base(type, itemId, clipSize)
         {
         }
 
@@ -30,17 +31,17 @@ namespace CustomItems.Items
         public override Modifiers Modifiers { get; } = new Modifiers(3, 4, 0);
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Player.Hurting += OnHurting;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Player.Hurting -= OnHurting;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         private void OnHurting(HurtingEventArgs ev)

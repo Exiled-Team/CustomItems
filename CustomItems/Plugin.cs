@@ -8,7 +8,7 @@ namespace CustomItems
     using System.Collections.Generic;
     using CustomItems.Configs;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
     using HarmonyLib;
     using Scp914Events = Exiled.Events.Handlers.Scp914;
     using Server = Exiled.Events.Handlers.Server;
@@ -87,7 +87,7 @@ namespace CustomItems
         public override void OnDisabled()
         {
             foreach (CustomItem item in ItemManagers)
-                item.UnregisterCustomItem();
+                item.Unregister();
 
             Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
             Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;

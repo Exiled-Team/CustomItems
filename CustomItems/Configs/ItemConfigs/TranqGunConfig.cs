@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -14,7 +15,7 @@ namespace CustomItems.ItemConfigs
     public class TranqGunConfig
     {
         [Description("The number of rounds usable after a single reload.")]
-        public int ClipSize { get; set; } = 2;
+        public uint ClipSize { get; set; } = 2;
         
         [Description("The base weapon this one is modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunUSP;
@@ -23,14 +24,14 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideGr18
                 },
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 80,
                     Location = SpawnLocation.Inside173Armory
@@ -54,7 +55,7 @@ namespace CustomItems.ItemConfigs
         public int ScpResistChance { get; set; } = 40;
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 10;
+        public uint Id { get; set; } = 10;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "This modifier USP fires non-lethal tranquilizing darts. Those affected will be rendered unconscious for a short duration. Unreliable against SCPs. Repeated tranquilizing of the same person will render them resistant to it's effect.";

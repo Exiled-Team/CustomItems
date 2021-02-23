@@ -8,7 +8,8 @@ namespace CustomItems.Items
     using System.Linq;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Exiled.Events.Handlers;
     using Interactables.Interobjects.DoorUtils;
@@ -27,7 +28,7 @@ namespace CustomItems.Items
         private readonly List<DoorVariant> lockedDoors = new List<DoorVariant>();
 
         /// <inheritdoc />
-        public EmpGrenade(ItemType type, int itemId)
+        public EmpGrenade(ItemType type, uint itemId)
             : base(type, itemId)
         {
         }
@@ -49,19 +50,19 @@ namespace CustomItems.Items
         protected override float FuseTime { get; } = Plugin.Singleton.Config.ItemConfigs.EmpCfg.FuseDuration;
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
+        protected override void SubscribeEvents()
         {
             Scp079.ChangingCamera += OnChangingCamera;
             Scp079.InteractingDoor += OnInteractingDoor;
             Map.ExplodingGrenade += OnExplodingGrenade;
-            base.LoadEvents();
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnloadEvents()
+        protected override void UnsubscribeEvents()
         {
             Map.ExplodingGrenade -= OnExplodingGrenade;
-            base.UnloadEvents();
+            base.UnsubscribeEvents();
         }
 
         private static void OnChangingCamera(ChangingCameraEventArgs ev)
@@ -79,7 +80,7 @@ namespace CustomItems.Items
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
         {
-            if (!CheckGrenade(ev.Grenade))
+            if (!Check(ev.Grenade))
                 return;
 
             ev.IsAllowed = false;

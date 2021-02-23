@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.CustomItems.API;
+using Exiled.CustomItems.API.Spawn;
 
 #pragma warning disable 1591
 
@@ -20,7 +21,7 @@ namespace CustomItems.ItemConfigs
         public int RegenAmount { get; set; } = 2;
         
         [Description("The max clip size for the weapon.")]
-        public int ClipSize { get; set; } = 12;
+        public uint ClipSize { get; set; } = 12;
         
         [Description("The base weapon this one will be modeled after.")]
         public ItemType ItemType { get; set; } = ItemType.GunCOM15;
@@ -29,9 +30,9 @@ namespace CustomItems.ItemConfigs
         public SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
-            DynamicSpawnLocations = new List<DynamicItemSpawn>
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicItemSpawn
+                new DynamicSpawnPoint
                 {
                     Chance = 100,
                     Location = SpawnLocation.Inside173Armory
@@ -40,7 +41,7 @@ namespace CustomItems.ItemConfigs
         };
 
         [Description("The Custom Item ID for this item.")]
-        public int Id { get; set; } = 7;
+        public uint Id { get; set; } = 7;
         
         [Description("The description of this item show to players when they obtain it.")]
         public string Description { get; set; } = "SCP-127 is a pistol that slowly regenerates it's ammo over time but cannot be reloaded normally.";
