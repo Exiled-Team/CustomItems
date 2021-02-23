@@ -66,19 +66,7 @@ namespace CustomItems.Items
             if (Scp1499Players.ContainsKey(ev.Player))
             {
                 ev.IsAllowed = false;
-                ev.Player.Position = Scp1499Players[ev.Player];
-
-                if (Warhead.IsDetonated && Scp1499Players[ev.Player].y < 800)
-                {
-                    ev.Player.Kill(DamageTypes.Nuke);
-                }
-                else
-                if (Map.IsLCZDecontaminated && Scp1499Players[ev.Player].y > -500)
-                {
-                    ev.Player.Kill(DamageTypes.Decont);
-                }
-
-                Scp1499Players.Remove(ev.Player);
+                SendPlayerBack(ev.Player);
             }
             else
             {
@@ -98,6 +86,9 @@ namespace CustomItems.Items
             if (!CheckItem(ev.Player.CurrentItem))
                 return;
 
+            if (ev.Player.CurrentRoom.Name == "PocketWorld")
+                return;
+
             if (Scp1499Players.ContainsKey(ev.Player))
                 Scp1499Players[ev.Player] = ev.Player.Position;
             else
@@ -110,56 +101,63 @@ namespace CustomItems.Items
             {
                 Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration, () =>
                 {
-                    if (!Scp1499Players.ContainsKey(ev.Player))
-                        return;
-
-                    ev.Player.Position = Scp1499Players[ev.Player];
-
-                    bool shouldKill = false;
-                    if (Warhead.IsDetonated)
-                    {
-                        if (ev.Player.CurrentRoom.Zone != ZoneType.Surface)
-                        {
-                            shouldKill = true;
-                        }
-                        else
-                        {
-                            foreach (Lift lift in Map.Lifts)
-                                if (lift.elevatorName.Contains("Gate"))
-                                    if (Vector3.Distance(ev.Player.Position, lift.transform.position) <= 4.5f)
-                                    {
-                                        shouldKill = true;
-                                        break;
-                                    }
-                        }
-
-                        if (shouldKill)
-                            ev.Player.Kill(DamageTypes.Nuke);
-                    }
-                    else if (Map.IsLCZDecontaminated)
-                    {
-                        if (ev.Player.CurrentRoom.Zone == ZoneType.LightContainment)
-                        {
-                            shouldKill = true;
-                        }
-                        else
-                        {
-                            foreach (Lift lift in Map.Lifts)
-                                if (lift.elevatorName.Contains("El"))
-                                    if (Vector3.Distance(ev.Player.Position, lift.transform.position) <= 4.5f)
-                                    {
-                                        shouldKill = true;
-                                        break;
-                                    }
-                        }
-
-                        if (shouldKill)
-                            ev.Player.Kill(DamageTypes.Decont);
-                    }
-
-                    Scp1499Players.Remove(ev.Player);
+                    SendPlayerBack(ev.Player);
                 });
             }
+        }
+
+        private void SendPlayerBack(Player player)
+        {
+            if (!Scp1499Players.ContainsKey(player))
+                return;
+
+            player.Position = Scp1499Players[player];
+
+            bool shouldKill = false;
+            if (Warhead.IsDetonated)
+            {
+                if (player.CurrentRoom.Zone != ZoneType.Surface)
+                {
+                    shouldKill = true;
+                }
+                else
+                {
+                    foreach (Lift lift in Map.Lifts)
+                        if (lift.elevatorName.Contains("Gate"))
+                            foreach (Lift.Elevator elevator in lift.elevators)
+                                if (Vector3.Distance(player.Position, elevator.target.position) <= 3.5f)
+                                {
+                                    shouldKill = true;
+                                    break;
+                                }
+                }
+
+                if (shouldKill)
+                    player.Kill(DamageTypes.Nuke);
+            }
+            else if (Map.IsLCZDecontaminated)
+            {
+                if (player.CurrentRoom.Zone == ZoneType.LightContainment)
+                {
+                    shouldKill = true;
+                }
+                else
+                {
+                    foreach (Lift lift in Map.Lifts)
+                        if (lift.elevatorName.Contains("El"))
+                            foreach (Lift.Elevator elevator in lift.elevators)
+                                if (Vector3.Distance(player.Position, elevator.target.position) <= 3.5f)
+                                {
+                                    shouldKill = true;
+                                    break;
+                                }
+                }
+
+                if (shouldKill)
+                    player.Kill(DamageTypes.Decont);
+            }
+
+            Scp1499Players.Remove(player);
         }
     }
 }

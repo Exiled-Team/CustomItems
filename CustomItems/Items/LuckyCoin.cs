@@ -82,6 +82,7 @@ namespace CustomItems.Items
 
         private void OnRoundStart()
         {
+            teleports.Clear();
             foreach (PocketDimensionTeleport teleport in Object.FindObjectsOfType<PocketDimensionTeleport>())
             {
                 teleports.Add(teleport);
