@@ -39,7 +39,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void LoadEvents()
         {
-            Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStart;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnterPocketDimension;
             base.LoadEvents();
@@ -48,7 +47,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStart;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnterPocketDimension;
             base.UnloadEvents();
