@@ -16,16 +16,16 @@ namespace CustomItems.Items
     {
         private readonly Vector3 scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); // This position is where is unused terrain on the Surface
 
-        /// <summary>
-        ///  Gets a <see cref="Dictionary{TKey,TValue}"/> of players in the 1499 dimension and their tp-back coordinates.
-        /// </summary>
-        public static Dictionary<Player, Vector3> Scp1499Players => new Dictionary<Player, Vector3>();
-
         /// <inheritdoc />
         public Scp1499(ItemType type, int itemId)
             : base(type, itemId)
         {
         }
+
+        /// <summary>
+        ///  Gets a <see cref="Dictionary{TKey,TValue}"/> of players in the 1499 dimension and their tp-back coordinates.
+        /// </summary>
+        public static Dictionary<Player, Vector3> Scp1499Players => new Dictionary<Player, Vector3>();
 
         /// <inheritdoc/>
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Name;
@@ -118,10 +118,15 @@ namespace CustomItems.Items
                     {
                         ev.Player.Kill(DamageTypes.Nuke);
                     }
-                    else
-                    if (Map.IsLCZDecontaminated && Scp1499Players[ev.Player].y > -500)
+                    else if (Map.IsLCZDecontaminated && Scp1499Players[ev.Player].y > -500)
                     {
                         ev.Player.Kill(DamageTypes.Decont);
+                    }
+                    else if (Warhead.IsDetonated || Map.IsLCZDecontaminated)
+                    {
+                        foreach (Lift lift in Map.Lifts)
+                            if (Vector3.Distance(Scp1499Players[ev.Player], lift.transform.position) <= 4.5f)
+                                ev.Player.Kill();
                     }
 
                     Scp1499Players.Remove(ev.Player);
