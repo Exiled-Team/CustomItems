@@ -71,7 +71,10 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (!CheckItem(ev.Attacker.CurrentItem) || ev.Attacker == ev.Target)
+            if (!CheckItem(ev.Attacker.CurrentItem) || ev.Attacker == ev.Target || ev.DamageType != DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
+                return;
+
+            if (Scp1499.Scp1499Players.ContainsKey(ev.Attacker) || Scp1499.Scp1499Players.ContainsKey(ev.Target))
                 return;
 
             ev.Amount = 0;

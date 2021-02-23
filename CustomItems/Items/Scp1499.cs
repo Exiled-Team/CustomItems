@@ -15,7 +15,11 @@ namespace CustomItems.Items
     public class Scp1499 : CustomItem
     {
         private readonly Vector3 scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); // This position is where is unused terrain on the Surface
-        private readonly Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
+
+        /// <summary>
+        ///  Gets a <see cref="Dictionary{TKey,TValue}"/> of players in the 1499 dimension and their tp-back coordinates.
+        /// </summary>
+        public static Dictionary<Player, Vector3> Scp1499Players => new Dictionary<Player, Vector3>();
 
         /// <inheritdoc />
         public Scp1499(ItemType type, int itemId)
@@ -52,28 +56,28 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnDroppingItem(DroppingItemEventArgs ev)
         {
-            if (scp1499Players.ContainsKey(ev.Player))
+            if (Scp1499Players.ContainsKey(ev.Player))
                 ev.IsAllowed = false;
 
             if (!CheckItem(ev.Item))
                 return;
 
-            if (scp1499Players.ContainsKey(ev.Player))
+            if (Scp1499Players.ContainsKey(ev.Player))
             {
                 ev.IsAllowed = false;
-                ev.Player.Position = scp1499Players[ev.Player];
+                ev.Player.Position = Scp1499Players[ev.Player];
 
-                if (Warhead.IsDetonated && scp1499Players[ev.Player].y < 800)
+                if (Warhead.IsDetonated && Scp1499Players[ev.Player].y < 800)
                 {
                     ev.Player.Kill(DamageTypes.Nuke);
                 }
                 else
-                if (Map.IsLCZDecontaminated && scp1499Players[ev.Player].y > -500)
+                if (Map.IsLCZDecontaminated && Scp1499Players[ev.Player].y > -500)
                 {
                     ev.Player.Kill(DamageTypes.Decont);
                 }
 
-                scp1499Players.Remove(ev.Player);
+                Scp1499Players.Remove(ev.Player);
             }
             else
             {
@@ -84,7 +88,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnWaitingForPlayers()
         {
-            scp1499Players.Clear();
+            Scp1499Players.Clear();
             base.OnWaitingForPlayers();
         }
 
@@ -93,10 +97,10 @@ namespace CustomItems.Items
             if (!CheckItem(ev.Player.CurrentItem))
                 return;
 
-            if (scp1499Players.ContainsKey(ev.Player))
-                scp1499Players[ev.Player] = ev.Player.Position;
+            if (Scp1499Players.ContainsKey(ev.Player))
+                Scp1499Players[ev.Player] = ev.Player.Position;
             else
-                scp1499Players.Add(ev.Player, ev.Player.Position);
+                Scp1499Players.Add(ev.Player, ev.Player.Position);
 
             ev.Player.Position = scp1499DimensionPos;
             ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
@@ -105,22 +109,22 @@ namespace CustomItems.Items
             {
                 Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration, () =>
                 {
-                    if (!scp1499Players.ContainsKey(ev.Player))
+                    if (!Scp1499Players.ContainsKey(ev.Player))
                         return;
 
-                    ev.Player.Position = scp1499Players[ev.Player];
+                    ev.Player.Position = Scp1499Players[ev.Player];
 
-                    if (Warhead.IsDetonated && scp1499Players[ev.Player].y < 800)
+                    if (Warhead.IsDetonated && Scp1499Players[ev.Player].y < 800)
                     {
                         ev.Player.Kill(DamageTypes.Nuke);
                     }
                     else
-                    if (Map.IsLCZDecontaminated && scp1499Players[ev.Player].y > -500)
+                    if (Map.IsLCZDecontaminated && Scp1499Players[ev.Player].y > -500)
                     {
                         ev.Player.Kill(DamageTypes.Decont);
                     }
 
-                    scp1499Players.Remove(ev.Player);
+                    Scp1499Players.Remove(ev.Player);
                 });
             }
         }

@@ -63,7 +63,7 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (CheckItem(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target)
+            if (CheckItem(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.DamageType == DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
                 ev.Amount = 0f;
         }
 
