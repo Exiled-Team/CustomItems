@@ -26,7 +26,7 @@ namespace CustomItems.Items
         /// <summary>
         ///  Gets a <see cref="Dictionary{TKey,TValue}"/> of players in the 1499 dimension and their tp-back coordinates.
         /// </summary>
-        public static Dictionary<Player, Vector3> Scp1499Players => new Dictionary<Player, Vector3>();
+        public static Dictionary<Player, Vector3> Scp1499Players { get; } = new Dictionary<Player, Vector3>();
 
         /// <inheritdoc/>
         public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Name;
