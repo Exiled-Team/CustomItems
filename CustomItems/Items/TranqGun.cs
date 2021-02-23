@@ -5,6 +5,7 @@
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
+    using System.Linq;
     using CustomItems.API;
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
@@ -48,6 +49,13 @@ namespace CustomItems.Items
         private static IEnumerator<float> DoTranquilize(Player player, float duration)
         {
             Vector3 pos = player.Position;
+
+            foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+            {
+                if (item.IsCustomItem(out CustomItem cItem))
+                    cItem.SpawnItem(player.Position);
+                player.Inventory.items.Remove(item);
+            }
 
             if (Plugin.Singleton.Config.ItemConfigs.TranqCfg.DropItems)
                 player.DropItems();
