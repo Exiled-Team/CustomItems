@@ -33,7 +33,7 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.ImpCfg.Description;

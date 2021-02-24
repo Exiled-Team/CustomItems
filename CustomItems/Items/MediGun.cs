@@ -27,7 +27,7 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
@@ -35,8 +35,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.Hurting += OnHurting;
-            Exiled.Events.Handlers.Player.Shooting += OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Player.Dying += OnDyingMG;
             base.SubscribeEvents();
@@ -45,8 +43,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.Hurting -= OnHurting;
-            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Player.Dying -= OnDyingMG;
             base.UnsubscribeEvents();
@@ -59,24 +55,15 @@ namespace CustomItems.Items
             base.OnWaitingForPlayers();
         }
 
-        private void OnHurting(HurtingEventArgs ev)
+        /// <inheritdoc/>
+        protected override void OnHurting(HurtingEventArgs ev)
         {
             if (Check(ev.Attacker.CurrentItem))
                 ev.Amount = 0f;
         }
 
-        private void OnDyingMG(DyingEventArgs ev)
-        {
-            if (!ev.Target.IsHuman || ev.Killer.Role != RoleType.Scp049)
-                return;
-
-            if (!previousRoles.ContainsKey(ev.Target))
-                previousRoles.Add(ev.Target, RoleType.None);
-
-            previousRoles[ev.Target] = ev.Target.Role;
-        }
-
-        private void OnShooting(ShootingEventArgs ev)
+        /// <inheritdoc/>
+        protected override void OnShooting(ShootingEventArgs ev)
         {
             if (!Check(ev.Shooter.CurrentItem))
                 return;
@@ -104,6 +91,17 @@ namespace CustomItems.Items
                 if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)
                     DoReviveZombie(player);
             }
+        }
+
+        private void OnDyingMG(DyingEventArgs ev)
+        {
+            if (!ev.Target.IsHuman || ev.Killer.Role != RoleType.Scp049)
+                return;
+
+            if (!previousRoles.ContainsKey(ev.Target))
+                previousRoles.Add(ev.Target, RoleType.None);
+
+            previousRoles[ev.Target] = ev.Target.Role;
         }
 
         private void DoReviveZombie(Player player)

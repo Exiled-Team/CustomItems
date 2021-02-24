@@ -31,7 +31,7 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Description;

@@ -87,7 +87,7 @@ namespace CustomItems
         public override void OnDisabled()
         {
             foreach (CustomItem item in ItemManagers)
-                item.Unregister();
+                item.TryUnregister();
 
             Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
             Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;

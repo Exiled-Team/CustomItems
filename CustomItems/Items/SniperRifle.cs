@@ -22,7 +22,7 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.SniperCfg.Description;
@@ -31,20 +31,7 @@ namespace CustomItems.Items
         public override Modifiers Modifiers { get; } = new Modifiers(3, 4, 0);
 
         /// <inheritdoc/>
-        protected override void SubscribeEvents()
-        {
-            Player.Hurting += OnHurting;
-            base.SubscribeEvents();
-        }
-
-        /// <inheritdoc/>
-        protected override void UnsubscribeEvents()
-        {
-            Player.Hurting -= OnHurting;
-            base.UnsubscribeEvents();
-        }
-
-        private void OnHurting(HurtingEventArgs ev)
+        protected override void OnHurting(HurtingEventArgs ev)
         {
             if (Check(ev.Attacker.CurrentItem))
                 ev.Amount *= Plugin.Singleton.Config.ItemConfigs.SniperCfg.DamageMultiplier;

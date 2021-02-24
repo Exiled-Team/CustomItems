@@ -29,53 +29,13 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
 
-        /// <inheritdoc/>
-        protected override void SubscribeEvents()
-        {
-            Player.Shooting += OnShooting;
-            base.SubscribeEvents();
-        }
-
-        /// <inheritdoc/>
-        protected override void UnsubscribeEvents()
-        {
-            Player.Shooting -= OnShooting;
-            base.UnsubscribeEvents();
-        }
-
-        private static float HitHandler(HitboxIdentity box)
-        {
-            switch (box.id)
-            {
-                case HitBoxType.HEAD:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 1.25f;
-                case HitBoxType.LEG:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.65f;
-                case HitBoxType.ARM:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.55f;
-                default:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage;
-            }
-        }
-
-        private static Quaternion RandomAimCone() =>
-            Quaternion.Euler(
-                Random.Range(
-                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
-                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
-                Random.Range(
-                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
-                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
-                Random.Range(
-                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
-                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity));
-
-        private void OnShooting(ShootingEventArgs ev)
+                /// <inheritdoc/>
+        protected override void OnShooting(ShootingEventArgs ev)
         {
             if (!Check(ev.Shooter.CurrentItem))
                 return;
@@ -169,5 +129,32 @@ namespace CustomItems.Items
                 Log.Error($"{e}\n{e.StackTrace}");
             }
         }
+
+        private static float HitHandler(HitboxIdentity box)
+        {
+            switch (box.id)
+            {
+                case HitBoxType.HEAD:
+                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 1.25f;
+                case HitBoxType.LEG:
+                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.65f;
+                case HitBoxType.ARM:
+                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.55f;
+                default:
+                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage;
+            }
+        }
+
+        private static Quaternion RandomAimCone() =>
+            Quaternion.Euler(
+                Random.Range(
+                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
+                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
+                Random.Range(
+                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
+                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
+                Random.Range(
+                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
+                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity));
     }
 }

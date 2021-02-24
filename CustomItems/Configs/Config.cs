@@ -157,7 +157,7 @@ namespace CustomItems.Configs
                 foreach (KeyValuePair<string, float> itemChance in list.Value)
                 {
                     CustomItem item = null;
-                    foreach (CustomItem cItem in Exiled.CustomItems.CustomItems.Instance.ItemManagers)
+                    foreach (CustomItem cItem in CustomItem.Registered)
                         if (cItem.Name == itemChance.Key)
                             item = cItem;
                     if (item == null)

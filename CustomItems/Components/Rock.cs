@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Exiled.CustomItems.API.Features;
+
 namespace CustomItems
 {
     using System;
@@ -41,7 +43,7 @@ namespace CustomItems
                 if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || Plugin.Singleton.Config.ItemConfigs.RockCfg.FriendlyFire))
                     target.Hurt(Plugin.Singleton.Config.ItemConfigs.RockCfg.ThrownDamage, DamageTypes.Wall, "ROCK");
                 Destroy(gameObject);
-                Exiled.CustomItems.CustomItems.Instance.ItemManagers.First(i => i.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);
+                CustomItem.Registered.First(i => i.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);
             }
             catch (Exception e)
             {

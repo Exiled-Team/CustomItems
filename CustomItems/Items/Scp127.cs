@@ -25,7 +25,7 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
@@ -49,9 +49,10 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        protected override void ItemGiven(Player player)
+        protected override void ShowPickedUpMessage(Player player)
         {
             Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(player)));
+            base.ShowPickedUpMessage(player);
         }
 
         /// <inheritdoc/>
@@ -96,7 +97,7 @@ namespace CustomItems.Items
             {
                 yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 
-                foreach (Pickup pickup in Pickups)
+                foreach (Pickup pickup in Spawned)
                     if (Check(pickup) && pickup.durability < ClipSize)
                     {
                         pickup.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;

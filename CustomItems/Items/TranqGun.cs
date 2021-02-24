@@ -30,39 +30,10 @@ namespace CustomItems.Items
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.Description;
 
         /// <inheritdoc />
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.TranqCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        protected override void SubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.Hurting += OnHurting;
-            base.SubscribeEvents();
-        }
-
-        /// <inheritdoc/>
-        protected override void UnsubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.Hurting -= OnHurting;
-            base.UnsubscribeEvents();
-        }
-
-        private static IEnumerator<float> DoTranquilize(Player player, float duration)
-        {
-            Vector3 pos = player.Position;
-
-            if (Plugin.Singleton.Config.ItemConfigs.TranqCfg.DropItems)
-                player.DropItems();
-
-            Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
-            player.Position = new Vector3(0, 0, 0);
-
-            yield return Timing.WaitForSeconds(duration);
-
-            player.Position = pos;
-            Object.Destroy(ragdoll.gameObject);
-        }
-
-        private void OnHurting(HurtingEventArgs ev)
+        protected override void OnHurting(HurtingEventArgs ev)
         {
             if (!Check(ev.Attacker.CurrentItem))
                 return;
@@ -81,6 +52,22 @@ namespace CustomItems.Items
 
             if (dur > 0f)
                 Timing.RunCoroutine(DoTranquilize(ev.Target, dur));
+        }
+
+        private static IEnumerator<float> DoTranquilize(Player player, float duration)
+        {
+            Vector3 pos = player.Position;
+
+            if (Plugin.Singleton.Config.ItemConfigs.TranqCfg.DropItems)
+                player.DropItems();
+
+            Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
+            player.Position = new Vector3(0, 0, 0);
+
+            yield return Timing.WaitForSeconds(duration);
+
+            player.Position = pos;
+            Object.Destroy(ragdoll.gameObject);
         }
     }
 }

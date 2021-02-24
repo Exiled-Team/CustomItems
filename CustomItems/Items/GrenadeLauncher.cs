@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Exiled.CustomItems.API.Components;
+
 namespace CustomItems.Items
 {
     using System.Linq;
@@ -11,7 +13,6 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
-    using Exiled.CustomItems.Components;
     using Exiled.Events.EventArgs;
     using Grenades;
     using MEC;
@@ -31,24 +32,10 @@ namespace CustomItems.Items
         public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
 
         /// <inheritdoc/>
         public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
-
-        /// <inheritdoc/>
-        protected override void SubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.Shooting += OnShooting;
-            base.SubscribeEvents();
-        }
-
-        /// <inheritdoc/>
-        protected override void UnsubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
-            base.UnsubscribeEvents();
-        }
 
         /// <inheritdoc/>
         protected override void OnReloading(ReloadingWeaponEventArgs ev)
@@ -84,6 +71,23 @@ namespace CustomItems.Items
             }
         }
 
+        /// <inheritdoc/>
+        protected override void OnShooting(ShootingEventArgs ev)
+        {
+            if (!Check(ev.Shooter.CurrentItem))
+                return;
+
+            ev.IsAllowed = false;
+            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - 1);
+
+            Vector3 velocity = (ev.Position - ev.Shooter.Position) * Plugin.Singleton.Config.ItemConfigs.GlCfg.GrenadeSpeed;
+            Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
+            Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
+            Grenade grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
+            CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
+            collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
+        }
+
         /// <summary>
         /// Spawns a live grenade object on the map.
         /// </summary>
@@ -107,22 +111,6 @@ namespace CustomItems.Items
             NetworkServer.Spawn(component2.gameObject);
 
             return component2;
-        }
-
-        private void OnShooting(ShootingEventArgs ev)
-        {
-            if (!Check(ev.Shooter.CurrentItem))
-                return;
-
-            ev.IsAllowed = false;
-            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - 1);
-
-            Vector3 velocity = (ev.Position - ev.Shooter.Position) * Plugin.Singleton.Config.ItemConfigs.GlCfg.GrenadeSpeed;
-            Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
-            Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-            Grenade grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
-            CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
-            collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
         }
     }
 }

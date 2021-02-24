@@ -33,84 +33,84 @@ namespace CustomItems
                 if (plugin.Config.SniperRifle)
                 {
                     SniperRifle sniper = new SniperRifle(plugin.Config.ItemConfigs.SniperCfg.ItemType, plugin.Config.ItemConfigs.SniperCfg.ClipSize, plugin.Config.ItemConfigs.SniperCfg.Id);
-                    if (sniper.RegisterCustomItem())
+                    if (sniper.TryRegister())
                         plugin.ItemManagers.Add(sniper);
                 }
 
                 if (plugin.Config.Shotgun)
                 {
                     Shotgun shotgun = new Shotgun(plugin.Config.ItemConfigs.ShotgunCfg.ItemType, plugin.Config.ItemConfigs.ShotgunCfg.SpreadCount * 2, Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Id);
-                    if (shotgun.RegisterCustomItem())
+                    if (shotgun.TryRegister())
                         plugin.ItemManagers.Add(shotgun);
                 }
 
                 if (plugin.Config.GrenadeLauncher)
                 {
                     GrenadeLauncher launcher = new GrenadeLauncher(plugin.Config.ItemConfigs.GlCfg.ItemType, plugin.Config.ItemConfigs.GlCfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.GlCfg.Id);
-                    if (launcher.RegisterCustomItem())
+                    if (launcher.TryRegister())
                         plugin.ItemManagers.Add(launcher);
                 }
 
                 if (plugin.Config.Scp127)
                 {
                     Scp127 scp127 = new Scp127(plugin.Config.ItemConfigs.Scp127Cfg.ItemType, plugin.Config.ItemConfigs.Scp127Cfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Id);
-                    if (scp127.RegisterCustomItem())
+                    if (scp127.TryRegister())
                         plugin.ItemManagers.Add(scp127);
                 }
 
                 if (plugin.Config.ImplosionGrenade)
                 {
                     ImplosionGrenade implosionGrenade = new ImplosionGrenade(ItemType.GrenadeFrag, Plugin.Singleton.Config.ItemConfigs.ImpCfg.Id);
-                    if (implosionGrenade.RegisterCustomItem())
+                    if (implosionGrenade.TryRegister())
                         plugin.ItemManagers.Add(implosionGrenade);
                 }
 
                 if (plugin.Config.EmpGrenade)
                 {
                     EmpGrenade empGrenade = new EmpGrenade(ItemType.GrenadeFlash, Plugin.Singleton.Config.ItemConfigs.EmpCfg.Id);
-                    if (empGrenade.RegisterCustomItem())
+                    if (empGrenade.TryRegister())
                         plugin.ItemManagers.Add(empGrenade);
                 }
 
                 if (plugin.Config.LethalInjection)
                 {
                     LethalInjection lethalInjection = new LethalInjection(ItemType.Adrenaline, Plugin.Singleton.Config.ItemConfigs.LethalCfg.Id);
-                    if (lethalInjection.RegisterCustomItem())
+                    if (lethalInjection.TryRegister())
                         plugin.ItemManagers.Add(lethalInjection);
                 }
 
                 if (plugin.Config.MediGun)
                 {
                     MediGun mediGun = new MediGun(plugin.Config.ItemConfigs.MediCfg.ItemType, plugin.Config.ItemConfigs.MediCfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.MediCfg.Id);
-                    if (mediGun.RegisterCustomItem())
+                    if (mediGun.TryRegister())
                         plugin.ItemManagers.Add(mediGun);
                 }
 
                 if (plugin.Config.TranqGun)
                 {
                     TranqGun tranqGun = new TranqGun(plugin.Config.ItemConfigs.TranqCfg.ItemType, plugin.Config.ItemConfigs.TranqCfg.ClipSize, Plugin.Singleton.Config.ItemConfigs.TranqCfg.Id);
-                    if (tranqGun.RegisterCustomItem())
+                    if (tranqGun.TryRegister())
                         plugin.ItemManagers.Add(tranqGun);
                 }
 
                 if (plugin.Config.LuckyCoin)
                 {
                     LuckyCoin luckyCoin = new LuckyCoin(ItemType.Coin, Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Id);
-                    if (luckyCoin.RegisterCustomItem())
+                    if (luckyCoin.TryRegister())
                         plugin.ItemManagers.Add(luckyCoin);
                 }
 
                 if (plugin.Config.Rock)
                 {
                     Items.Rock rock = new Items.Rock(ItemType.SCP018, plugin.Config.ItemConfigs.RockCfg.Id);
-                    if (rock.RegisterCustomItem())
+                    if (rock.TryRegister())
                         plugin.ItemManagers.Add(rock);
                 }
 
                 if (plugin.Config.Scp1499)
                 {
                     Scp1499 scp1499 = new Scp1499(ItemType.SCP268, Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Id);
-                    if (scp1499.RegisterCustomItem())
+                    if (scp1499.TryRegister())
                         plugin.ItemManagers.Add(scp1499);
                 }
 
