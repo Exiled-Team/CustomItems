@@ -53,20 +53,26 @@
     <Reference Include="CommandSystem.Core">
       <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\Exiled.API.dll</HintPath>
+    <Reference Include="Exiled.API, Version=2.3.3.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\Exiled.Events.dll</HintPath>
+    <Reference Include="Exiled.Bootstrap, Version=2.3.3.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.Bootstrap.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Loader">
-      <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\Exiled.Loader.dll</HintPath>
+    <Reference Include="Exiled.CreditTags, Version=2.3.3.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions">
-      <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\Exiled.Permissions.dll</HintPath>
+    <Reference Include="Exiled.Events, Version=2.3.3.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater">
-      <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\Exiled.Updater.dll</HintPath>
+    <Reference Include="Exiled.Loader, Version=2.3.3.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions, Version=2.3.3.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.3.3\lib\net472\Exiled.Updater.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\C#\Stuff\Pluginy EXILED\Exiled Stuff\Exiled dll\Mirror.dll</HintPath>
