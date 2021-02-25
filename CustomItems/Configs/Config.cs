@@ -123,6 +123,11 @@ namespace CustomItems.Configs
         public bool Rock { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether SCP-714 is enabled.
+        /// </summary>
+        public bool Scp714 { get; set; } = true;
+
+        /// <summary>
         /// Loads item configs.
         /// </summary>
         public void LoadConfigs()

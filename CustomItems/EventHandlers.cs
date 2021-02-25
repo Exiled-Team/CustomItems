@@ -68,6 +68,9 @@ namespace CustomItems
                 if (plugin.Config.Scp1499)
                     new Scp1499(ItemType.SCP268, Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Id).RegisterCustomItem();
 
+                if (plugin.Config.Scp714)
+                    new Scp714(ItemType.Coin, Plugin.Singleton.Config.ItemConfigs.Scp714Cfg.Id).RegisterCustomItem();
+
                 plugin.Config.ParseSubclassList();
 
                 first = false;

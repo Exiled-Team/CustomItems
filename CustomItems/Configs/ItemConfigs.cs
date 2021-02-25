@@ -83,5 +83,11 @@ namespace CustomItems.Configs
         /// </summary>
         [Description("Rock configs.")]
         public RockConfig RockCfg { get; set; } = new RockConfig();
+
+        /// <summary>
+        /// Gets or sets SCP-714 configs.
+        /// </summary>
+        [Description("Rock configs.")]
+        public Scp714Config Scp714Cfg { get; set; } = new Scp714Config();
     }
 }
