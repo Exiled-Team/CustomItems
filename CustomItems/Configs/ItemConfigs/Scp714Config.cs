@@ -34,14 +34,14 @@ namespace CustomItems.ItemConfigs
         [Description("Where on the map items should spawn, and their % chance of spawning in each location.")]
         public Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = new Dictionary<SpawnLocation, float>
         {
-            { SpawnLocation.InsideHid, 10 }
+            { SpawnLocation.Inside049Armory, 50 }
         };
 
         [Description("The Custom Item ID for this item.")]
         public int Id { get; set; } = 13;
 
         [Description("The description of this item show to players when they obtain it.")]
-        public string Description { get; set; } = "The green ring that protects you from SCP-049";
+        public string Description { get; set; } = "This green ring protects you from SCP-049";
 
         [Description("The name of this item shown to players when they obtain it.")]
         public string Name { get; set; } = "SCP-714";
