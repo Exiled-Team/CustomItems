@@ -1,6 +1,9 @@
-// <copyright file="MediGun.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="MediGun.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -17,25 +20,25 @@ namespace CustomItems.Items
     {
         private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public MediGun(ItemType type, uint clipSize, uint itemId)
             : base(type, itemId, clipSize)
         {
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.MediCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.MediCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.MediCfg.Description;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
+            if (CustomItems.Instance.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Player.Dying += OnDyingMG;
             base.SubscribeEvents();
         }
@@ -43,7 +46,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
+            if (CustomItems.Instance.Config.ItemConfigs.MediCfg.HealZombies)
                 Exiled.Events.Handlers.Player.Dying -= OnDyingMG;
             base.UnsubscribeEvents();
         }
@@ -77,15 +80,15 @@ namespace CustomItems.Items
 
             if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
             {
-                float amount = damage * Plugin.Singleton.Config.ItemConfigs.MediCfg.HealingModifier;
+                float amount = damage * CustomItems.Instance.Config.ItemConfigs.MediCfg.HealingModifier;
                 if (player.Health + amount > player.MaxHealth)
                     player.Health = player.MaxHealth;
                 else
                     player.Health += amount;
             }
-            else if (player.Role == RoleType.Scp0492 && Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
+            else if (player.Role == RoleType.Scp0492 && CustomItems.Instance.Config.ItemConfigs.MediCfg.HealZombies)
             {
-                player.MaxAdrenalineHealth = Plugin.Singleton.Config.ItemConfigs.MediCfg.ZombieHealingRequired;
+                player.MaxAdrenalineHealth = CustomItems.Instance.Config.ItemConfigs.MediCfg.ZombieHealingRequired;
                 player.AdrenalineHealth += damage;
 
                 if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)

@@ -1,6 +1,9 @@
-// <copyright file="Shotgun.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="Shotgun.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -12,29 +15,28 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
     using Mirror;
     using UnityEngine;
-    using Player = Exiled.Events.Handlers.Player;
     using Random = UnityEngine.Random;
     using Server = Exiled.API.Features.Server;
 
     /// <inheritdoc />
     public class Shotgun : CustomWeapon
     {
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public Shotgun(ItemType type, uint clipSize, uint itemId)
             : base(type, itemId, clipSize)
         {
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.Description;
 
-                /// <inheritdoc/>
+        /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
             if (!Check(ev.Shooter.CurrentItem))
@@ -44,7 +46,7 @@ namespace CustomItems.Items
 
             try
             {
-                uint bullets = Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.SpreadCount;
+                uint bullets = CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.SpreadCount;
                 if (ev.Shooter.CurrentItem.durability <= bullets)
                     bullets = (uint)ev.Shooter.CurrentItem.durability;
                 Ray[] rays = new Ray[bullets];
@@ -93,7 +95,7 @@ namespace CustomItems.Items
                                 float distance = Vector3.Distance(ev.Shooter.Position, target.Position);
 
                                 for (int f = 0; f < (int)distance; f++)
-                                    damage *= Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.DamageFalloffModifier;
+                                    damage *= CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.DamageFalloffModifier;
 
                                 target.Hurt(damage, DamageTypes.Wall, ev.Shooter.Nickname, ev.Shooter.Id);
                                 component.RpcPlaceDecal(true, (sbyte)target.ReferenceHub.characterClassManager.Classes.SafeGet(target.Role).bloodType, hits[i].point + (hits[i].normal * 0.01f), Quaternion.FromToRotation(Vector3.up, hits[i].normal));
@@ -111,7 +113,7 @@ namespace CustomItems.Items
                     BreakableWindow window = hits[i].collider.GetComponent<BreakableWindow>();
                     if (window != null)
                     {
-                        window.ServerDamageWindow(Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage);
+                        window.ServerDamageWindow(CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.BaseDamage);
                         confirm = true;
                         continue;
                     }
@@ -119,7 +121,7 @@ namespace CustomItems.Items
                     component.RpcPlaceDecal(false, component.curWeapon, hits[i].point + (hits[i].normal * 0.01f), Quaternion.FromToRotation(Vector3.up, hits[i].normal));
                 }
 
-                for (int i = 0; i < Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BoomCount; i++)
+                for (int i = 0; i < CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.BoomCount; i++)
                     component.RpcConfirmShot(confirm, component.curWeapon);
 
                 ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)bullets);
@@ -135,26 +137,26 @@ namespace CustomItems.Items
             switch (box.id)
             {
                 case HitBoxType.HEAD:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 1.25f;
+                    return CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.BaseDamage * 1.25f;
                 case HitBoxType.LEG:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.65f;
+                    return CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.65f;
                 case HitBoxType.ARM:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.55f;
+                    return CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.BaseDamage * 0.55f;
                 default:
-                    return Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.BaseDamage;
+                    return CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.BaseDamage;
             }
         }
 
         private static Quaternion RandomAimCone() =>
             Quaternion.Euler(
                 Random.Range(
-                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
-                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
+                    -CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
+                    CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
                 Random.Range(
-                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
-                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
+                    -CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
+                    CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.AimconeSeverity),
                 Random.Range(
-                    -Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
-                    Plugin.Singleton.Config.ItemConfigs.ShotgunCfg.AimconeSeverity));
+                    -CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.AimconeSeverity,
+                    CustomItems.Instance.Config.ItemConfigs.ShotgunCfg.AimconeSeverity));
     }
 }

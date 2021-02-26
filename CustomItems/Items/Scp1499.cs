@@ -1,6 +1,9 @@
-﻿// <copyright file="Scp1499.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// -----------------------------------------------------------------------
+// <copyright file="Scp1499.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -19,20 +22,20 @@ namespace CustomItems.Items
         private readonly Vector3 scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); // This position is where is unused terrain on the Surface
         private readonly Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public Scp1499(ItemType type, uint itemId)
             : base(type, itemId)
         {
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.Scp1499Cfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.Scp1499Cfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.Scp1499Cfg.Description;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
@@ -90,9 +93,9 @@ namespace CustomItems.Items
             ev.Player.Position = scp1499DimensionPos;
             ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Scp268>();
 
-            if (Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
+            if (CustomItems.Instance.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
             {
-                Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration, () =>
+                Timing.CallDelayed(CustomItems.Instance.Config.ItemConfigs.Scp1499Cfg.Duration, () =>
                 {
                     if (!scp1499Players.ContainsKey(ev.Player))
                         return;

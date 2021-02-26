@@ -1,8 +1,9 @@
-// <copyright file="GrenadeLauncher.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="GrenadeLauncher.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
-
-using Exiled.CustomItems.API.Components;
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -11,6 +12,7 @@ namespace CustomItems.Items
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Components;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
@@ -22,20 +24,20 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class GrenadeLauncher : CustomWeapon
     {
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public GrenadeLauncher(ItemType type, uint clipSize, uint itemId)
             : base(type, itemId, clipSize)
         {
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.GlCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.GlCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.GlCfg.Description;
 
         /// <inheritdoc/>
         protected override void OnReloading(ReloadingWeaponEventArgs ev)
@@ -43,10 +45,10 @@ namespace CustomItems.Items
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            if (Plugin.Singleton.Config.ItemConfigs.GlCfg.UseGrenades)
+            if (CustomItems.Instance.Config.ItemConfigs.GlCfg.UseGrenades)
             {
                 ev.IsAllowed = false;
-                Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", CustomItems.Instance.Config.Debug);
                 foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items.ToList())
                 {
                     if (item.id != ItemType.GrenadeFrag)
@@ -56,14 +58,14 @@ namespace CustomItems.Items
                     ev.Player.ReloadWeapon();
 
                     ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
-                    Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", Plugin.Singleton.Config.Debug);
+                    Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", CustomItems.Instance.Config.Debug);
                     Timing.CallDelayed(4.5f, () => { ev.Player.ReloadWeapon(); });
                     ev.Player.RemoveItem(item);
 
                     break;
                 }
 
-                Log.Debug($"{ev.Player.Nickname} was unable to reload their {Name} - No grenades in inventory.", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} was unable to reload their {Name} - No grenades in inventory.", CustomItems.Instance.Config.Debug);
             }
             else
             {
@@ -80,10 +82,10 @@ namespace CustomItems.Items
             ev.IsAllowed = false;
             ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - 1);
 
-            Vector3 velocity = (ev.Position - ev.Shooter.Position) * Plugin.Singleton.Config.ItemConfigs.GlCfg.GrenadeSpeed;
+            Vector3 velocity = (ev.Position - ev.Shooter.Position) * CustomItems.Instance.Config.ItemConfigs.GlCfg.GrenadeSpeed;
             Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
             Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-            Grenade grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
+            Grenade grenade = SpawnGrenade(pos, velocity, CustomItems.Instance.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
             CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
             collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
         }

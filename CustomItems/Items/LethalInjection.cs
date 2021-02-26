@@ -1,6 +1,9 @@
-// <copyright file="LethalInjection.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="LethalInjection.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -16,20 +19,20 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class LethalInjection : CustomItem
     {
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public LethalInjection(ItemType type, uint itemId)
             : base(type, itemId)
         {
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.LethalCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.LethalCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LethalCfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.LethalCfg.Description;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
@@ -47,37 +50,37 @@ namespace CustomItems.Items
 
         private void OnMedicalItemUsed(UsingMedicalItemEventArgs ev)
         {
-            Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}", Plugin.Singleton.Config.Debug);
+            Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}", CustomItems.Instance.Config.Debug);
             if (!Check(ev.Player.CurrentItem))
                 return;
 
             Timing.CallDelayed(1.5f, () =>
             {
-                Log.Debug($"{ev.Player.Nickname} used a {Name}", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} used a {Name}", CustomItems.Instance.Config.Debug);
                 foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
                     if (player.Role == RoleType.Scp096)
                     {
-                        Log.Debug($"{ev.Player.Nickname} - {Name} found an 096: {player.Nickname}", Plugin.Singleton.Config.Debug);
+                        Log.Debug($"{ev.Player.Nickname} - {Name} found an 096: {player.Nickname}", CustomItems.Instance.Config.Debug);
                         if (!(player.CurrentScp is Scp096 scp096))
                             continue;
 
-                        Log.Debug($"{player.Nickname} 096 component found.", Plugin.Singleton.Config.Debug);
+                        Log.Debug($"{player.Nickname} 096 component found.", CustomItems.Instance.Config.Debug);
                         if ((!scp096.HasTarget(ev.Player.ReferenceHub) ||
                              scp096.PlayerState != Scp096PlayerState.Enraged) &&
                             scp096.PlayerState != Scp096PlayerState.Enraging &&
                             scp096.PlayerState != Scp096PlayerState.Attacking)
                             continue;
 
-                        Log.Debug($"{player.Nickname} 096 checks passed.", Plugin.Singleton.Config.Debug);
+                        Log.Debug($"{player.Nickname} 096 checks passed.", CustomItems.Instance.Config.Debug);
                         scp096.ResetEnrage();
                         ev.Player.Kill(DamageTypes.Poison);
                         return;
                     }
 
-                if (!Plugin.Singleton.Config.ItemConfigs.LethalCfg.KillOnFail)
+                if (!CustomItems.Instance.Config.ItemConfigs.LethalCfg.KillOnFail)
                     return;
 
-                Log.Debug($"{Name} kill on fail: {ev.Player.Nickname}", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{Name} kill on fail: {ev.Player.Nickname}", CustomItems.Instance.Config.Debug);
                 ev.Player.Kill(DamageTypes.Poison);
             });
 

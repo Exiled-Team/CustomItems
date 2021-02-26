@@ -1,6 +1,9 @@
-// <copyright file="LuckyCoin.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="LuckyCoin.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -21,20 +24,20 @@ namespace CustomItems.Items
         private bool isDropped;
         private bool onCooldown;
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public LuckyCoin(ItemType type, uint itemId)
             : base(type, itemId)
         {
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.LuckyCfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.LuckyCfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.LuckyCfg.Description;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
@@ -70,7 +73,7 @@ namespace CustomItems.Items
             if (ev.Player.CurrentRoom.Name == "PocketWorld")
             {
                 ev.IsAllowed = false;
-                Log.Debug($"{Name} has been dropped in the Pocket Dimension.", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{Name} has been dropped in the Pocket Dimension.", CustomItems.Instance.Config.Debug);
                 isDropped = true;
                 ev.Player.RemoveItem(ev.Item);
             }
@@ -91,33 +94,33 @@ namespace CustomItems.Items
 
         private void OnEnterPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            Log.Debug($"{ev.Player.Nickname} Entering Pocket Dimension.", Plugin.Singleton.Config.Debug);
+            Log.Debug($"{ev.Player.Nickname} Entering Pocket Dimension.", CustomItems.Instance.Config.Debug);
             if (onCooldown)
             {
-                Log.Debug($"{ev.Player.Nickname} - Not spawning, on cooldown.", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} - Not spawning, on cooldown.", CustomItems.Instance.Config.Debug);
                 return;
             }
 
             if (!isDropped || !(ev.Position.y < -1900f))
                 return;
 
-            Log.Debug($"{ev.Player.Nickname} - EPD checks passed.", Plugin.Singleton.Config.Debug);
+            Log.Debug($"{ev.Player.Nickname} - EPD checks passed.", CustomItems.Instance.Config.Debug);
             foreach (PocketDimensionTeleport teleport in teleports)
             {
-                Log.Debug($"{ev.Player.Nickname} - Checking teleporter..", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} - Checking teleporter..", CustomItems.Instance.Config.Debug);
                 if (teleport.type != PocketDimensionTeleport.PDTeleportType.Exit)
                     continue;
 
                 onCooldown = true;
-                Log.Debug($"{ev.Player.Nickname} - Valid exit found..", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} - Valid exit found..", CustomItems.Instance.Config.Debug);
                 Vector3 tpPos = teleport.transform.position;
                 float dist = Vector3.Distance(tpPos, ev.Position);
                 Vector3 spawnPos = Vector3.MoveTowards(tpPos, ev.Position, 15);
-                Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}", CustomItems.Instance.Config.Debug);
 
                 Pickup coin = Exiled.API.Extensions.Item.Spawn(ItemType.Coin, 0f, spawnPos);
 
-                Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.LuckyCfg.Duration, () => coin.Delete());
+                Timing.CallDelayed(CustomItems.Instance.Config.ItemConfigs.LuckyCfg.Duration, () => coin.Delete());
                 Timing.CallDelayed(120f, () => onCooldown = false);
                 break;
             }

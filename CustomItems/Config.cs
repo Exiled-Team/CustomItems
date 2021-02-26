@@ -1,8 +1,11 @@
-// <copyright file="Config.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="Config.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
-namespace CustomItems.Configs
+namespace CustomItems
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +15,7 @@ namespace CustomItems.Configs
     using Exiled.API.Interfaces;
     using Exiled.CustomItems.API.Features;
     using Exiled.Loader;
+    using Items;
 
     /// <summary>
     /// The plugin's config class.
@@ -26,7 +30,7 @@ namespace CustomItems.Configs
         /// <summary>
         /// The item configs reference object.
         /// </summary>
-        public ItemConfigs ItemConfigs;
+        public Configs.ItemConfigs ItemConfigs;
 
         /// <inheritdoc/>
         [Description("Whether or not this plugin is enabled.")]
@@ -78,9 +82,12 @@ namespace CustomItems.Configs
         public bool LethalInjection { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether EMP Grenades are enabled.
+        /// Gets a value indicating whether EMP Grenades are enabled.
         /// </summary>
-        public bool EmpGrenade { get; set; } = true;
+        public List<EmpGrenade> EmpGrenades { get; private set; } = new List<EmpGrenade>()
+        {
+            new EmpGrenade(0, ItemType.GrenadeFlash)
+        };
 
         /// <summary>
         /// Gets or sets a value indicating whether Implosion Grenades are enabled.
@@ -125,7 +132,7 @@ namespace CustomItems.Configs
         /// <summary>
         /// Loads item configs.
         /// </summary>
-        public void LoadConfigs()
+        public void Load()
         {
             if (!Directory.Exists(CustomItemFolder))
                 Directory.CreateDirectory(CustomItemFolder);
@@ -134,13 +141,12 @@ namespace CustomItems.Configs
 
             if (!File.Exists(filePath))
             {
-                ItemConfigs = new ItemConfigs();
+                ItemConfigs = new Configs.ItemConfigs();
                 File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
             }
             else
             {
-                ItemConfigs =
-                    ConfigManager.Deserializer.Deserialize<ItemConfigs>(File.ReadAllText(filePath));
+                ItemConfigs = ConfigManager.Deserializer.Deserialize<Configs.ItemConfigs>(File.ReadAllText(filePath));
                 File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
             }
         }

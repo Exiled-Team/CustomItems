@@ -1,8 +1,9 @@
-// <copyright file="Rock.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="Rock.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
-
-using Exiled.CustomItems.API.Features;
+// -----------------------------------------------------------------------
 
 namespace CustomItems
 {
@@ -10,6 +11,7 @@ namespace CustomItems
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API.Features;
     using Grenades;
     using UnityEngine;
 
@@ -37,17 +39,22 @@ namespace CustomItems
         {
             try
             {
-                if (collision.gameObject == Owner || collision.gameObject.GetComponent<Grenade>() != null)
+                if (collision.gameObject == Owner || !collision.gameObject.TryGetComponent<Grenade>(out _))
                     return;
 
-                if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || Plugin.Singleton.Config.ItemConfigs.RockCfg.FriendlyFire))
-                    target.Hurt(Plugin.Singleton.Config.ItemConfigs.RockCfg.ThrownDamage, DamageTypes.Wall, "ROCK");
+                if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target &&
+                    (target.Side != Side || CustomItems.Instance.Config.ItemConfigs.RockCfg.FriendlyFire))
+                {
+                    target.Hurt(CustomItems.Instance.Config.ItemConfigs.RockCfg.ThrownDamage, DamageTypes.Wall, "ROCK");
+                }
+
                 Destroy(gameObject);
-                CustomItem.Registered.First(i => i.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);
+
+                CustomItem.Registered.First(customItem => customItem.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Log.Error($"{e}\n{e.StackTrace}");
+                Log.Error($"{nameof(OnSpeedCollisionEnter)} error: {exception}");
             }
         }
     }

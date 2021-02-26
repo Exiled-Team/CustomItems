@@ -1,11 +1,14 @@
-// <copyright file="ItemConfigs.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="ItemConfigs.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Configs
 {
     using System.ComponentModel;
-    using CustomItems.ItemConfigs;
+    using global::CustomItems.ItemConfigs;
 
     /// <summary>
     /// Item Configs.

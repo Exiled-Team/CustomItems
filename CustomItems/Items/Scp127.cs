@@ -1,6 +1,9 @@
-// <copyright file="Scp127.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="Scp127.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
@@ -14,21 +17,21 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class Scp127 : CustomWeapon
     {
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public Scp127(ItemType type, uint clipSize, uint itemId)
             : base(type, itemId, clipSize)
         {
             Coroutines.Add(Timing.RunCoroutine(DoAmmoRegeneration()));
-        }
+        }*/
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
+        public override string Name { get; } = CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.Name;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnProperties;
+        public override SpawnProperties SpawnProperties { get; protected set; } = CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.SpawnProperties;
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
+        public override string Description { get; } = CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.Description;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
@@ -52,6 +55,7 @@ namespace CustomItems.Items
         protected override void ShowPickedUpMessage(Player player)
         {
             Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(player)));
+
             base.ShowPickedUpMessage(player);
         }
 
@@ -60,14 +64,15 @@ namespace CustomItems.Items
         {
             if (Check(ev.Pickup))
                 Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
+
             base.OnPickingUp(ev);
         }
 
         private IEnumerator<float> DoInventoryRegeneration(Player player)
         {
-            for (; ;)
+            while (true)
             {
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
+                yield return Timing.WaitForSeconds(CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 
                 bool hasItem = false;
 
@@ -82,7 +87,7 @@ namespace CustomItems.Items
                         continue;
 
                     Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
-                    newInfo.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
+                    newInfo.durability += CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.RegenAmount;
                     player.Inventory.items[i] = newInfo;
                 }
 
@@ -93,14 +98,14 @@ namespace CustomItems.Items
 
         private IEnumerator<float> DoAmmoRegeneration()
         {
-            for (; ;)
+            while (true)
             {
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
+                yield return Timing.WaitForSeconds(CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.RegenDelay);
 
                 foreach (Pickup pickup in Spawned)
                     if (Check(pickup) && pickup.durability < ClipSize)
                     {
-                        pickup.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
+                        pickup.durability += CustomItems.Instance.Config.ItemConfigs.Scp127Cfg.RegenAmount;
 
                         yield return Timing.WaitForSeconds(0.5f);
                     }
