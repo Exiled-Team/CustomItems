@@ -86,7 +86,7 @@ namespace CustomItems
         /// </summary>
         public List<EmpGrenade> EmpGrenades { get; private set; } = new List<EmpGrenade>()
         {
-            new EmpGrenade(0, ItemType.GrenadeFlash)
+            new EmpGrenade() { Id = 0, Type = ItemType.Flashlight },
         };
 
         /// <summary>
