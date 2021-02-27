@@ -27,11 +27,6 @@ namespace CustomItems
         /// </summary>
         public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
 
-        /// <summary>
-        /// The item configs reference object.
-        /// </summary>
-        public Configs.ItemConfigs ItemConfigs;
-
         /// <inheritdoc/>
         [Description("Whether or not this plugin is enabled.")]
         public bool IsEnabled { get; set; } = true;
@@ -40,7 +35,7 @@ namespace CustomItems
         /// Gets or sets a value indicating whether if debug mode is enabled.
         /// </summary>
         [Description("Whether or not debug messages should be displayed in the server console.")]
-        public bool Debug { get; set; } = false;
+        public bool IsDebugEnabled { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating what subclasses should get what items, and their spawn chances.
@@ -54,102 +49,112 @@ namespace CustomItems
         };
 
         /// <summary>
-        /// Gets or sets a value indicating the custom item config folder path.
+        /// Gets the list of emp greanades.
         /// </summary>
-        [Description("The folder location where CustomItems will look for and store it's item configurations.")]
-        public string CustomItemFolder { get; set; } = Path.Combine(Paths.Configs, "CustomItems");
-
-        /// <summary>
-        /// Gets or sets a value indicating the custom item config file path used for the server.
-        /// </summary>
-        [Description("The name of the config file this server will use for custom item configurations.")]
-        public string ConfigFileName { get; set; } = "global.yml";
-
-        /// <summary>
-        /// Gets or sets a value indicating whether TranqGun is enabled.
-        /// </summary>
-        [Description("The following configs determine whether or not that item is enabled on this server. If the item is disabled, it's configs are still loaded, however the item will not spawn on the map, cannot be used for subclasses, or given via commands.")]
-        public bool TranqGun { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether MediGun is enabled.
-        /// </summary>
-        public bool MediGun { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Lethal Injections are enabled.
-        /// </summary>
-        public bool LethalInjection { get; set; } = true;
-
-        /// <summary>
-        /// Gets a value indicating whether EMP Grenades are enabled.
-        /// </summary>
+        [Description("The list of EMP grenades.")]
         public List<EmpGrenade> EmpGrenades { get; private set; } = new List<EmpGrenade>()
         {
-            new EmpGrenade() { Id = 0, Type = ItemType.Flashlight },
+            new EmpGrenade() { Type = ItemType.GrenadeFlash },
         };
 
         /// <summary>
-        /// Gets or sets a value indicating whether Implosion Grenades are enabled.
+        /// Gets the list of grenade launchers.
         /// </summary>
-        public bool ImplosionGrenade { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether SCP-127 is enabled.
-        /// </summary>
-        public bool Scp127 { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Sniper Rifles are enabled.
-        /// </summary>
-        public bool SniperRifle { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Grenade Launchers are enabled.
-        /// </summary>
-        public bool GrenadeLauncher { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Shotguns are enabled.
-        /// </summary>
-        public bool Shotgun { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Lucky Coins are enabled.
-        /// </summary>
-        public bool LuckyCoin { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether SCP-1499 is enabled.
-        /// </summary>
-        public bool Scp1499 { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Rocks are enabled.
-        /// </summary>
-        public bool Rock { get; set; } = true;
-
-        /// <summary>
-        /// Loads item configs.
-        /// </summary>
-        public void Load()
+        [Description("The list of grenade launchers.")]
+        public List<GrenadeLauncher> GrenadeLaunchers { get; private set; } = new List<GrenadeLauncher>()
         {
-            if (!Directory.Exists(CustomItemFolder))
-                Directory.CreateDirectory(CustomItemFolder);
+            new GrenadeLauncher() { Type = ItemType.GunLogicer },
+        };
 
-            string filePath = Path.Combine(CustomItemFolder, ConfigFileName);
+        /// <summary>
+        /// Gets the list of implosion grenades.
+        /// </summary>
+        [Description("The list of implosion grenades.")]
+        public List<ImplosionGrenade> ImplosionGrenades { get; private set; } = new List<ImplosionGrenade>()
+        {
+            new ImplosionGrenade() { Type = ItemType.GrenadeFrag },
+        };
 
-            if (!File.Exists(filePath))
-            {
-                ItemConfigs = new Configs.ItemConfigs();
-                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
-            }
-            else
-            {
-                ItemConfigs = ConfigManager.Deserializer.Deserialize<Configs.ItemConfigs>(File.ReadAllText(filePath));
-                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
-            }
-        }
+        /// <summary>
+        /// Gets the list of lethal injections.
+        /// </summary>
+        [Description("The list of lethal injections.")]
+        public List<LethalInjection> LethalInjections { get; private set; } = new List<LethalInjection>()
+        {
+            new LethalInjection() { Type = ItemType.Adrenaline },
+        };
+
+        /// <summary>
+        /// Gets the list of lucky coins.
+        /// </summary>
+        [Description("The list of lucky coins.")]
+        public List<LuckyCoin> LuckyCoins { get; private set; } = new List<LuckyCoin>()
+        {
+            new LuckyCoin() { Type = ItemType.Coin },
+        };
+
+        /// <summary>
+        /// Gets the list of mediGuns.
+        /// </summary>
+        [Description("The list of mediGuns.")]
+        public List<MediGun> MediGuns { get; private set; } = new List<MediGun>()
+        {
+            new MediGun() { Type = ItemType.GunProject90 },
+        };
+
+        /// <summary>
+        /// Gets the list of Rocks.
+        /// </summary>
+        [Description("The list of Rocks.")]
+        public List<Rock> Rocks { get; private set; } = new List<Rock>()
+        {
+            new Rock() { Type = ItemType.SCP018 },
+        };
+
+        /// <summary>
+        /// Gets the list of Scp127s.
+        /// </summary>
+        [Description("The list of Scp127s.")]
+        public List<Scp127> Scp127s { get; private set; } = new List<Scp127>()
+        {
+            new Scp127() { Type = ItemType.GunCOM15 },
+        };
+
+        /// <summary>
+        /// Gets the list of Scp1499s.
+        /// </summary>
+        [Description("The list of Scp1499s.")]
+        public List<Scp1499> Scp1499s { get; private set; } = new List<Scp1499>()
+        {
+            new Scp1499() { Type = ItemType.SCP268 },
+        };
+
+        /// <summary>
+        /// Gets the list of shotguns.
+        /// </summary>
+        [Description("The list of shotguns.")]
+        public List<Shotgun> Shotguns { get; private set; } = new List<Shotgun>()
+        {
+            new Shotgun() { Type = ItemType.GunMP7 },
+        };
+
+        /// <summary>
+        /// Gets the list of sniper rifles.
+        /// </summary>
+        [Description("The list of sniper rifles.")]
+        public List<SniperRifle> SniperRifle { get; private set; } = new List<SniperRifle>()
+        {
+            new SniperRifle() { Type = ItemType.GunE11SR },
+        };
+
+        /// <summary>
+        /// Gets the list of tranquilizer guns.
+        /// </summary>
+        [Description("The list of tranquilizer guns.")]
+        public List<TranquilizerGun> TranquilizerGun { get; private set; } = new List<TranquilizerGun>()
+        {
+            new TranquilizerGun() { Type = ItemType.GunUSP },
+        };
 
         /// <summary>
         /// Parses the subclass list from the Plugin config.
@@ -157,15 +162,21 @@ namespace CustomItems
         public void ParseSubclassList()
         {
             SubclassItems.Clear();
+
             foreach (KeyValuePair<string, Dictionary<string, float>> list in SubclassList)
             {
                 List<Tuple<CustomItem, float>> customItems = new List<Tuple<CustomItem, float>>();
+
                 foreach (KeyValuePair<string, float> itemChance in list.Value)
                 {
                     CustomItem item = null;
-                    foreach (CustomItem cItem in CustomItem.Registered)
-                        if (cItem.Name == itemChance.Key)
-                            item = cItem;
+
+                    foreach (CustomItem customItem in CustomItem.Registered)
+                    {
+                        if (customItem.Name == itemChance.Key)
+                            item = customItem;
+                    }
+
                     if (item == null)
                     {
                         Log.Warn($"Unable to add {itemChance.Key} to {list.Key}, item not installed.");
@@ -173,11 +184,13 @@ namespace CustomItems
                     }
 
                     customItems.Add(new Tuple<CustomItem, float>(item, itemChance.Value));
-                    Log.Debug($"Adding {itemChance.Key} to {list.Key} with {itemChance.Value}% spawn chance.", Debug);
+
+                    Log.Debug($"Adding {itemChance.Key} to {list.Key} with {itemChance.Value}% spawn chance.", IsDebugEnabled);
                 }
 
                 SubclassItems.Add(list.Key, customItems);
-                Log.Debug($"{list.Key} has had {customItems.Count} items added to their spawn list.", Debug);
+
+                Log.Debug($"{list.Key} has had {customItems.Count} items added to their spawn list.", IsDebugEnabled);
             }
         }
     }

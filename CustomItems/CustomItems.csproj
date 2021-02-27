@@ -106,19 +106,6 @@
   <ItemGroup>
     <Compile Include="Components\Rock.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Configs\ItemConfigs.cs" />
-    <Compile Include="Configs\ItemConfigs\EmpGrenadeConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\GrenadeLauncherConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\ImplosionGrenadeConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\LethalInjectionConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\LuckCoinConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\MediGunConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\Scp1499Config.cs" />
-    <Compile Include="Configs\ItemConfigs\RockConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\Scp127Config.cs" />
-    <Compile Include="Configs\ItemConfigs\ShotgunConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\SniperRifleConfig.cs" />
-    <Compile Include="Configs\ItemConfigs\TranqGunConfig.cs" />
     <Compile Include="Events\ServerHandler.cs" />
     <Compile Include="Events\AddClassEvent.cs" />
     <Compile Include="Events\AddClassEventArgs.cs" />
@@ -133,7 +120,7 @@
     <Compile Include="Items\Shotgun.cs" />
     <Compile Include="Items\SniperRifle.cs" />
     <Compile Include="Items\ImplosionGrenade.cs" />
-    <Compile Include="Items\TranqGun.cs" />
+    <Compile Include="Items\TranquilizerGun.cs" />
     <Compile Include="Patches\AddClass.cs" />
     <Compile Include="CustomItems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

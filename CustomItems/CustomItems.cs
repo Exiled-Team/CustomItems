@@ -8,10 +8,10 @@
 namespace CustomItems
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using Events;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API;
     using HarmonyLib;
     using Server = Exiled.Events.Handlers.Server;
 
@@ -21,6 +21,8 @@ namespace CustomItems
         private static readonly CustomItems InstanceValue = new CustomItems();
 
         private Harmony harmonyInstance;
+
+        private ServerHandler serverHandler;
 
         private CustomItems()
         {
@@ -34,24 +36,14 @@ namespace CustomItems
         /// <inheritdoc/>
         public override Version RequiredExiledVersion { get; } = new Version(2, 3, 0);
 
-        /// <summary>
-        /// Gets the EventHandlers class.
-        /// </summary>
-        public ServerHandler EventHandlers { get; private set; }
-
-        /// <summary>
-        /// Gets the Internal list of item managers.
-        /// </summary>
-        internal List<CustomItem> ItemManagers { get; } = new List<CustomItem>();
-
         /// <inheritdoc/>
         public override void OnEnabled()
         {
-            EventHandlers = new ServerHandler();
+            serverHandler = new ServerHandler();
 
-            Config.Load();
+            RegisterItems();
 
-            Log.Debug("Checking for Subclassing...", Config.Debug);
+            Log.Debug("Checking for Subclassing...", Config.IsDebugEnabled);
 
             try
             {
@@ -59,11 +51,10 @@ namespace CustomItems
             }
             catch (Exception)
             {
-                Log.Debug("Subclassing not installed.", Config.Debug);
+                Log.Debug("Subclassing not installed.", Config.IsDebugEnabled);
             }
 
-            Server.ReloadedConfigs += EventHandlers.OnReloadingConfigs;
-            Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
+            Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 
             base.OnEnabled();
         }
@@ -71,17 +62,87 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            foreach (CustomItem item in ItemManagers)
-                item.TryUnregister();
+            UnregisterItems();
 
-            Server.ReloadedConfigs -= EventHandlers.OnReloadingConfigs;
-            Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
+            Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
 
             harmonyInstance?.UnpatchAll();
 
-            EventHandlers = null;
+            serverHandler = null;
 
             base.OnDisabled();
+        }
+
+        private void RegisterItems()
+        {
+            if (Instance.Config.EmpGrenades != null)
+                Instance.Config.EmpGrenades.Register();
+
+            if (Instance.Config.GrenadeLaunchers != null)
+                Instance.Config.GrenadeLaunchers.Register();
+
+            if (Instance.Config.ImplosionGrenades != null)
+                Instance.Config.ImplosionGrenades.Register();
+
+            if (Instance.Config.LethalInjections != null)
+                Instance.Config.LethalInjections.Register();
+
+            if (Instance.Config.LuckyCoins != null)
+                Instance.Config.LuckyCoins.Register();
+
+            if (Instance.Config.MediGuns != null)
+                Instance.Config.MediGuns.Register();
+
+            if (Instance.Config.Rocks != null)
+                Instance.Config.Rocks.Register();
+
+            if (Instance.Config.Scp127s != null)
+                Instance.Config.Scp127s.Register();
+
+            if (Instance.Config.Scp1499s != null)
+                Instance.Config.Scp1499s.Register();
+
+            if (Instance.Config.Shotguns != null)
+                Instance.Config.Shotguns.Register();
+
+            if (Instance.Config.SniperRifle != null)
+                Instance.Config.SniperRifle.Register();
+        }
+
+        private void UnregisterItems()
+        {
+            if (Instance.Config.EmpGrenades != null)
+                Instance.Config.EmpGrenades.Unregister();
+
+            if (Instance.Config.GrenadeLaunchers != null)
+                Instance.Config.GrenadeLaunchers.Unregister();
+
+            if (Instance.Config.ImplosionGrenades != null)
+                Instance.Config.ImplosionGrenades.Unregister();
+
+            if (Instance.Config.LethalInjections != null)
+                Instance.Config.LethalInjections.Unregister();
+
+            if (Instance.Config.LuckyCoins != null)
+                Instance.Config.LuckyCoins.Unregister();
+
+            if (Instance.Config.MediGuns != null)
+                Instance.Config.MediGuns.Unregister();
+
+            if (Instance.Config.Rocks != null)
+                Instance.Config.Rocks.Unregister();
+
+            if (Instance.Config.Scp127s != null)
+                Instance.Config.Scp127s.Unregister();
+
+            if (Instance.Config.Scp1499s != null)
+                Instance.Config.Scp1499s.Unregister();
+
+            if (Instance.Config.Shotguns != null)
+                Instance.Config.Shotguns.Unregister();
+
+            if (Instance.Config.SniperRifle != null)
+                Instance.Config.SniperRifle.Unregister();
         }
 
         private void CheckAndPatchSubclassing()

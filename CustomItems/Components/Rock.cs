@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CustomItems
+namespace CustomItems.Components
 {
     using System;
     using System.Linq;
@@ -21,14 +21,39 @@ namespace CustomItems
     public class Rock : Scp018Grenade
     {
         /// <summary>
-        /// Gets or sets the owner of the 'rock'.
+        /// Gets the owner of the 'rock'.
         /// </summary>
-        public GameObject Owner { get; set; }
+        public GameObject Owner { get; private set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="Side"/> of the rock, for determining friendly fire.
+        /// Gets the <see cref="Side"/> of the rock, for determining friendly fire.
         /// </summary>
-        public Side Side { get; set; }
+        public Side Side { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the rock can hurt allies or not.
+        /// </summary>
+        public bool FriendlyFire { get; private set; }
+
+        /// <summary>
+        /// Gets the thrown damage.
+        /// </summary>
+        public float ThrownDamage { get; private set; }
+
+        /// <summary>
+        /// Inits the rock.
+        /// </summary>
+        /// <param name="owner"><inheritdoc cref="Owner"/></param>
+        /// <param name="side"><inheritdoc cref="Side"/></param>
+        /// <param name="friendlyFire"><inheritdoc cref="FriendlyFire"/></param>
+        /// <param name="thrownDamage"><inheritdoc cref="ThrownDamage"/></param>
+        public void Init(GameObject owner, Side side, bool friendlyFire, float thrownDamage)
+        {
+            Owner = owner;
+            Side = side;
+            FriendlyFire = friendlyFire;
+            ThrownDamage = thrownDamage;
+        }
 
         /// <summary>
         /// The collision handler.
@@ -42,11 +67,8 @@ namespace CustomItems
                 if (collision.gameObject == Owner || !collision.gameObject.TryGetComponent<Grenade>(out _))
                     return;
 
-                if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target &&
-                    (target.Side != Side || CustomItems.Instance.Config.ItemConfigs.RockCfg.FriendlyFire))
-                {
-                    target.Hurt(CustomItems.Instance.Config.ItemConfigs.RockCfg.ThrownDamage, DamageTypes.Wall, "ROCK");
-                }
+                if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || FriendlyFire))
+                    target.Hurt(ThrownDamage, DamageTypes.Wall, "ROCK");
 
                 Destroy(gameObject);
 

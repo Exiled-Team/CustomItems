@@ -8,9 +8,11 @@
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
@@ -31,19 +33,60 @@ namespace CustomItems.Items
         private readonly List<DoorVariant> lockedDoors = new List<DoorVariant>();
 
         /// <inheritdoc/>
+        public override uint Id { get; set; } = 0;
+
+        /// <inheritdoc/>
         public override string Name { get; set; } = "EM-119";
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties();
+        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            Limit = 1,
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new DynamicSpawnPoint
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.Inside173Gate,
+                },
+            },
+            StaticSpawnPoints = new List<StaticSpawnPoint>
+            {
+                new StaticSpawnPoint
+                {
+                    Chance = 50,
+                    Name = "somewhere",
+                    Position = new Vector(100, 25, 40),
+                },
+            },
+        };
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = "asd";
+        public override string Description { get; set; } = "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
 
         /// <inheritdoc/>
-        public override bool ExplodeOnCollision { get; set; }
+        public override bool ExplodeOnCollision { get; set; } = true;
 
         /// <inheritdoc/>
-        public override float FuseTime { get; set; }
+        public override float FuseTime { get; set; } = 3;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not EMP grenades will open doors that are currently locked.
+        /// </summary>
+        [Description("Whether or not EMP grenades will open doors that are currently locked.")]
+        public bool OpenLockedDoors { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not EMP grenades will open doors that require keycard permissions.
+        /// </summary>
+        [Description("Whether or not EMP grenades will open doors that require keycard permissions.")]
+        public bool OpenKeycardDoors { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets how long the EMP effect should last on the rooms affected.
+        /// </summary>
+        [Description("How long the EMP effect should last on the rooms affected.")]
+        public float Duration { get; set; } = 20f;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
@@ -87,26 +130,32 @@ namespace CustomItems.Items
             ev.IsAllowed = false;
 
             Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade);
-            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Exiled.API.Features.Map.Rooms.Count}", CustomItems.Instance.Config.Debug);
+
+            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Exiled.API.Features.Map.Rooms.Count}", CustomItems.Instance.Config.IsDebugEnabled);
 
             LockedRooms079.Add(room);
-            room.TurnOffLights(CustomItems.Instance.Config.ItemConfigs.EmpCfg.Duration);
-            Log.Debug($"{room.Doors.Count()} - {room.Type}", CustomItems.Instance.Config.Debug);
+
+            room.TurnOffLights(Duration);
+
+            Log.Debug($"{room.Doors.Count()} - {room.Type}", CustomItems.Instance.Config.IsDebugEnabled);
+
             foreach (DoorVariant door in room.Doors)
             {
-                if (door.NetworkActiveLocks > 0 && !CustomItems.Instance.Config.ItemConfigs.EmpCfg.OpenLockedDoors)
+                if (door.NetworkActiveLocks > 0 && !OpenLockedDoors)
                     continue;
 
-                if (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !CustomItems.Instance.Config.ItemConfigs.EmpCfg.OpenKeycardDoors)
+                if (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors)
                     continue;
 
-                Log.Debug("Opening a door!", CustomItems.Instance.Config.Debug);
+                Log.Debug("Opening a door!", CustomItems.Instance.Config.IsDebugEnabled);
+
                 door.NetworkTargetState = true;
                 door.ServerChangeLock(DoorLockReason.NoPower, true);
+
                 if (lockedDoors.Contains(door))
                     lockedDoors.Add(door);
 
-                Timing.CallDelayed(CustomItems.Instance.Config.ItemConfigs.EmpCfg.Duration, () =>
+                Timing.CallDelayed(Duration, () =>
                 {
                     door.ServerChangeLock(DoorLockReason.NoPower, false);
                     lockedDoors.Remove(door);
@@ -114,10 +163,12 @@ namespace CustomItems.Items
             }
 
             foreach (Player player in Player.Get(RoleType.Scp079))
+            {
                 if (player.Camera != null && player.Camera.Room() == room)
                     player.SetCamera(198);
+            }
 
-            Timing.CallDelayed(CustomItems.Instance.Config.ItemConfigs.EmpCfg.Duration, () => LockedRooms079.Remove(room));
+            Timing.CallDelayed(Duration, () => LockedRooms079.Remove(room));
         }
     }
 }
