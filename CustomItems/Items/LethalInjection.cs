@@ -45,9 +45,6 @@ namespace CustomItems.Items
             },
         };
 
-        /// <inheritdoc/>
-        public override float Durability { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the Lethal Injection should always kill the user, regardless of if they stop SCP-096's enrage.
         /// </summary>

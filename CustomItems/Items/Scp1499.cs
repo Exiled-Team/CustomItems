@@ -48,9 +48,6 @@ namespace CustomItems.Items
             },
         };
 
-        /// <inheritdoc/>
-        public override float Durability { get; set; }
-
         /// <summary>
         /// Gets or sets how long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit).
         /// </summary>

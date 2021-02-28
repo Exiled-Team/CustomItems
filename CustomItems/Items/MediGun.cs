@@ -102,6 +102,7 @@ namespace CustomItems.Items
         protected override void OnWaitingForPlayers()
         {
             previousRoles.Clear();
+
             base.OnWaitingForPlayers();
         }
 

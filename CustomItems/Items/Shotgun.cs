@@ -53,6 +53,9 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public override float Damage { get; set; } = 13.5f;
 
+        /// <inheritdoc/>
+        public override uint ClipSize { get; set; } = 8;
+
         /// <summary>
         /// Gets or sets the amount of pellets fired at once. This amount of ammo will also be consumed from the weapons current clip. If the clip is lower than this amount, the amount in the clip is used instead.
         /// </summary>

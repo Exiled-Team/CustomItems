@@ -61,9 +61,6 @@ namespace CustomItems.Items
         public float Duration { get; set; } = 2;
 
         /// <inheritdoc/>
-        public override float Durability { get; set; }
-
-        /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
             Server.RoundStarted += OnRoundStart;
