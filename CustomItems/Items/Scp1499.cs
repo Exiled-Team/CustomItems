@@ -5,13 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Exiled.API.Enums;
-
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
     using CustomPlayerEffects;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
