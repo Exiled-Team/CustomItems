@@ -1,20 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Scp1499.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
-// Licensed under the CC BY-SA 3.0 license.
+﻿// <copyright file="Scp1499.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using CustomPlayerEffects;
+    using CustomItems.API;
     using Exiled.API.Enums;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
-    using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
     using UnityEngine;
@@ -22,94 +15,91 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class Scp1499 : CustomItem
     {
-        // This position is where is unused terrain on the Surface
-        private readonly Vector3 scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f);
-        private readonly Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
+        private readonly Vector3 scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f); // This position is where is unused terrain on the Surface
 
-        /// <inheritdoc/>
-        public override uint Id { get; set; } = 8;
-
-        /// <inheritdoc/>
-        public override string Name { get; set; } = "SCP-1499";
-
-        /// <inheritdoc/>
-        public override string Description { get; set; } = "The gas mask that temporarily teleports you to another dimension, when you put it on.";
-
-        /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        /// <inheritdoc />
+        public Scp1499(ItemType type, int itemId)
+            : base(type, itemId)
         {
-            Limit = 1,
-            DynamicSpawnPoints = new List<DynamicSpawnPoint>
-            {
-                new DynamicSpawnPoint
-                {
-                    Chance = 10,
-                    Location = SpawnLocation.InsideHid,
-                },
-            },
-        };
+        }
 
         /// <summary>
-        /// Gets or sets how long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit).
+        ///  Gets a <see cref="Dictionary{TKey,TValue}"/> of players in the 1499 dimension and their tp-back coordinates.
         /// </summary>
-        [Description("How long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit)")]
-        public float Duration { get; set; } = 15f;
+        public static Dictionary<Player, Vector3> Scp1499Players { get; } = new Dictionary<Player, Vector3>();
 
         /// <inheritdoc/>
-        protected override void SubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.MedicalItemDequipped += OnMedicalItemDeEquipped;
+        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Name;
 
-            base.SubscribeEvents();
+        /// <inheritdoc/>
+        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLocations;
+
+        /// <inheritdoc/>
+        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Description;
+
+        /// <inheritdoc/>
+        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.SpawnLimit;
+
+        /// <inheritdoc/>
+        protected override void LoadEvents()
+        {
+            Exiled.Events.Handlers.Player.MedicalItemDequipped += OnDequippedMedicalItem;
+            base.LoadEvents();
         }
 
         /// <inheritdoc/>
-        protected override void UnsubscribeEvents()
+        protected override void UnloadEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnMedicalItemDeEquipped;
-
-            base.UnsubscribeEvents();
+            Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnDequippedMedicalItem;
+            base.UnloadEvents();
         }
 
         /// <inheritdoc/>
-        protected override void OnDropping(DroppingItemEventArgs ev)
+        protected override void OnDroppingItem(DroppingItemEventArgs ev)
         {
-            if (scp1499Players.ContainsKey(ev.Player) && Check(ev.Item))
-            {
+            if (Scp1499Players.ContainsKey(ev.Player))
                 ev.IsAllowed = false;
 
+            if (!CheckItem(ev.Item))
+                return;
+
+            if (Scp1499Players.ContainsKey(ev.Player))
+            {
+                ev.IsAllowed = false;
                 SendPlayerBack(ev.Player);
             }
             else
             {
-                base.OnDropping(ev);
+                base.OnDroppingItem(ev);
             }
         }
 
         /// <inheritdoc/>
         protected override void OnWaitingForPlayers()
         {
-            scp1499Players.Clear();
-
+            Scp1499Players.Clear();
             base.OnWaitingForPlayers();
         }
 
-        private void OnMedicalItemDeEquipped(DequippedMedicalItemEventArgs ev)
+        private void OnDequippedMedicalItem(DequippedMedicalItemEventArgs ev)
         {
-            if (!Check(ev.Player.CurrentItem))
+            if (!CheckItem(ev.Player.CurrentItem))
                 return;
 
-            if (scp1499Players.ContainsKey(ev.Player))
-                scp1499Players[ev.Player] = ev.Player.Position;
+            if (ev.Player.CurrentRoom.Name == "PocketWorld")
+                return;
+
+            if (Scp1499Players.ContainsKey(ev.Player))
+                Scp1499Players[ev.Player] = ev.Player.Position;
             else
-                scp1499Players.Add(ev.Player, ev.Player.Position);
+                Scp1499Players.Add(ev.Player, ev.Player.Position);
 
             ev.Player.Position = scp1499DimensionPos;
-            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Scp268>();
+            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Scp268>();
 
-            if (Duration > 0)
+            if (Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration > 0)
             {
-                Timing.CallDelayed(Duration, () =>
+                Timing.CallDelayed(Plugin.Singleton.Config.ItemConfigs.Scp1499Cfg.Duration, () =>
                 {
                     SendPlayerBack(ev.Player);
                 });
@@ -118,10 +108,10 @@ namespace CustomItems.Items
 
         private void SendPlayerBack(Player player)
         {
-            if (!scp1499Players.ContainsKey(player))
+            if (!Scp1499Players.ContainsKey(player))
                 return;
 
-            player.Position = scp1499Players[player];
+            player.Position = Scp1499Players[player];
 
             bool shouldKill = false;
             if (Warhead.IsDetonated)
@@ -167,7 +157,7 @@ namespace CustomItems.Items
                     player.Kill(DamageTypes.Decont);
             }
 
-            scp1499Players.Remove(player);
+            Scp1499Players.Remove(player);
         }
     }
 }
