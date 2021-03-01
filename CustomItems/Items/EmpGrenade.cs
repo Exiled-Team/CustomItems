@@ -83,6 +83,12 @@ namespace CustomItems.Items
         public bool OpenKeycardDoors { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating what doors will never be opened by EMP grenades.
+        /// </summary>
+        [Description("A list of door names that will not be opened with EMP grenades regardless of the above configs.")]
+        public HashSet<string> BlacklistedDoorNames { get; set; } = new HashSet<string>();
+
+        /// <summary>
         /// Gets or sets how long the EMP effect should last on the rooms affected.
         /// </summary>
         [Description("How long the EMP effect should last on the rooms affected.")]
@@ -141,6 +147,9 @@ namespace CustomItems.Items
 
             foreach (DoorVariant door in room.Doors)
             {
+                if (BlacklistedDoorNames.Contains(door.GetNametag()))
+                    continue;
+
                 if (door.NetworkActiveLocks > 0 && !OpenLockedDoors)
                     continue;
 
