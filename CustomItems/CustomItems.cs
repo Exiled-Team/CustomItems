@@ -98,6 +98,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.Shotguns?.Register();
 
             Instance.Config.ItemConfigs.SniperRifle?.Register();
+
+            Instance.Config.ItemConfigs.TranquilizerGun?.Register();
         }
 
         private void UnregisterItems()
@@ -123,6 +125,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.Shotguns?.Unregister();
 
             Instance.Config.ItemConfigs.SniperRifle?.Unregister();
+
+            Instance.Config.ItemConfigs.TranquilizerGun?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()

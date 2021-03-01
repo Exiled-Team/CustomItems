@@ -26,6 +26,8 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class GrenadeLauncher : CustomWeapon
     {
+        private CustomGrenade loadedCustomGrenade;
+
         /// <inheritdoc/>
         public override uint Id { get; set; } = 1;
 
@@ -101,6 +103,9 @@ namespace CustomItems.Items
                     ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
                     Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", CustomItems.Instance.Config.IsDebugEnabled);
                     Timing.CallDelayed(4.5f, () => { ev.Player.ReloadWeapon(); });
+                    if (TryGet(item, out CustomItem cItem))
+                        if (cItem is CustomGrenade customGrenade)
+                            loadedCustomGrenade = customGrenade;
                     ev.Player.RemoveItem(item);
 
                     break;
@@ -124,7 +129,11 @@ namespace CustomItems.Items
             Vector3 velocity = (ev.Position - ev.Shooter.Position) * GrenadeSpeed;
             Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
             Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-            Grenade grenade = SpawnGrenade(pos, velocity, FuseTime, GrenadeType.FragGrenade, ev.Shooter);
+            Grenade grenade;
+            if (loadedCustomGrenade != null)
+                grenade = loadedCustomGrenade.Spawn(pos, velocity, FuseTime, loadedCustomGrenade.Type, ev.Shooter);
+            else
+                grenade = SpawnGrenade(pos, velocity, FuseTime, GrenadeType.FragGrenade, ev.Shooter);
             CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
 
             collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
@@ -141,7 +150,7 @@ namespace CustomItems.Items
         /// <returns>The <see cref="Grenade"/> being spawned.</returns>
         ///
         /// I stole this from Synapse.Api.Map.SpawnGrenade -- Thanks Dimenzio, I was dreading having to find my super old version and adapting it to the new game version.
-        private static Grenade SpawnGrenade(Vector3 position, Vector3 velocity, float fuseTime = 3f, GrenadeType grenadeType = GrenadeType.FragGrenade, Player player = null)
+        private Grenade SpawnGrenade(Vector3 position, Vector3 velocity, float fuseTime = 3f, GrenadeType grenadeType = GrenadeType.FragGrenade, Player player = null)
         {
             if (player == null)
                 player = Server.Host;
