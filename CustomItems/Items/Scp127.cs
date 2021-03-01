@@ -1,86 +1,104 @@
-// <copyright file="Scp127.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="Scp127.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
-    using CustomItems.API;
+    using System.ComponentModel;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
 
     /// <inheritdoc />
     public class Scp127 : CustomWeapon
     {
-        /// <inheritdoc />
-        public Scp127(ItemType type, int clipSize, int itemId)
-            : base(type, clipSize, itemId)
+        /// <inheritdoc/>
+        public override uint Id { get; set; } = 7;
+
+        /// <inheritdoc/>
+        public override string Name { get; set; } = "SCP-127";
+
+        /// <inheritdoc/>
+        public override string Description { get; set; } = "SCP-127 is a pistol that slowly regenerates it's ammo over time but cannot be reloaded normally.";
+
+        /// <inheritdoc/>
+        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
-            Coroutines.Add(Timing.RunCoroutine(DoAmmoRegeneration()));
-        }
+            Limit = 1,
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new DynamicSpawnPoint
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.Inside173Armory,
+                },
+            },
+        };
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Name;
+        public override Modifiers Modifiers { get; set; } = default;
 
         /// <inheritdoc/>
-        public override Dictionary<SpawnLocation, float> SpawnLocations { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLocations;
+        public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.Description;
+        public override uint ClipSize { get; set; } = 15;
 
-        /// <inheritdoc/>
-        public override int SpawnLimit { get; set; } = Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.SpawnLimit;
+        /// <summary>
+        /// Gets or sets how often ammo will be regenerated. Regeneration occurs at all times, however this timer is reset when the weapon is picked up or dropped.
+        /// </summary>
+        [Description("How often ammo will be regenerated. Regeneration occurs at all times, however this timer is reset when the weapon is picked up or dropped.")]
+        public float RegenerationDelay { get; set; } = 10f;
+
+        /// <summary>
+        /// Gets or sets the amount of ammo that will be regenerated each regeneration cycle.
+        /// </summary>
+        [Description("The amount of ammo that will be regenerated each regeneration cycle.")]
+        public int RegenerationAmount { get; set; } = 2;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
         /// <inheritdoc/>
-        protected override void LoadEvents()
-        {
-            Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUp;
-            base.LoadEvents();
-        }
-
-        /// <inheritdoc/>
-        protected override void UnloadEvents()
+        public override void Destroy()
         {
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
 
-            Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUp;
-            base.UnloadEvents();
+            base.Destroy();
         }
 
         /// <inheritdoc/>
-        protected override void OnReloadingWeapon(ReloadingWeaponEventArgs ev)
-        {
-            if (CheckItem(ev.Player.CurrentItem))
-                ev.IsAllowed = false;
-        }
+        protected override void OnReloading(ReloadingWeaponEventArgs ev) => ev.IsAllowed = false;
 
         /// <inheritdoc/>
-        protected override void ItemGiven(Player player)
+        protected override void ShowPickedUpMessage(Player player)
         {
             Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(player)));
+
+            base.ShowPickedUpMessage(player);
         }
 
-        private void OnPickingUp(PickingUpItemEventArgs ev)
-        {
-            if (CheckItem(ev.Pickup))
-                Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
-        }
+        /// <inheritdoc/>
+        protected override void OnPickingUp(PickingUpItemEventArgs ev) => Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
 
         private IEnumerator<float> DoInventoryRegeneration(Player player)
         {
-            for (; ;)
+            while (true)
             {
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
+                yield return Timing.WaitForSeconds(RegenerationDelay);
 
                 bool hasItem = false;
 
                 for (int i = 0; i < player.Inventory.items.Count; i++)
                 {
-                    if (!CheckItem(player.Inventory.items[i]))
+                    if (!Check(player.Inventory.items[i]))
                         continue;
 
                     hasItem = true;
@@ -89,7 +107,11 @@ namespace CustomItems.Items
                         continue;
 
                     Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
-                    newInfo.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
+
+                    if ((newInfo.durability + RegenerationAmount) > ClipSize)
+                        newInfo.durability = ClipSize;
+                    else
+                        newInfo.durability += RegenerationAmount;
                     player.Inventory.items[i] = newInfo;
                 }
 
@@ -100,17 +122,19 @@ namespace CustomItems.Items
 
         private IEnumerator<float> DoAmmoRegeneration()
         {
-            for (; ;)
+            while (true)
             {
-                yield return Timing.WaitForSeconds(Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenDelay);
+                yield return Timing.WaitForSeconds(RegenerationDelay);
 
-                foreach (Pickup pickup in ItemPickups)
-                    if (CheckItem(pickup) && pickup.durability < ClipSize)
+                foreach (Pickup pickup in Spawned)
+                {
+                    if (Check(pickup) && pickup.durability < ClipSize)
                     {
-                        pickup.durability += Plugin.Singleton.Config.ItemConfigs.Scp127Cfg.RegenAmount;
+                        pickup.durability += RegenerationAmount;
 
                         yield return Timing.WaitForSeconds(0.5f);
                     }
+                }
             }
         }
     }
