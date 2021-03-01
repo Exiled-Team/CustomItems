@@ -13,6 +13,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
+    using YamlDotNet.Serialization;
 
     /// <inheritdoc />
     public class SniperRifle : CustomWeapon
@@ -30,6 +31,7 @@ namespace CustomItems.Items
         public override uint ClipSize { get; set; } = 1;
 
         /// <inheritdoc/>
+        [YamlIgnore]
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
