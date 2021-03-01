@@ -126,5 +126,14 @@ namespace CustomItems.Configs
         {
             new TranquilizerGun() { Type = ItemType.GunUSP },
         };
+
+        /// <summary>
+        /// Gets the list of Scp714s.
+        /// </summary>
+        [Description("The list of Scp714s.")]
+        public List<Scp714> Scp714s { get; private set; } = new List<Scp714>()
+        {
+            new Scp714() { Type = ItemType.Coin },
+        };
     }
 }
