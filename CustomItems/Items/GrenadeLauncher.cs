@@ -84,7 +84,7 @@ namespace CustomItems.Items
         public float FuseTime { get; set; } = 1f;
 
         /// <summary>
-        /// Gets or sets a value indicating if the GL should ignore modded grenades.
+        /// Gets or sets a value indicating whether the GL should ignore modded grenades.
         /// </summary>
         [Description("Whether or not the Grenade Launcher will consider modded frag grenades as viable grenades for reloading.")]
         public bool IgnoreModdedGrenades { get; set; } = false;
