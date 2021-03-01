@@ -96,6 +96,9 @@ namespace CustomItems.Items
             {
                 ev.IsAllowed = false;
 
+                if (ev.Player.CurrentItem.durability >= ClipSize)
+                    return;
+
                 Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", CustomItems.Instance.Config.IsDebugEnabled);
 
                 foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items.ToList())
