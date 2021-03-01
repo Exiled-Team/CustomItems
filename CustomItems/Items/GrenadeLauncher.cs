@@ -83,6 +83,12 @@ namespace CustomItems.Items
         [Description("The max duration of the fuse of grenades shot from the weapon. Note, these grenades will always explode immediatly when they collide with something, but this can be used with slow-moving grenades to cause mid-air explosions.")]
         public float FuseTime { get; set; } = 1f;
 
+        /// <summary>
+        /// Gets or sets a value indicating if the GL should ignore modded grenades.
+        /// </summary>
+        [Description("Whether or not the Grenade Launcher will consider modded frag grenades as viable grenades for reloading.")]
+        public bool IgnoreModdedGrenades { get; set; } = false;
+
         /// <inheritdoc/>
         protected override void OnReloading(ReloadingWeaponEventArgs ev)
         {
@@ -96,6 +102,14 @@ namespace CustomItems.Items
                 {
                     if (item.id != ItemType.GrenadeFrag)
                         continue;
+                    if (TryGet(item, out CustomItem cItem))
+                    {
+                        if (IgnoreModdedGrenades)
+                            continue;
+
+                        if (cItem is CustomGrenade customGrenade)
+                            loadedCustomGrenade = customGrenade;
+                    }
 
                     ev.Player.ReferenceHub.weaponManager.scp268.ServerDisable();
                     ev.Player.ReloadWeapon();
@@ -103,9 +117,7 @@ namespace CustomItems.Items
                     ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
                     Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", CustomItems.Instance.Config.IsDebugEnabled);
                     Timing.CallDelayed(4.5f, () => { ev.Player.ReloadWeapon(); });
-                    if (TryGet(item, out CustomItem cItem))
-                        if (cItem is CustomGrenade customGrenade)
-                            loadedCustomGrenade = customGrenade;
+
                     ev.Player.RemoveItem(item);
 
                     break;
@@ -130,13 +142,38 @@ namespace CustomItems.Items
             Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
             Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
             Grenade grenade;
+
             if (loadedCustomGrenade != null)
-                grenade = loadedCustomGrenade.Spawn(pos, velocity, FuseTime, loadedCustomGrenade.Type, ev.Shooter);
+            {
+                grenade = loadedCustomGrenade.Spawn(pos, velocity, FuseTime, GetGrenadeType(loadedCustomGrenade.Type), ev.Shooter);
+                loadedCustomGrenade = null;
+            }
             else
+            {
                 grenade = SpawnGrenade(pos, velocity, FuseTime, GrenadeType.FragGrenade, ev.Shooter);
+            }
+
             CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
 
             collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="ItemType"/> into a <see cref="GrenadeType"/>.
+        /// </summary>
+        /// <param name="type">The <see cref="ItemType"/> to check.</param>
+        /// <returns><see cref="GrenadeType"/>.</returns>
+        private GrenadeType GetGrenadeType(ItemType type)
+        {
+            switch (type)
+            {
+                case ItemType.GrenadeFlash:
+                    return GrenadeType.Flashbang;
+                case ItemType.SCP018:
+                    return GrenadeType.Scp018;
+                default:
+                    return GrenadeType.FragGrenade;
+            }
         }
 
         /// <summary>
