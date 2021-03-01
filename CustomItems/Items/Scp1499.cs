@@ -59,6 +59,8 @@ namespace CustomItems.Items
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.MedicalItemDequipped += OnMedicalItemDeEquipped;
+            Exiled.Events.Handlers.Player.Destroying += OnDestroying;
+            Exiled.Events.Handlers.Player.Died += OnDied;
 
             base.SubscribeEvents();
         }
@@ -67,6 +69,8 @@ namespace CustomItems.Items
         protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnMedicalItemDeEquipped;
+            Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
+            Exiled.Events.Handlers.Player.Died -= OnDied;
 
             base.UnsubscribeEvents();
         }
@@ -92,6 +96,18 @@ namespace CustomItems.Items
             scp1499Players.Clear();
 
             base.OnWaitingForPlayers();
+        }
+
+        private void OnDied(DiedEventArgs ev)
+        {
+            if (scp1499Players.ContainsKey(ev.Target))
+                scp1499Players.Remove(ev.Target);
+        }
+
+        private void OnDestroying(DestroyingEventArgs ev)
+        {
+            if (scp1499Players.ContainsKey(ev.Player))
+                scp1499Players.Remove(ev.Player);
         }
 
         private void OnMedicalItemDeEquipped(DequippedMedicalItemEventArgs ev)
