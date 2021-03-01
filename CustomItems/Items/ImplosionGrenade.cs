@@ -90,7 +90,6 @@ namespace CustomItems.Items
         {
             Map.ExplodingGrenade += OnExplodingGrenade;
 
-            Log.Info($"Implosion grenade override thingy.");
             base.SubscribeEvents();
         }
 
@@ -121,10 +120,8 @@ namespace CustomItems.Items
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
         {
-            Log.Info("grenade thrown.");
             if (Check(ev.Grenade))
             {
-                Log.Info("Is implosion");
                 Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", CustomItems.Instance.Config.IsDebugEnabled);
                 Dictionary<Player, float> copiedList = new Dictionary<Player, float>();
                 foreach (KeyValuePair<Player, float> kvp in ev.TargetToDamages)

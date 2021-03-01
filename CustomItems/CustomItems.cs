@@ -10,6 +10,7 @@ namespace CustomItems
     using System;
     using System.Linq;
     using Events;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using HarmonyLib;
@@ -34,7 +35,7 @@ namespace CustomItems
         public static CustomItems Instance => InstanceValue;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 3, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 4, 1);
 
         /// <inheritdoc/>
         public override void OnEnabled()
