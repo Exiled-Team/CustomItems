@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Enums;
+
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
@@ -57,7 +59,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemUsed += OnUsedMedicalItem;
+            Exiled.Events.Handlers.Player.MedicalItemDequipped += OnMedicalItemDeEquipped;
 
             base.SubscribeEvents();
         }
@@ -65,7 +67,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemUsed -= OnUsedMedicalItem;
+            Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnMedicalItemDeEquipped;
 
             base.UnsubscribeEvents();
         }
@@ -73,12 +75,11 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnDropping(DroppingItemEventArgs ev)
         {
-            if (scp1499Players.ContainsKey(ev.Player))
+            if (scp1499Players.ContainsKey(ev.Player) && Check(ev.Item))
             {
                 ev.IsAllowed = false;
-                ev.Player.Position = scp1499Players[ev.Player];
 
-                scp1499Players.Remove(ev.Player);
+                SendPlayerBack(ev.Player);
             }
             else
             {
@@ -94,7 +95,7 @@ namespace CustomItems.Items
             base.OnWaitingForPlayers();
         }
 
-        private void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
+        private void OnMedicalItemDeEquipped(DequippedMedicalItemEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
@@ -111,14 +112,63 @@ namespace CustomItems.Items
             {
                 Timing.CallDelayed(Duration, () =>
                 {
-                    if (!scp1499Players.ContainsKey(ev.Player))
-                        return;
-
-                    ev.Player.Position = scp1499Players[ev.Player];
-
-                    scp1499Players.Remove(ev.Player);
+                    SendPlayerBack(ev.Player);
                 });
             }
+        }
+
+        private void SendPlayerBack(Player player)
+        {
+            if (!scp1499Players.ContainsKey(player))
+                return;
+
+            player.Position = scp1499Players[player];
+
+            bool shouldKill = false;
+            if (Warhead.IsDetonated)
+            {
+                if (player.CurrentRoom.Zone != ZoneType.Surface)
+                {
+                    shouldKill = true;
+                }
+                else
+                {
+                    foreach (Lift lift in Map.Lifts)
+                        if (lift.elevatorName.Contains("Gate"))
+                            foreach (Lift.Elevator elevator in lift.elevators)
+                                if (Vector3.Distance(player.Position, elevator.target.position) <= 3.5f)
+                                {
+                                    shouldKill = true;
+                                    break;
+                                }
+                }
+
+                if (shouldKill)
+                    player.Kill(DamageTypes.Nuke);
+            }
+            else if (Map.IsLCZDecontaminated)
+            {
+                if (player.CurrentRoom.Zone == ZoneType.LightContainment)
+                {
+                    shouldKill = true;
+                }
+                else
+                {
+                    foreach (Lift lift in Map.Lifts)
+                        if (lift.elevatorName.Contains("El"))
+                            foreach (Lift.Elevator elevator in lift.elevators)
+                                if (Vector3.Distance(player.Position, elevator.target.position) <= 3.5f)
+                                {
+                                    shouldKill = true;
+                                    break;
+                                }
+                }
+
+                if (shouldKill)
+                    player.Kill(DamageTypes.Decont);
+            }
+
+            scp1499Players.Remove(player);
         }
     }
 }

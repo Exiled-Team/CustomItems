@@ -41,7 +41,7 @@ namespace CustomItems
         {
             serverHandler = new ServerHandler();
 
-            Config.LoadItemConfigs();
+            Config.LoadItems();
             RegisterItems();
 
             Log.Debug("Checking for Subclassing...", Config.IsDebugEnabled);

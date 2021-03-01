@@ -19,7 +19,7 @@ namespace CustomItems.Events
         /// </summary>
         public void OnReloadingConfigs()
         {
-            Instance.Config.LoadItemConfigs();
+            Instance.Config.LoadItems();
             Instance.Config.ParseSubclassList();
         }
     }

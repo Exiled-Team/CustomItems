@@ -28,7 +28,7 @@ namespace CustomItems
         /// <summary>
         /// Item Config settings.
         /// </summary>
-        public ItemConfigs ItemConfigs;
+        public Configs.Items ItemConfigs;
 
         /// <summary>
         /// The list of <see cref="CustomItem"/>s and their spawn chances for each Subclass.
@@ -69,7 +69,7 @@ namespace CustomItems
         /// <summary>
         /// Loads the item configs.
         /// </summary>
-        public void LoadItemConfigs()
+        public void LoadItems()
         {
             if (!Directory.Exists(ItemConfigFolder))
                 Directory.CreateDirectory(ItemConfigFolder);
@@ -77,12 +77,12 @@ namespace CustomItems
             string filePath = Path.Combine(ItemConfigFolder, ItemConfigFile);
             if (!File.Exists(filePath))
             {
-                ItemConfigs = new ItemConfigs();
+                ItemConfigs = new Configs.Items();
                 File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
             }
             else
             {
-                ItemConfigs = ConfigManager.Deserializer.Deserialize<ItemConfigs>(File.ReadAllText(filePath));
+                ItemConfigs = ConfigManager.Deserializer.Deserialize<Configs.Items>(File.ReadAllText(filePath));
                 File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
             }
         }

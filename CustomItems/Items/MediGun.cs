@@ -112,7 +112,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Attacker.CurrentItem))
+            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.DamageType == DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
                 ev.Amount = 0f;
         }
 

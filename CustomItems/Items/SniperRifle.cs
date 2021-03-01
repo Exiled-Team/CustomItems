@@ -61,6 +61,10 @@ namespace CustomItems.Items
         public float DamageMultiplier { get; set; } = 7.5f;
 
         /// <inheritdoc/>
-        protected override void OnHurting(HurtingEventArgs ev) => ev.Amount *= DamageMultiplier;
+        protected override void OnHurting(HurtingEventArgs ev)
+        {
+            if (ev.Attacker != ev.Target && ev.DamageType == DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
+                ev.Amount *= DamageMultiplier;
+        }
     }
 }

@@ -90,6 +90,7 @@ namespace CustomItems.Items
         {
             Map.ExplodingGrenade += OnExplodingGrenade;
 
+            Log.Info($"Implosion grenade override thingy.");
             base.SubscribeEvents();
         }
 
@@ -110,7 +111,9 @@ namespace CustomItems.Items
             for (int i = 0; i < SuctionCount; i++)
             {
                 Log.Debug($"{player.Nickname} suctioned?", CustomItems.Instance.Config.IsDebugEnabled);
-                player.Position = Vector3.MoveTowards(player.Position, position, SuctionPerTick);
+                Vector3 newPos = Vector3.MoveTowards(player.Position, position, SuctionPerTick);
+                if (!Physics.Linecast(player.Position, newPos, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                    player.Position = Vector3.MoveTowards(player.Position, position, SuctionPerTick);
 
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
@@ -118,8 +121,10 @@ namespace CustomItems.Items
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
         {
+            Log.Info("grenade thrown.");
             if (Check(ev.Grenade))
             {
+                Log.Info("Is implosion");
                 Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", CustomItems.Instance.Config.IsDebugEnabled);
                 Dictionary<Player, float> copiedList = new Dictionary<Player, float>();
                 foreach (KeyValuePair<Player, float> kvp in ev.TargetToDamages)

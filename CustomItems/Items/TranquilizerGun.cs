@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Linq;
+
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
@@ -92,10 +94,10 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (!Check(ev.Attacker.CurrentItem))
+            if (!Check(ev.Attacker.CurrentItem) || ev.Attacker == ev.Target)
                 return;
 
-            ev.Amount = 0;
+            ev.Amount = Damage;
 
             if (ev.Target.Team == Team.SCP && ResistantScps)
                 if (UnityEngine.Random.Range(1, 101) <= ScpResistChance)
@@ -114,6 +116,13 @@ namespace CustomItems.Items
         private IEnumerator<float> DoTranquilize(Player player, float duration)
         {
             Vector3 pos = player.Position;
+
+            foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+            {
+                if (TryGet(item, out CustomItem cItem))
+                    cItem.Spawn(player.Position);
+                player.Inventory.items.Remove(item);
+            }
 
             if (DropItems)
                 player.DropItems();
