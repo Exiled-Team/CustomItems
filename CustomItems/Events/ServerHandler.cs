@@ -17,6 +17,10 @@ namespace CustomItems.Events
         /// <summary>
         /// OnReloadingConfigs handler.
         /// </summary>
-        public void OnReloadingConfigs() => Instance.Config.ParseSubclassList();
+        public void OnReloadingConfigs()
+        {
+            Instance.Config.LoadItemConfigs();
+            Instance.Config.ParseSubclassList();
+        }
     }
 }

@@ -68,7 +68,7 @@ namespace CustomItems.Items
         public override bool ExplodeOnCollision { get; set; } = true;
 
         /// <inheritdoc/>
-        public override float FuseTime { get; set; } = 3;
+        public override float FuseTime { get; set; } = 1.5f;
 
         /// <summary>
         /// Gets or sets a value indicating whether or not EMP grenades will open doors that are currently locked.

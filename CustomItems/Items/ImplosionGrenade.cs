@@ -57,7 +57,7 @@ namespace CustomItems.Items
         public override bool ExplodeOnCollision { get; set; } = true;
 
         /// <inheritdoc/>
-        public override float FuseTime { get; set; }
+        public override float FuseTime { get; set; } = 1.5f;
 
         /// <summary>
         /// Gets or sets the % of normal frag grenade damage this grenade will deal to those in it's radius.

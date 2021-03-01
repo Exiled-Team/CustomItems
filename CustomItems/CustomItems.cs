@@ -41,6 +41,7 @@ namespace CustomItems
         {
             serverHandler = new ServerHandler();
 
+            Config.LoadItemConfigs();
             RegisterItems();
 
             Log.Debug("Checking for Subclassing...", Config.IsDebugEnabled);
@@ -75,74 +76,52 @@ namespace CustomItems
 
         private void RegisterItems()
         {
-            if (Instance.Config.EmpGrenades != null)
-                Instance.Config.EmpGrenades.Register();
+            Instance.Config.ItemConfigs.EmpGrenades?.Register();
 
-            if (Instance.Config.GrenadeLaunchers != null)
-                Instance.Config.GrenadeLaunchers.Register();
+            Instance.Config.ItemConfigs.GrenadeLaunchers?.Register();
 
-            if (Instance.Config.ImplosionGrenades != null)
-                Instance.Config.ImplosionGrenades.Register();
+            Instance.Config.ItemConfigs.ImplosionGrenades?.Register();
 
-            if (Instance.Config.LethalInjections != null)
-                Instance.Config.LethalInjections.Register();
+            Instance.Config.ItemConfigs.LethalInjections?.Register();
 
-            if (Instance.Config.LuckyCoins != null)
-                Instance.Config.LuckyCoins.Register();
+            Instance.Config.ItemConfigs.LuckyCoins?.Register();
 
-            if (Instance.Config.MediGuns != null)
-                Instance.Config.MediGuns.Register();
+            Instance.Config.ItemConfigs.MediGuns?.Register();
 
-            if (Instance.Config.Rocks != null)
-                Instance.Config.Rocks.Register();
+            Instance.Config.ItemConfigs.Rocks?.Register();
 
-            if (Instance.Config.Scp127s != null)
-                Instance.Config.Scp127s.Register();
+            Instance.Config.ItemConfigs.Scp127s?.Register();
 
-            if (Instance.Config.Scp1499s != null)
-                Instance.Config.Scp1499s.Register();
+            Instance.Config.ItemConfigs.Scp1499s?.Register();
 
-            if (Instance.Config.Shotguns != null)
-                Instance.Config.Shotguns.Register();
+            Instance.Config.ItemConfigs.Shotguns?.Register();
 
-            if (Instance.Config.SniperRifle != null)
-                Instance.Config.SniperRifle.Register();
+            Instance.Config.ItemConfigs.SniperRifle?.Register();
         }
 
         private void UnregisterItems()
         {
-            if (Instance.Config.EmpGrenades != null)
-                Instance.Config.EmpGrenades.Unregister();
+            Instance.Config.ItemConfigs.EmpGrenades?.Unregister();
 
-            if (Instance.Config.GrenadeLaunchers != null)
-                Instance.Config.GrenadeLaunchers.Unregister();
+            Instance.Config.ItemConfigs.GrenadeLaunchers?.Unregister();
 
-            if (Instance.Config.ImplosionGrenades != null)
-                Instance.Config.ImplosionGrenades.Unregister();
+            Instance.Config.ItemConfigs.ImplosionGrenades?.Unregister();
 
-            if (Instance.Config.LethalInjections != null)
-                Instance.Config.LethalInjections.Unregister();
+            Instance.Config.ItemConfigs.LethalInjections?.Unregister();
 
-            if (Instance.Config.LuckyCoins != null)
-                Instance.Config.LuckyCoins.Unregister();
+            Instance.Config.ItemConfigs.LuckyCoins?.Unregister();
 
-            if (Instance.Config.MediGuns != null)
-                Instance.Config.MediGuns.Unregister();
+            Instance.Config.ItemConfigs.MediGuns?.Unregister();
 
-            if (Instance.Config.Rocks != null)
-                Instance.Config.Rocks.Unregister();
+            Instance.Config.ItemConfigs.Rocks?.Unregister();
 
-            if (Instance.Config.Scp127s != null)
-                Instance.Config.Scp127s.Unregister();
+            Instance.Config.ItemConfigs.Scp127s?.Unregister();
 
-            if (Instance.Config.Scp1499s != null)
-                Instance.Config.Scp1499s.Unregister();
+            Instance.Config.ItemConfigs.Scp1499s?.Unregister();
 
-            if (Instance.Config.Shotguns != null)
-                Instance.Config.Shotguns.Unregister();
+            Instance.Config.ItemConfigs.Shotguns?.Unregister();
 
-            if (Instance.Config.SniperRifle != null)
-                Instance.Config.SniperRifle.Unregister();
+            Instance.Config.ItemConfigs.SniperRifle?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()

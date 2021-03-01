@@ -107,7 +107,11 @@ namespace CustomItems.Items
                         continue;
 
                     Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
-                    newInfo.durability += RegenerationAmount;
+
+                    if ((newInfo.durability + RegenerationAmount) > ClipSize)
+                        newInfo.durability = ClipSize;
+                    else
+                        newInfo.durability += RegenerationAmount;
                     player.Inventory.items[i] = newInfo;
                 }
 

@@ -5,6 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+#pragma warning disable SA1200
+
+using CustomItems.Configs;
+
 namespace CustomItems
 {
     using System;
@@ -15,13 +19,17 @@ namespace CustomItems
     using Exiled.API.Interfaces;
     using Exiled.CustomItems.API.Features;
     using Exiled.Loader;
-    using Items;
 
     /// <summary>
     /// The plugin's config class.
     /// </summary>
     public class Config : IConfig
     {
+        /// <summary>
+        /// Item Config settings.
+        /// </summary>
+        public ItemConfigs ItemConfigs;
+
         /// <summary>
         /// The list of <see cref="CustomItem"/>s and their spawn chances for each Subclass.
         /// </summary>
@@ -49,112 +57,35 @@ namespace CustomItems
         };
 
         /// <summary>
-        /// Gets the list of emp greanades.
+        /// Gets or sets a value indicating what folder item configs will be stored in.
         /// </summary>
-        [Description("The list of EMP grenades.")]
-        public List<EmpGrenade> EmpGrenades { get; private set; } = new List<EmpGrenade>()
-        {
-            new EmpGrenade() { Type = ItemType.GrenadeFlash },
-        };
+        public string ItemConfigFolder { get; set; } = Path.Combine(Paths.Configs, "CustomItems");
 
         /// <summary>
-        /// Gets the list of grenade launchers.
+        /// Gets or sets a value indicating what file will be used for item configs.
         /// </summary>
-        [Description("The list of grenade launchers.")]
-        public List<GrenadeLauncher> GrenadeLaunchers { get; private set; } = new List<GrenadeLauncher>()
-        {
-            new GrenadeLauncher() { Type = ItemType.GunLogicer },
-        };
+        public string ItemConfigFile { get; set; } = "global.yml";
 
         /// <summary>
-        /// Gets the list of implosion grenades.
+        /// Loads the item configs.
         /// </summary>
-        [Description("The list of implosion grenades.")]
-        public List<ImplosionGrenade> ImplosionGrenades { get; private set; } = new List<ImplosionGrenade>()
+        public void LoadItemConfigs()
         {
-            new ImplosionGrenade() { Type = ItemType.GrenadeFrag },
-        };
+            if (!Directory.Exists(ItemConfigFolder))
+                Directory.CreateDirectory(ItemConfigFolder);
 
-        /// <summary>
-        /// Gets the list of lethal injections.
-        /// </summary>
-        [Description("The list of lethal injections.")]
-        public List<LethalInjection> LethalInjections { get; private set; } = new List<LethalInjection>()
-        {
-            new LethalInjection() { Type = ItemType.Adrenaline },
-        };
-
-        /// <summary>
-        /// Gets the list of lucky coins.
-        /// </summary>
-        [Description("The list of lucky coins.")]
-        public List<LuckyCoin> LuckyCoins { get; private set; } = new List<LuckyCoin>()
-        {
-            new LuckyCoin() { Type = ItemType.Coin },
-        };
-
-        /// <summary>
-        /// Gets the list of mediGuns.
-        /// </summary>
-        [Description("The list of mediGuns.")]
-        public List<MediGun> MediGuns { get; private set; } = new List<MediGun>()
-        {
-            new MediGun() { Type = ItemType.GunProject90 },
-        };
-
-        /// <summary>
-        /// Gets the list of Rocks.
-        /// </summary>
-        [Description("The list of Rocks.")]
-        public List<Rock> Rocks { get; private set; } = new List<Rock>()
-        {
-            new Rock() { Type = ItemType.SCP018 },
-        };
-
-        /// <summary>
-        /// Gets the list of Scp127s.
-        /// </summary>
-        [Description("The list of Scp127s.")]
-        public List<Scp127> Scp127s { get; private set; } = new List<Scp127>()
-        {
-            new Scp127() { Type = ItemType.GunCOM15 },
-        };
-
-        /// <summary>
-        /// Gets the list of Scp1499s.
-        /// </summary>
-        [Description("The list of Scp1499s.")]
-        public List<Scp1499> Scp1499s { get; private set; } = new List<Scp1499>()
-        {
-            new Scp1499() { Type = ItemType.SCP268 },
-        };
-
-        /// <summary>
-        /// Gets the list of shotguns.
-        /// </summary>
-        [Description("The list of shotguns.")]
-        public List<Shotgun> Shotguns { get; private set; } = new List<Shotgun>()
-        {
-            new Shotgun() { Type = ItemType.GunMP7 },
-        };
-
-        /// <summary>
-        /// Gets the list of sniper rifles.
-        /// </summary>
-        [Description("The list of sniper rifles.")]
-        public List<SniperRifle> SniperRifle { get; private set; } = new List<SniperRifle>()
-        {
-            new SniperRifle() { Type = ItemType.GunE11SR },
-        };
-
-        /// <summary>
-        /// Gets the list of tranquilizer guns.
-        /// </summary>
-        [Description("The list of tranquilizer guns.")]
-        public List<TranquilizerGun> TranquilizerGun { get; private set; } = new List<TranquilizerGun>()
-        {
-            new TranquilizerGun() { Type = ItemType.GunUSP },
-        };
+            string filePath = Path.Combine(ItemConfigFolder, ItemConfigFile);
+            if (!File.Exists(filePath))
+            {
+                ItemConfigs = new ItemConfigs();
+                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
+            }
+            else
+            {
+                ItemConfigs = ConfigManager.Deserializer.Deserialize<ItemConfigs>(File.ReadAllText(filePath));
+                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
+            }
+        }
 
         /// <summary>
         /// Parses the subclass list from the Plugin config.
