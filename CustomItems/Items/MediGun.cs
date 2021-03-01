@@ -1,12 +1,18 @@
-// <copyright file="MediGun.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="MediGun.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
+    using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
@@ -17,34 +23,81 @@ namespace CustomItems.Items
     {
         private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
 
-        /// <inheritdoc />
-        public MediGun(ItemType type, uint clipSize, uint itemId)
-            : base(type, itemId, clipSize)
+        /// <inheritdoc/>
+        public override uint Id { get; set; } = 5;
+
+        /// <inheritdoc/>
+        public override string Name { get; set; } = "MG-119";
+
+        /// <inheritdoc/>
+        public override string Description { get; set; } = "A specialized weapon that fires darts filled with a special mixture of Painkillers, Antibiotics, Antiseptics and other medicines. When fires at friendly targets, they will be healed. When fired at instances of SCP-049-2, they will be slowly converted back to human form. Does nothing when fired at anyone else.";
+
+        /// <inheritdoc/>
+        public override Modifiers Modifiers { get; set; } = default;
+
+        /// <inheritdoc/>
+        public override float Damage { get; set; }
+
+        /// <inheritdoc/>
+        public override uint ClipSize { get; set; } = 10;
+
+        /// <inheritdoc/>
+        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
-        }
+            Limit = 1,
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new DynamicSpawnPoint
+                {
+                    Chance = 40,
+                    Location = SpawnLocation.InsideGr18,
+                },
+                new DynamicSpawnPoint
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.InsideGateA,
+                },
+                new DynamicSpawnPoint
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.InsideGateB,
+                },
+            },
+        };
 
-        /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Name;
+        /// <summary>
+        /// Gets or sets a value indicating whether or not zombies can be 'cured' by this weapon.
+        /// </summary>
+        [Description("Whether or not zombies can be 'cured' by this weapon.")]
+        public bool HealZombies { get; set; } = true;
 
-        /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.SpawnProperties;
+        /// <summary>
+        /// Gets or sets the % of damage the weapon would normally deal, that is converted into healing. 1 = 100%, 0.5 = 50%, 0.0 = 0%.
+        /// </summary>
+        [Description("The % of damage the weapon would normally deal, that is converted into healing. 1 = 100%, 0.5 = 50%, 0.0 = 0%")]
+        public float HealingModifier { get; set; } = 1f;
 
-        /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.MediCfg.Description;
+        /// <summary>
+        /// Gets or sets the amount of total 'healing' a zombie will require before being cured.
+        /// </summary>
+        [Description("The amount of total 'healing' a zombie will require before being cured.")]
+        public int ZombieHealingRequired { get; set; } = 200;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
-                Exiled.Events.Handlers.Player.Dying += OnDyingMG;
+            if (HealZombies)
+                Exiled.Events.Handlers.Player.Dying += OnDying;
+
             base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            if (Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
-                Exiled.Events.Handlers.Player.Dying -= OnDyingMG;
+            if (HealZombies)
+                Exiled.Events.Handlers.Player.Dying -= OnDying;
+
             base.UnsubscribeEvents();
         }
 
@@ -52,6 +105,7 @@ namespace CustomItems.Items
         protected override void OnWaitingForPlayers()
         {
             previousRoles.Clear();
+
             base.OnWaitingForPlayers();
         }
 
@@ -77,15 +131,15 @@ namespace CustomItems.Items
 
             if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
             {
-                float amount = damage * Plugin.Singleton.Config.ItemConfigs.MediCfg.HealingModifier;
+                float amount = damage * HealingModifier;
                 if (player.Health + amount > player.MaxHealth)
                     player.Health = player.MaxHealth;
                 else
                     player.Health += amount;
             }
-            else if (player.Role == RoleType.Scp0492 && Plugin.Singleton.Config.ItemConfigs.MediCfg.HealZombies)
+            else if (player.Role == RoleType.Scp0492 && HealZombies)
             {
-                player.MaxAdrenalineHealth = Plugin.Singleton.Config.ItemConfigs.MediCfg.ZombieHealingRequired;
+                player.MaxAdrenalineHealth = ZombieHealingRequired;
                 player.AdrenalineHealth += damage;
 
                 if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)
@@ -93,7 +147,7 @@ namespace CustomItems.Items
             }
         }
 
-        private void OnDyingMG(DyingEventArgs ev)
+        private void OnDying(DyingEventArgs ev)
         {
             if (!ev.Target.IsHuman || ev.Killer.Role != RoleType.Scp049)
                 return;

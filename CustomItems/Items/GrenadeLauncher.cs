@@ -1,16 +1,20 @@
-// <copyright file="GrenadeLauncher.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="GrenadeLauncher.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
 // </copyright>
-
-using Exiled.CustomItems.API.Components;
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Components;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
@@ -22,31 +26,70 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class GrenadeLauncher : CustomWeapon
     {
-        /// <inheritdoc />
-        public GrenadeLauncher(ItemType type, uint clipSize, uint itemId)
-            : base(type, itemId, clipSize)
+        /// <inheritdoc/>
+        public override uint Id { get; set; } = 1;
+
+        /// <inheritdoc/>
+        public override string Name { get; set; } = "GL-119";
+
+        /// <inheritdoc/>
+        public override string Description { get; set; } = "This weapon will launch grenades in the direction you are firing, instead of bullets. Requires Frag Grenades in your inventory to reload.";
+
+        /// <inheritdoc/>
+        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
-        }
+            Limit = 1,
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new DynamicSpawnPoint
+                {
+                    Chance = 50,
+                    Location = SpawnLocation.Inside049Armory,
+                },
+                new DynamicSpawnPoint
+                {
+                    Chance = 40,
+                    Location = SpawnLocation.InsideHczArmory,
+                },
+            },
+        };
 
         /// <inheritdoc/>
-        public override string Name { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Name;
+        public override Modifiers Modifiers { get; set; } = default;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; protected set; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.SpawnProperties;
+        public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override string Description { get; } = Plugin.Singleton.Config.ItemConfigs.GlCfg.Description;
+        public override uint ClipSize { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not players will need actual frag grenades in their inventory to use as ammo. If false, the weapon's base ammo type is used instead.
+        /// </summary>
+        [Description("Whether or not players will need actual frag grenades in their inventory to use as ammo. If false, the weapon's base ammo type is used instead.")]
+        public bool UseGrenades { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the speed of grenades when they shoot out of the weapon.
+        /// </summary>
+        [Description("The speed of grenades when they shoot out of the weapon.")]
+        public float GrenadeSpeed { get; set; } = 1.5f;
+
+        /// <summary>
+        /// Gets or sets the max duration of the fuse of grenades shot from the weapon. Note, these grenades will always explode immediatly when they collide with something, but this can be used with slow-moving grenades to cause mid-air explosions.
+        /// </summary>
+        [Description("The max duration of the fuse of grenades shot from the weapon. Note, these grenades will always explode immediatly when they collide with something, but this can be used with slow-moving grenades to cause mid-air explosions.")]
+        public float FuseTime { get; set; } = 1f;
 
         /// <inheritdoc/>
         protected override void OnReloading(ReloadingWeaponEventArgs ev)
         {
-            if (!Check(ev.Player.CurrentItem))
-                return;
-
-            if (Plugin.Singleton.Config.ItemConfigs.GlCfg.UseGrenades)
+            if (UseGrenades)
             {
                 ev.IsAllowed = false;
-                Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", Plugin.Singleton.Config.Debug);
+
+                Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", CustomItems.Instance.Config.IsDebugEnabled);
+
                 foreach (Inventory.SyncItemInfo item in ev.Player.Inventory.items.ToList())
                 {
                     if (item.id != ItemType.GrenadeFrag)
@@ -56,14 +99,14 @@ namespace CustomItems.Items
                     ev.Player.ReloadWeapon();
 
                     ev.Player.Inventory.items.ModifyDuration(ev.Player.Inventory.GetItemIndex(), ClipSize);
-                    Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", Plugin.Singleton.Config.Debug);
+                    Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", CustomItems.Instance.Config.IsDebugEnabled);
                     Timing.CallDelayed(4.5f, () => { ev.Player.ReloadWeapon(); });
                     ev.Player.RemoveItem(item);
 
                     break;
                 }
 
-                Log.Debug($"{ev.Player.Nickname} was unable to reload their {Name} - No grenades in inventory.", Plugin.Singleton.Config.Debug);
+                Log.Debug($"{ev.Player.Nickname} was unable to reload their {Name} - No grenades in inventory.", CustomItems.Instance.Config.IsDebugEnabled);
             }
             else
             {
@@ -74,17 +117,16 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            if (!Check(ev.Shooter.CurrentItem))
-                return;
-
             ev.IsAllowed = false;
+
             ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - 1);
 
-            Vector3 velocity = (ev.Position - ev.Shooter.Position) * Plugin.Singleton.Config.ItemConfigs.GlCfg.GrenadeSpeed;
+            Vector3 velocity = (ev.Position - ev.Shooter.Position) * GrenadeSpeed;
             Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
             Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-            Grenade grenade = SpawnGrenade(pos, velocity, Plugin.Singleton.Config.ItemConfigs.GlCfg.FuseTime, GrenadeType.FragGrenade, ev.Shooter);
+            Grenade grenade = SpawnGrenade(pos, velocity, FuseTime, GrenadeType.FragGrenade, ev.Shooter);
             CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
+
             collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
         }
 
@@ -106,8 +148,10 @@ namespace CustomItems.Items
 
             GrenadeManager component = player.GrenadeManager;
             Grenade component2 = GameObject.Instantiate(component.availableGrenades[(int)grenadeType].grenadeInstance).GetComponent<Grenade>();
+
             component2.FullInitData(component, position, Quaternion.Euler(component2.throwStartAngle), velocity, component2.throwAngularVelocity, player == Server.Host ? Team.RIP : player.Team);
             component2.NetworkfuseTime = NetworkTime.time + fuseTime;
+
             NetworkServer.Spawn(component2.gameObject);
 
             return component2;
