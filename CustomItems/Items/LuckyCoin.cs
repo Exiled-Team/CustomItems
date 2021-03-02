@@ -111,7 +111,7 @@ namespace CustomItems.Items
             foreach (PocketDimensionTeleport teleport in Object.FindObjectsOfType<PocketDimensionTeleport>())
             {
                 teleports.Add(teleport);
-                Log.Debug("Adding PD Teleport..");
+                Log.Debug("Adding PD Teleport..", CustomItems.Instance.Config.IsDebugEnabled);
             }
         }
 
