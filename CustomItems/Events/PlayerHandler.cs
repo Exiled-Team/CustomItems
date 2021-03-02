@@ -1,10 +1,16 @@
-using System;
-using System.Collections.Generic;
-using Exiled.CustomItems.API.Features;
-using MEC;
+// -----------------------------------------------------------------------
+// <copyright file="PlayerHandler.cs" company="Galaxy199 and iopietro">
+// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace CustomItems.Events
 {
+    using System;
+    using System.Collections.Generic;
+    using Exiled.CustomItems.API.Features;
+    using MEC;
     using static CustomItems;
 
     /// <summary>
@@ -15,6 +21,7 @@ namespace CustomItems.Events
         /// <summary>
         /// AddingClass handler.
         /// </summary>
+        /// <param name="ev"><see cref="AddClassEventArgs"/>.</param>
         public void OnAddingSubclass(AddClassEventArgs ev)
         {
             if (!Instance.Config.SubclassItems.TryGetValue(ev.Subclass.Name, out List<Tuple<CustomItem, float>> customItems))

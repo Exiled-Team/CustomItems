@@ -10,7 +10,6 @@ namespace CustomItems
     using System;
     using System.Linq;
     using Events;
-    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using HarmonyLib;
@@ -19,6 +18,11 @@ namespace CustomItems
     /// <inheritdoc />
     public class CustomItems : Plugin<Config>
     {
+        /// <summary>
+        /// Random Number Generator.
+        /// </summary>
+        public Random Rng = new Random();
+
         private static readonly CustomItems InstanceValue = new CustomItems();
 
         private Harmony harmonyInstance;
@@ -35,11 +39,6 @@ namespace CustomItems
         /// Gets the Plugin instance.
         /// </summary>
         public static CustomItems Instance => InstanceValue;
-
-        /// <summary>
-        /// Random Number Generator.
-        /// </summary>
-        public Random Rng = new Random();
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion { get; } = new Version(2, 4, 1);
