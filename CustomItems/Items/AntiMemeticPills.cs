@@ -68,7 +68,7 @@ namespace CustomItems.Items
                 foreach (Player scp in scp096s)
                     if (scp.CurrentScp is PlayableScps.Scp096 scp096 && scp096.HasTarget(ev.Player.ReferenceHub))
                         scp096._targets.Remove(ev.Player.ReferenceHub);
-                ev.Player.EnableEffect<Concussed>(5f, true);
+                ev.Player.EnableEffect<Amnesia>(10f, true);
             });
         }
     }
