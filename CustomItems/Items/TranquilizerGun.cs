@@ -120,8 +120,10 @@ namespace CustomItems.Items
             {
                 foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
                 {
-                    if (TryGet(item, out CustomItem cItem))
-                        cItem.Spawn(player.Position);
+                    if (!TryGet(item, out CustomItem cItem))
+                        continue;
+
+                    cItem.Spawn(player.Position);
                     player.Inventory.items.Remove(item);
                 }
 
