@@ -99,7 +99,7 @@ namespace CustomItems.Items
             ev.Amount = Damage;
 
             if (ev.Target.Team == Team.SCP && ResistantScps)
-                if (UnityEngine.Random.Range(1, 101) <= ScpResistChance)
+                if (CustomItems.Instance.Rng.Next(100) <= ScpResistChance)
                     return;
 
             float dur = Duration;
