@@ -102,6 +102,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.TranquilizerGun?.Register();
 
             Instance.Config.ItemConfigs.Scp714s?.Register();
+
+            Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
         }
 
         private void UnregisterItems()
@@ -131,6 +133,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.TranquilizerGun?.Register();
 
             Instance.Config.ItemConfigs.Scp714s?.Unregister();
+
+            Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()
