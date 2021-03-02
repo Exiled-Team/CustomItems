@@ -147,13 +147,10 @@ namespace CustomItems.Items
 
             foreach (DoorVariant door in room.Doors)
             {
-                if (BlacklistedDoorNames.Contains(door.GetNametag()))
-                    continue;
-
-                if (door.NetworkActiveLocks > 0 && !OpenLockedDoors)
-                    continue;
-
-                if (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors)
+                if (door == null ||
+                    (!string.IsNullOrEmpty(door.GetNametag()) && BlacklistedDoorNames.Contains(door.GetNametag())) ||
+                    (door.NetworkActiveLocks > 0 && !OpenLockedDoors) ||
+                    (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors))
                     continue;
 
                 Log.Debug("Opening a door!", CustomItems.Instance.Config.IsDebugEnabled);
