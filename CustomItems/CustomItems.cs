@@ -25,6 +25,8 @@ namespace CustomItems
 
         private ServerHandler serverHandler;
 
+        private PlayerHandler playerHandler;
+
         private CustomItems()
         {
         }
@@ -34,6 +36,11 @@ namespace CustomItems
         /// </summary>
         public static CustomItems Instance => InstanceValue;
 
+        /// <summary>
+        /// Random Number Generator.
+        /// </summary>
+        public Random Rng = new Random();
+
         /// <inheritdoc/>
         public override Version RequiredExiledVersion { get; } = new Version(2, 4, 1);
 
@@ -41,6 +48,7 @@ namespace CustomItems
         public override void OnEnabled()
         {
             serverHandler = new ServerHandler();
+            playerHandler = new PlayerHandler();
 
             Config.LoadItems();
             RegisterItems();
@@ -67,10 +75,12 @@ namespace CustomItems
             UnregisterItems();
 
             Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
+            Events.AddClassEvent.AddClass -= playerHandler.OnAddingSubclass;
 
             harmonyInstance?.UnpatchAll();
 
             serverHandler = null;
+            playerHandler = null;
 
             base.OnDisabled();
         }
@@ -142,8 +152,10 @@ namespace CustomItems
             if (Exiled.Loader.Loader.Plugins.All(pugin => pugin.Name != "Subclass"))
                 return;
 
+            Config.ParseSubclassList();
             Instance.harmonyInstance = new Harmony($"com.customitems.{DateTime.UtcNow.Ticks}");
             Instance.harmonyInstance.PatchAll();
+            Events.AddClassEvent.AddClass += playerHandler.OnAddingSubclass;
         }
     }
 }

@@ -114,6 +114,7 @@
     <Compile Include="Components\Rock.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Configs\Items.cs" />
+    <Compile Include="Events\PlayerHandler.cs" />
     <Compile Include="Events\ServerHandler.cs" />
     <Compile Include="Events\AddClassEvent.cs" />
     <Compile Include="Events\AddClassEventArgs.cs" />
