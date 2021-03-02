@@ -116,15 +116,17 @@ namespace CustomItems.Items
         {
             Vector3 pos = player.Position;
 
-            foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
-            {
-                if (TryGet(item, out CustomItem cItem))
-                    cItem.Spawn(player.Position);
-                player.Inventory.items.Remove(item);
-            }
-
             if (DropItems)
+            {
+                foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+                {
+                    if (TryGet(item, out CustomItem cItem))
+                        cItem.Spawn(player.Position);
+                    player.Inventory.items.Remove(item);
+                }
+
                 player.DropItems();
+            }
 
             Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
             player.Position = new Vector3(0, 0, 0);
