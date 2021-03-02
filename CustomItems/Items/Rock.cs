@@ -104,7 +104,6 @@ namespace CustomItems.Items
         protected override void OnThrowing(ThrowingGrenadeEventArgs ev)
         {
             ev.IsAllowed = false;
-            Log.Info(ev.IsSlow);
             if (ev.IsSlow)
             {
                 Timing.CallDelayed(1f, () =>

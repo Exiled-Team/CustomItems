@@ -49,7 +49,6 @@ namespace CustomItems.Components
         /// <param name="thrownDamage"><inheritdoc cref="ThrownDamage"/></param>
         public void Init(GameObject owner, Side side, bool friendlyFire, float thrownDamage)
         {
-            Log.Info($"Initing rock component.");
             Owner = owner;
             Side = side;
             FriendlyFire = friendlyFire;
