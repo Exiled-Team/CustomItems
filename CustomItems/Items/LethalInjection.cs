@@ -54,7 +54,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Player.UsingMedicalItem += OnMedicalItemUsed;
+            Player.UsingMedicalItem += OnUsingMedicalItem;
 
             base.SubscribeEvents();
         }
@@ -62,12 +62,12 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Player.UsingMedicalItem -= OnMedicalItemUsed;
+            Player.UsingMedicalItem -= OnUsingMedicalItem;
 
             base.UnsubscribeEvents();
         }
 
-        private void OnMedicalItemUsed(UsingMedicalItemEventArgs ev)
+        private void OnUsingMedicalItem(UsingMedicalItemEventArgs ev)
         {
             Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}", CustomItems.Instance.Config.IsDebugEnabled);
             if (!Check(ev.Player.CurrentItem))
@@ -97,14 +97,16 @@ namespace CustomItems.Items
                     }
 
                 if (!KillOnFail)
+                {
+                    ev.Player.AdrenalineHealth = 0;
                     return;
+                }
 
                 Log.Debug($"{Name} kill on fail: {ev.Player.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
                 ev.Player.Kill(DamageTypes.Poison);
             });
 
             ev.Player.RemoveItem(ev.Player.CurrentItem);
-            ev.IsAllowed = false;
         }
     }
 }
