@@ -142,13 +142,12 @@ namespace CustomItems.Items
             ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - 1);
 
             Vector3 velocity = (ev.Position - ev.Shooter.Position) * GrenadeSpeed;
-            Grenade grenadeComponent = ev.Shooter.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
-            Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
+            Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
             Grenade grenade;
 
             if (loadedCustomGrenade != null)
             {
-                grenade = loadedCustomGrenade.Spawn(pos, velocity, FuseTime, GetGrenadeType(loadedCustomGrenade.Type), ev.Shooter);
+                grenade = loadedCustomGrenade.Spawn(pos, velocity, FuseTime, loadedCustomGrenade.Type, ev.Shooter);
                 loadedCustomGrenade = null;
             }
             else
@@ -156,27 +155,7 @@ namespace CustomItems.Items
                 grenade = SpawnGrenade(pos, velocity, FuseTime, GrenadeType.FragGrenade, ev.Shooter);
             }
 
-            CollisionHandler collisionHandler = grenade.gameObject.AddComponent<CollisionHandler>();
-
-            collisionHandler.Init(ev.Shooter.GameObject, grenadeComponent);
-        }
-
-        /// <summary>
-        /// Converts a <see cref="ItemType"/> into a <see cref="GrenadeType"/>.
-        /// </summary>
-        /// <param name="type">The <see cref="ItemType"/> to check.</param>
-        /// <returns><see cref="GrenadeType"/>.</returns>
-        private GrenadeType GetGrenadeType(ItemType type)
-        {
-            switch (type)
-            {
-                case ItemType.GrenadeFlash:
-                    return GrenadeType.Flashbang;
-                case ItemType.SCP018:
-                    return GrenadeType.Scp018;
-                default:
-                    return GrenadeType.FragGrenade;
-            }
+            grenade.gameObject.AddComponent<CollisionHandler>().Init(ev.Shooter.GameObject, grenade);
         }
 
         /// <summary>

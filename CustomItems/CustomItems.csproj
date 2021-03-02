@@ -65,9 +65,8 @@
       <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.CreditTags.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.CustomItems.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.CustomItems, Version=2.4.4.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\EXILED\bin\Release\Exiled.CustomItems.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Events.dll</HintPath>

@@ -7,14 +7,19 @@
 
 namespace CustomItems.Items
 {
+    using System;
     using System.ComponentModel;
+    using System.Linq;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API.Components;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Grenades;
     using MEC;
+    using Mirror;
     using UnityEngine;
+    using YamlDotNet.Serialization;
 
     /// <inheritdoc />
     public class Rock : CustomGrenade
@@ -58,60 +63,96 @@ namespace CustomItems.Items
         public bool FriendlyFire { get; set; } = false;
 
         /// <inheritdoc/>
+        [YamlIgnore]
         public override bool ExplodeOnCollision { get; set; } = false;
 
         /// <inheritdoc/>
         public override float FuseTime { get; set; } = int.MaxValue;
 
         /// <inheritdoc/>
+        public override Grenade Spawn(Vector3 position, Vector3 velocity, float fuseTime = 3, ItemType grenadeType = ItemType.GrenadeFrag, Player player = null)
+        {
+            if (player == null)
+                player = Server.Host;
+
+            GrenadeManager grenadeManager = player.GrenadeManager;
+            GrenadeSettings settings =
+                grenadeManager.availableGrenades.FirstOrDefault(g => g.inventoryID == grenadeType);
+
+            Grenade grenade = GameObject.Instantiate(settings.grenadeInstance).GetComponent<Grenade>();
+
+            grenade.FullInitData(grenadeManager, position, Quaternion.Euler(grenade.throwStartAngle), velocity, grenade.throwAngularVelocity, player == Server.Host ? Team.RIP : player.Team);
+            grenade.NetworkfuseTime = NetworkTime.time + fuseTime;
+
+            Tracked.Add(grenade.gameObject);
+
+            GameObject grenadeObject = grenade.gameObject;
+            UnityEngine.Object.Destroy(grenadeObject.GetComponent<Scp018Grenade>());
+            grenadeObject.AddComponent<Components.Rock>().Init(player.GameObject, player.Side, FriendlyFire, ThrownDamage);
+            NetworkServer.Spawn(grenadeObject);
+
+            if (ExplodeOnCollision)
+                grenade.gameObject.AddComponent<CollisionHandler>().Init(player.GameObject, grenade);
+
+            return grenade;
+        }
+
+        /// <summary>
+        /// Handling the throwing event for this grenade.
+        /// </summary>
+        /// <param name="ev"><see cref="ThrowingGrenadeEventArgs"/>.</param>
         protected override void OnThrowing(ThrowingGrenadeEventArgs ev)
         {
+            ev.IsAllowed = false;
+            Log.Info(ev.IsSlow);
             if (ev.IsSlow)
             {
-                Grenade grenadeComponent = ev.Player.GrenadeManager.availableGrenades[0].grenadeInstance.GetComponent<Grenade>();
-
                 Timing.CallDelayed(1f, () =>
                 {
-                    Vector3 pos = ev.Player.CameraTransform.TransformPoint(grenadeComponent.throwStartPositionOffset);
-                    GameObject grenade = Spawn(pos, ev.Player.CameraTransform.forward * ThrowSpeed, 3f, GetGrenadeType(Type)).gameObject;
-                    Object.Destroy(grenade.GetComponent<Scp018Grenade>());
+                    try
+                    {
+                        Vector3 pos = ev.Player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
+                        Spawn(pos, ev.Player.CameraTransform.forward * ThrowSpeed, 3f, Type, ev.Player);
 
-                    grenade.AddComponent<Components.Rock>().Init(ev.Player.GameObject, ev.Player.Side, FriendlyFire, ThrownDamage);
-
-                    Tracked.Add(grenade);
-
-                    ev.Player.RemoveItem(ev.Player.CurrentItem);
+                        ev.Player.RemoveItem(ev.Player.CurrentItem);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error($"{e}");
+                    }
                 });
             }
-
-            Timing.CallDelayed(1.25f, () =>
+            else
             {
-                Vector3 forward = ev.Player.CameraTransform.forward;
-
-                if (!Physics.Linecast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.position + (forward * 1.5f), out RaycastHit hit, PlayerLayerMask))
-                    return;
-
-                Log.Debug($"{ev.Player.Nickname} linecast is true!", CustomItems.Instance.Config.IsDebugEnabled);
-                if (hit.collider == null)
+                Timing.CallDelayed(1.25f, () =>
                 {
-                    Log.Debug($"{ev.Player.Nickname} collider is null?", CustomItems.Instance.Config.IsDebugEnabled);
-                    return;
-                }
+                    Vector3 forward = ev.Player.CameraTransform.forward;
 
-                Player target = Player.Get(hit.collider.GetComponentInParent<ReferenceHub>());
-                if (target == null)
-                {
-                    Log.Debug($"{ev.Player.Nickname} target null", CustomItems.Instance.Config.IsDebugEnabled);
-                    return;
-                }
+                    if (!Physics.Linecast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.position + (forward * 1.5f), out RaycastHit hit, PlayerLayerMask))
+                        return;
 
-                if (ev.Player.Side == target.Side && !FriendlyFire)
-                    return;
+                    Log.Debug($"{ev.Player.Nickname} linecast is true!", CustomItems.Instance.Config.IsDebugEnabled);
+                    if (hit.collider == null)
+                    {
+                        Log.Debug($"{ev.Player.Nickname} collider is null?", CustomItems.Instance.Config.IsDebugEnabled);
+                        return;
+                    }
 
-                Log.Debug($"{ev.Player.Nickname} hit {target.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
+                    Player target = Player.Get(hit.collider.GetComponentInParent<ReferenceHub>());
+                    if (target == null)
+                    {
+                        Log.Debug($"{ev.Player.Nickname} target null", CustomItems.Instance.Config.IsDebugEnabled);
+                        return;
+                    }
 
-                target.Hurt(HitDamage, ev.Player, DamageTypes.Wall);
-            });
+                    if (ev.Player.Side == target.Side && !FriendlyFire)
+                        return;
+
+                    Log.Debug($"{ev.Player.Nickname} hit {target.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
+
+                    target.Hurt(HitDamage, ev.Player, DamageTypes.Wall);
+                });
+            }
         }
     }
 }

@@ -49,6 +49,7 @@ namespace CustomItems.Components
         /// <param name="thrownDamage"><inheritdoc cref="ThrownDamage"/></param>
         public void Init(GameObject owner, Side side, bool friendlyFire, float thrownDamage)
         {
+            Log.Info($"Initing rock component.");
             Owner = owner;
             Side = side;
             FriendlyFire = friendlyFire;
@@ -64,15 +65,16 @@ namespace CustomItems.Components
         {
             try
             {
-                if (collision.gameObject == Owner || !collision.gameObject.TryGetComponent<Grenade>(out _))
+                if (collision.gameObject == Owner || collision.gameObject.TryGetComponent<Grenade>(out _))
+                {
                     return;
+                }
 
                 if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || FriendlyFire))
                     target.Hurt(ThrownDamage, DamageTypes.Wall, "ROCK");
 
-                Destroy(gameObject);
-
                 CustomItem.Registered.First(customItem => customItem.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);
+                Destroy(gameObject);
             }
             catch (Exception exception)
             {
