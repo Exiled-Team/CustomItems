@@ -9,6 +9,7 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using CustomPlayerEffects;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
@@ -98,7 +99,11 @@ namespace CustomItems.Items
 
                 if (!KillOnFail)
                 {
-                    ev.Player.AdrenalineHealth = 0;
+                    if (ev.Player.AdrenalineHealth > 30)
+                        ev.Player.AdrenalineHealth -= 30;
+                    else
+                        ev.Player.AdrenalineHealth = 0;
+                    ev.Player.DisableEffect<Invigorated>();
                     return;
                 }
 
