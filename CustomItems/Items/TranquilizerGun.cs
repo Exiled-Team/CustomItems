@@ -81,6 +81,12 @@ namespace CustomItems.Items
         public float ResistanceModifier { get; set; } = 1.2f;
 
         /// <summary>
+        /// Gets or sets a value indicating how often player resistances are reduced.
+        /// </summary>
+        [Description("How often the plugin should reduce the resistance amount for players, in seconds.")]
+        public float ResistanceFalloffDelay { get; set; } = 120f;
+
+        /// <summary>
         /// Gets or sets a value indicating whether or not tranquilized targets should drop all of their items.
         /// </summary>
         [Description("Whether or not tranquilized targets should drop all of their items.")]
@@ -96,8 +102,16 @@ namespace CustomItems.Items
         public override void Destroy()
         {
             tranquilizedPlayers.Clear();
+            Timing.KillCoroutines($"{nameof(TranquilizerGun)}-{Id}-reducer");
 
             base.Destroy();
+        }
+
+        /// <inheritdoc/>
+        protected override void SubscribeEvents()
+        {
+            Timing.RunCoroutine(ReduceResistances(), $"{nameof(TranquilizerGun)}-{Id}-reducer");
+            base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
@@ -192,6 +206,17 @@ namespace CustomItems.Items
             }
 
             player.Position = oldPosition;
+        }
+
+        private IEnumerator<float> ReduceResistances()
+        {
+            for (; ;)
+            {
+                foreach (Player player in tranquilizedPlayers.Keys)
+                    tranquilizedPlayers[player] = Mathf.Max(0, tranquilizedPlayers[player] / 2);
+
+                yield return Timing.WaitForSeconds(ResistanceFalloffDelay);
+            }
         }
     }
 }
