@@ -160,7 +160,7 @@ namespace CustomItems.Items
             if (ragdoll != null)
                 NetworkServer.Destroy(ragdoll.gameObject);
 
-            if (player == null)
+            if (player.GameObject == null)
                 yield break;
 
             newHealth = player.Health;
@@ -169,7 +169,9 @@ namespace CustomItems.Items
             player.Scale = previousScale;
             player.Health = newHealth;
             player.IsInvisible = false;
-            player.Inventory.curItem = previousItem;
+
+            if (!DropItems)
+                player.Inventory.curItem = previousItem;
 
             if (Warhead.IsDetonated && player.Position.y < 900)
             {
