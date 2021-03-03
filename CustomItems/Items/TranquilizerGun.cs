@@ -124,12 +124,18 @@ namespace CustomItems.Items
         private IEnumerator<float> DoTranquilize(Player player, float duration)
         {
             Vector3 oldPosition = player.Position;
-            ItemType previousItem = player.Inventory.curItem;
+            Inventory.SyncItemInfo previousItem =
+                player.ReferenceHub.inventory.items[player.ReferenceHub.inventory.GetItemIndex()];
             Vector3 previousScale = player.Scale;
             float newHealth = player.Health - Damage;
+            List<PlayerEffect> activeEffects = NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Rent();
 
             if (newHealth <= 0)
                 yield break;
+
+            foreach (PlayerEffect effect in player.ReferenceHub.playerEffectsController.AllEffects.Values)
+                if (effect.Enabled)
+                    activeEffects.Add(effect);
 
             if (DropItems)
             {
@@ -171,7 +177,13 @@ namespace CustomItems.Items
             player.IsInvisible = false;
 
             if (!DropItems)
-                player.Inventory.curItem = previousItem;
+                player.Inventory.CmdSetUnic(previousItem.uniq);
+
+            foreach (PlayerEffect effect in activeEffects)
+                if ((effect.Duration - duration) > 0)
+                    player.ReferenceHub.playerEffectsController.EnableEffect(effect, effect.Duration - duration);
+
+            NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Return(activeEffects);
 
             if (Warhead.IsDetonated && player.Position.y < 900)
             {

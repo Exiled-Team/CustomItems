@@ -87,6 +87,9 @@
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\Mirror.dll</HintPath>
     </Reference>
+    <Reference Include="NorthwoodLib, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\References\NorthwoodLib.dll</HintPath>
+    </Reference>
     <Reference Include="Subclass">
       <HintPath>$(EXILED_REFERENCES)\Subclass.dll</HintPath>
     </Reference>

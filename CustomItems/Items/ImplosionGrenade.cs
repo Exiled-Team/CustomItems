@@ -78,10 +78,16 @@ namespace CustomItems.Items
         public float SuctionPerTick { get; set; } = 0.125f;
 
         /// <summary>
-        /// Gets or sets how often each suction tick will occus. Note: Setting the tick-rate and suction-per-tick to lower numbers maks for a 'smoother' suction movement, however causes more stress on your server. Adjust accordingly.
+        /// Gets or sets how often each suction tick will occurs. Note: Setting the tick-rate and suction-per-tick to lower numbers maks for a 'smoother' suction movement, however causes more stress on your server. Adjust accordingly.
         /// </summary>
         [Description("How often each suction tick will occus. Note: Setting the tick-rate and suction-per-tick to lower numbers maks for a 'smoother' suction movement, however causes more stress on your server. Adjust accordingly.")]
         public float SuctionTickRate { get; set; } = 0.025f;
+
+        /// <summary>
+        /// Gets or sets a list of roles unable to be affected by Implosion grenades.
+        /// </summary>
+        [Description("What roles will not be able to be affected by Implosion Grenades. Keeping SCP-173 on this list is highly recommended.")]
+        public HashSet<RoleType> BlacklistedRoles { get; set; } = new HashSet<RoleType> { RoleType.Scp173, RoleType.Tutorial, };
 
         private List<CoroutineHandle> Coroutines { get; set; } = new List<CoroutineHandle>();
 
@@ -110,9 +116,10 @@ namespace CustomItems.Items
             for (int i = 0; i < SuctionCount; i++)
             {
                 Log.Debug($"{player.Nickname} suctioned?", CustomItems.Instance.Config.IsDebugEnabled);
-                Vector3 newPos = Vector3.MoveTowards(player.Position, position, SuctionPerTick);
+                Vector3 alteredPosition = position + (1f * (player.Position - position).normalized);
+                Vector3 newPos = Vector3.MoveTowards(player.Position, alteredPosition, SuctionPerTick);
                 if (!Physics.Linecast(player.Position, newPos, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
-                    player.Position = Vector3.MoveTowards(player.Position, position, SuctionPerTick);
+                    player.Position = newPos;
 
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
@@ -137,6 +144,9 @@ namespace CustomItems.Items
                 foreach (Player player in copiedList.Keys)
                 {
                     ev.TargetToDamages.Add(player, copiedList[player] * DamageModifier);
+                    if (BlacklistedRoles.Contains(player.Role))
+                        continue;
+
                     Log.Debug($"{player.Nickname} starting suction", CustomItems.Instance.Config.IsDebugEnabled);
 
                     try
