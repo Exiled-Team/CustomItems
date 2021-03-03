@@ -10,18 +10,20 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using CustomPlayerEffects;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
+    using Mirror;
     using UnityEngine;
 
     /// <inheritdoc />
     public class TranquilizerGun : CustomWeapon
     {
-        private readonly Dictionary<Player, int> tranquilizedPlayers = new Dictionary<Player, int>();
+        private readonly Dictionary<Player, float> tranquilizedPlayers = new Dictionary<Player, float>();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 11;
@@ -76,7 +78,7 @@ namespace CustomItems.Items
         /// Gets or sets the exponential modifier used to determine how much time is removed from the effect, everytime a player is tranquilized, they gain a resistance to further tranquilizations, reducing the duration of future effects.
         /// </summary>
         [Description("Everytime a player is tranquilized, they gain a resistance to further tranquilizations, reducing the duration of future effects. This number signifies the exponential modifier used to determine how much time is removed from the effect.")]
-        public int ResistanceModifier { get; set; } = 2;
+        public float ResistanceModifier { get; set; } = 1.2f;
 
         /// <summary>
         /// Gets or sets a value indicating whether or not tranquilized targets should drop all of their items.
@@ -91,52 +93,93 @@ namespace CustomItems.Items
         public int ScpResistChance { get; set; } = 40;
 
         /// <inheritdoc/>
+        public override void Destroy()
+        {
+            tranquilizedPlayers.Clear();
+
+            base.Destroy();
+        }
+
+        /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (!Check(ev.Attacker.CurrentItem) || ev.Attacker == ev.Target)
+            base.OnHurting(ev);
+
+            if (ev.Attacker == ev.Target || (ev.Target.Team == Team.SCP && ResistantScps && Random.Range(1, 101) <= ScpResistChance))
                 return;
 
-            ev.Amount = Damage;
+            float duration = Duration;
 
-            if (ev.Target.Team == Team.SCP && ResistantScps)
-                if (CustomItems.Instance.Rng.Next(100) <= ScpResistChance)
-                    return;
+            if (!tranquilizedPlayers.TryGetValue(ev.Target, out _))
+                tranquilizedPlayers.Add(ev.Target, 1);
 
-            float dur = Duration;
-            if (!tranquilizedPlayers.ContainsKey(ev.Target))
-                tranquilizedPlayers.Add(ev.Target, 0);
+            tranquilizedPlayers[ev.Target] *= ResistanceModifier;
 
-            dur -= tranquilizedPlayers[ev.Target] * ResistanceModifier;
+            duration -= tranquilizedPlayers[ev.Target];
 
-            if (dur > 0f)
-                Timing.RunCoroutine(DoTranquilize(ev.Target, dur));
+            if (duration > 0f)
+                Timing.RunCoroutine(DoTranquilize(ev.Target, duration));
         }
 
         private IEnumerator<float> DoTranquilize(Player player, float duration)
         {
-            Vector3 pos = player.Position;
+            Vector3 oldPosition = player.Position;
+            ItemType previousItem = player.Inventory.curItem;
+            Vector3 previousScale = player.Scale;
+            float newHealth = player.Health - Damage;
+
+            if (newHealth <= 0)
+                yield break;
 
             if (DropItems)
             {
                 foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
                 {
-                    if (!TryGet(item, out CustomItem cItem))
-                        continue;
+                    if (TryGet(item, out CustomItem customItem))
+                        customItem.Spawn(player.Position, item);
 
-                    cItem.Spawn(player.Position);
                     player.Inventory.items.Remove(item);
                 }
 
                 player.DropItems();
             }
 
-            Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, pos, allowRecall: false);
-            player.Position = new Vector3(0, 0, 0);
+            Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, oldPosition, allowRecall: false);
+
+            player.Inventory.curItem = ItemType.None;
+            player.IsInvisible = true;
+            player.Scale = Vector3.one * 0.2f;
+            player.Health = newHealth;
+            player.IsGodModeEnabled = true;
+
+            player.EnableEffect<Amnesia>(duration);
+            player.EnableEffect<Ensnared>(duration);
 
             yield return Timing.WaitForSeconds(duration);
 
-            player.Position = pos;
-            Object.Destroy(ragdoll.gameObject);
+            if (ragdoll != null)
+                NetworkServer.Destroy(ragdoll.gameObject);
+
+            if (player.GameObject == null)
+                yield break;
+
+            newHealth = player.Health;
+
+            player.IsGodModeEnabled = false;
+            player.Scale = previousScale;
+            player.Health = newHealth;
+            player.IsInvisible = false;
+
+            if (!DropItems)
+                player.Inventory.curItem = previousItem;
+
+            if (Warhead.IsDetonated && player.Position.y < 900)
+            {
+                player.Kill(DamageTypes.Nuke);
+                yield break;
+            }
+
+            player.Position = oldPosition;
         }
     }
 }
