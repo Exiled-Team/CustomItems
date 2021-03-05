@@ -2,6 +2,8 @@
 {
     using Grenades;
     using HarmonyLib;
+    using Mirror;
+    using System.CodeDom;
     using UnityEngine;
 
     /// <inheritdoc/>
@@ -14,7 +16,6 @@
             if (Items.C4Charge.Instance.IsSticky && Items.C4Charge.PlacedCharges.ContainsKey(__instance))
             {
                 var rigidbody = __instance.gameObject.GetComponent<Rigidbody>();
-
                 rigidbody.isKinematic = false;
                 rigidbody.useGravity = false;
                 rigidbody.velocity = Vector3.zero;

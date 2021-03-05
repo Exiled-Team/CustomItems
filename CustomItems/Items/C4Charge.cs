@@ -15,6 +15,7 @@
     using ServerEvent = Exiled.Events.Handlers.Server;
     using MapEvent = Exiled.Events.Handlers.Map;
     using UnityEngine;
+    using Exiled.CustomItems;
 
     /// <inheritdoc/>
     public class C4Charge : CustomGrenade
@@ -188,9 +189,14 @@
                 if (charge.Value == ev.Player)
                 {
                     if (AutoDetonate)
+                    {
                         charge.Key.NetworkfuseTime = 0.1f;
+                    }
                     else
+                    {
+                        TrySpawn((int)Id, charge.Key.transform.position);
                         NetworkServer.Destroy(charge.Key.gameObject);
+                    }
 
                     PlacedCharges.Remove(charge.Key);
                 }
@@ -204,9 +210,14 @@
                 if (charge.Value == ev.Target)
                 {
                     if (AutoDetonate)
+                    {
                         charge.Key.NetworkfuseTime = 0.1f;
+                    }
                     else
+                    {
+                        TrySpawn((int)Id, charge.Key.transform.position);
                         NetworkServer.Destroy(charge.Key.gameObject);
+                    }
 
                     PlacedCharges.Remove(charge.Key);
                 }
