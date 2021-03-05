@@ -20,6 +20,7 @@
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
                 rigidbody.freezeRotation = true;
+                rigidbody.mass = 100000;
             }
         }
     }
