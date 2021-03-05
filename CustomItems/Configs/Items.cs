@@ -139,9 +139,19 @@ namespace CustomItems.Configs
         /// <summary>
         /// Gets the list of Anti-Memetic Pills.
         /// </summary>
+        [Description("The list of Anti-Memetic Pills.")]
         public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new List<AntiMemeticPills>
         {
             new AntiMemeticPills { Type = ItemType.SCP500 },
+        };
+
+        /// <summary>
+        /// Gets the list of <see cref="Scp2818"/>s.
+        /// </summary>
+        [Description("The list of SCP-2818s.")]
+        public List<Scp2818> Scp2818s { get; private set; } = new List<Scp2818>
+        {
+            new Scp2818 { Type = ItemType.GunE11SR, },
         };
     }
 }
