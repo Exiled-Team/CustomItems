@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.4\lib\net472\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\Assembly-CSharp-Publicized.dll</HintPath>
@@ -53,45 +53,38 @@
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.API.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Bootstrap, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Bootstrap.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.CreditTags.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EXILED">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\EXILED.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=2.4.4.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\EXILED\bin\Release\Exiled.CustomItems.dll</HintPath>
+    <Reference Include="Exiled.API">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Events.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.CreditTags">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Loader, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Loader.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.CustomItems">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Permissions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Events">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Updater.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Loader">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Exiled.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(EXILED_REFERENCES)\Mirror.dll</HintPath>
+    <Reference Include="Exiled.Permissions">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\References\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Subclass">
-      <HintPath>$(EXILED_REFERENCES)\Subclass.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -107,32 +100,14 @@
       <HintPath>$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="YamlDotNet">
-      <HintPath>$(EXILED_REFERENCES)\YamlDotNet.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Rock.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Configs\Items.cs" />
-    <Compile Include="Events\PlayerHandler.cs" />
     <Compile Include="Events\ServerHandler.cs" />
-    <Compile Include="Events\AddClassEvent.cs" />
-    <Compile Include="Events\AddClassEventArgs.cs" />
-    <Compile Include="Items\AntiMemeticPills.cs" />
-    <Compile Include="Items\EmpGrenade.cs" />
-    <Compile Include="Items\GrenadeLauncher.cs" />
-    <Compile Include="Items\LethalInjection.cs" />
-    <Compile Include="Items\LuckyCoin.cs" />
-    <Compile Include="Items\MediGun.cs" />
-    <Compile Include="Items\Rock.cs" />
-    <Compile Include="Items\Scp127.cs" />
-    <Compile Include="Items\Scp714.cs" />
-    <Compile Include="Items\Scp1499.cs" />
-    <Compile Include="Items\Shotgun.cs" />
-    <Compile Include="Items\SniperRifle.cs" />
-    <Compile Include="Items\ImplosionGrenade.cs" />
-    <Compile Include="Items\TranquilizerGun.cs" />
-    <Compile Include="Patches\AddClass.cs" />
+    <Compile Include="Items\SCP2818.cs" />
     <Compile Include="CustomItems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

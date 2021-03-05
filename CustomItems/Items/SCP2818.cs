@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="SniperRifle.cs" company="Galaxy199 and iopietro">
+// <copyright file="EmpGrenade.cs" company="Galaxy199 and iopietro">
 // Copyright (c) Galaxy199 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -16,21 +16,22 @@ namespace CustomItems.Items
     using YamlDotNet.Serialization;
 
     /// <inheritdoc />
-    public class SniperRifle : CustomWeapon
+    public class SCP2818 : CustomWeapon
     {
         /// <inheritdoc/>
-        public override uint Id { get; set; } = 10;
+        public override uint Id { get; set; } = 2818;
 
         /// <inheritdoc/>
-        public override string Name { get; set; } = "SR-119";
+        public override string Name { get; set; } = "SCP-2818";
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
+        public override string Description { get; set; } = "SCP-2818 shoots the supposed biomass of the individual who pulled the trigger";
 
         /// <inheritdoc/>
         public override uint ClipSize { get; set; } = 1;
 
         /// <inheritdoc/>
+
         [YamlIgnore]
         public override float Damage { get; set; }
 
@@ -63,10 +64,13 @@ namespace CustomItems.Items
         public float DamageMultiplier { get; set; } = 7.5f;
 
         /// <inheritdoc/>
+        protected override void OnShooting(ShootingEventArgs ev)
+        {
+            ev.Shooter.Health = 0;
+        }
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != ev.Target && ev.DamageType == DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
-                ev.Amount *= DamageMultiplier;
+            ev.Target.Health = 0;
         }
     }
 }
