@@ -126,9 +126,6 @@
         {
             Instance = this;
 
-            ServerEvent.WaitingForPlayers += OnWaitingForPlayers;
-
-            PlayerEvent.ThrowingGrenade += OnThrowing;
             PlayerEvent.Destroying += OnDestroying;
             PlayerEvent.Died += OnDied;
 
@@ -142,9 +139,6 @@
         {
             Instance = null;
 
-            ServerEvent.WaitingForPlayers -= OnWaitingForPlayers;
-
-            PlayerEvent.ThrowingGrenade -= OnThrowing;
             PlayerEvent.Destroying -= OnDestroying;
             PlayerEvent.Died -= OnDied;
 
@@ -218,9 +212,9 @@
 
         private void OnExploding(ExplodingGrenadeEventArgs ev)
         {
-            if (PlacedCharges.ContainsKey(ev.Grenade.GetComponent<Grenade>()))
+            if (ev.Grenade.TryGetComponent(out Grenade grenade))
             {
-                PlacedCharges.Remove(ev.Grenade.GetComponent<Grenade>());
+                PlacedCharges.Remove(grenade);
             }
         }
     }
