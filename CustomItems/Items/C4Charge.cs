@@ -99,10 +99,10 @@
         public ItemType DetonatorItem { get; set; } = ItemType.Radio;
 
         /// <summary>
-        /// Gets or sets a value indicating whether C4 should C4 charges be detonated when the player who placed them dies.
+        /// Gets or sets a value indicating whether C4 charges be defused and dropped as pickable item when the player who placed them dies.
         /// </summary>
-        [Description("Should C4 charges be detonated when the player who placed them dies.")]
-        public bool AutoDetonate { get; set; } = false;
+        [Description("Should C4 charges be defused and dropped as pickable item when the player who placed them dies.")]
+        public bool DropChargesOnDeath { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether maximum distance between C4 Charge and player to detonate.
@@ -188,16 +188,12 @@
             {
                 if (charge.Value == ev.Player)
                 {
-                    if (AutoDetonate)
-                    {
-                        charge.Key.NetworkfuseTime = 0.1f;
-                    }
-                    else
+                    if (DropChargesOnDeath)
                     {
                         TrySpawn((int)Id, charge.Key.transform.position);
-                        NetworkServer.Destroy(charge.Key.gameObject);
                     }
 
+                    NetworkServer.Destroy(charge.Key.gameObject);
                     PlacedCharges.Remove(charge.Key);
                 }
             }
@@ -209,16 +205,12 @@
             {
                 if (charge.Value == ev.Target)
                 {
-                    if (AutoDetonate)
-                    {
-                        charge.Key.NetworkfuseTime = 0.1f;
-                    }
-                    else
+                    if (DropChargesOnDeath)
                     {
                         TrySpawn((int)Id, charge.Key.transform.position);
-                        NetworkServer.Destroy(charge.Key.gameObject);
                     }
 
+                    NetworkServer.Destroy(charge.Key.gameObject);
                     PlacedCharges.Remove(charge.Key);
                 }
             }
