@@ -41,7 +41,7 @@ namespace CustomItems.Items
         /// Gets or sets how often the <see cref="ShooterProjectile"/> coroutine will move the player.
         /// </summary>
         [Description("How frequently the shooter will be moved towards his target.\n# Note, a lower tick frequency, and lower MaxDistance will make the travel smoother, but be more stressful on your server.")]
-        public float TickFrequency { get; set; } = 0.025f;
+        public float TickFrequency { get; set; } = 0.0005f;
 
         /// <summary>
         /// Gets or sets the max distance towards the target location the shooter can be moved each tick.
@@ -78,14 +78,17 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            Timing.RunCoroutine(ShooterProjectile(ev.Shooter, ev.Target.transform.position, Player.Get(ev.Target)));
+            Player target = null;
+            if (ev.Target != null)
+                target = Player.Get(ev.Target);
+            Timing.RunCoroutine(ShooterProjectile(ev.Shooter, ev.Position, target));
         }
 
         private IEnumerator<float> ShooterProjectile(Player player, Vector3 targetPos, Player target = null)
         {
             // This is the camera transform used to make grenades appear like they are coming from the player's head instead of their stomach. We move them here so they aren't skidding across the floor.
             player.Position = player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
-            player.Scale = Vector3.one * 0.15f;
+            player.Scale = new Vector3(0.15f, 0.15f, 0.15f);
             if (target != null)
                 while (Vector3.Distance(player.Position, target.Position) > (MaxDistancePerTick + 0.15f))
                 {
@@ -100,6 +103,11 @@ namespace CustomItems.Items
 
                     yield return Timing.WaitForSeconds(TickFrequency);
                 }
+
+            player.Scale = Vector3.one;
+
+            // Make sure the scale is reset properly *before* killing them. That's important.
+            yield return Timing.WaitForSeconds(0.01f);
 
             player.Kill(DamageTypes.Nuke);
             target?.Kill(DamageTypes.Nuke);

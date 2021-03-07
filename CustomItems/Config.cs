@@ -75,6 +75,7 @@ namespace CustomItems
                 Directory.CreateDirectory(ItemConfigFolder);
 
             string filePath = Path.Combine(ItemConfigFolder, ItemConfigFile);
+            Log.Info($"{filePath}");
             if (!File.Exists(filePath))
             {
                 ItemConfigs = new Configs.Items();
