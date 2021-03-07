@@ -143,5 +143,14 @@ namespace CustomItems.Configs
         {
             new AntiMemeticPills { Type = ItemType.SCP500 },
         };
+
+        /// <summary>
+        /// Gets the list of Scp5355s.
+        /// </summary>
+        [Description("The list of Scp5355s.")]
+        public List<Scp5355> Scp5355s { get; private set; } = new List<Scp5355>
+        {
+            new Scp5355 { Type = ItemType.GunCOM15 },
+        };
     }
 }
