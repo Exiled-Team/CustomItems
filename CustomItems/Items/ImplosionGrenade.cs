@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.Events.Handlers;
+
 namespace CustomItems.Items
 {
     using System;
@@ -25,6 +27,7 @@ namespace CustomItems.Items
     {
         private int layerMask;
 
+        private List<Player> EffectedPlayers;
         /// <inheritdoc/>
         public override uint Id { get; set; } = 2;
 
@@ -95,6 +98,7 @@ namespace CustomItems.Items
         protected override void SubscribeEvents()
         {
             Map.ExplodingGrenade += OnExplodingGrenade;
+            Scp106.Teleporting += OnTeleporting;
 
             base.SubscribeEvents();
         }
@@ -103,6 +107,7 @@ namespace CustomItems.Items
         protected override void UnsubscribeEvents()
         {
             Map.ExplodingGrenade -= OnExplodingGrenade;
+            Scp106.Teleporting -= OnTeleporting;
 
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
@@ -123,6 +128,14 @@ namespace CustomItems.Items
 
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
+
+            NorthwoodLib.Pools.ListPool<Player>.Shared.Return(EffectedPlayers);
+        }
+
+        private void OnTeleporting(TeleportingEventArgs ev)
+        {
+            if (EffectedPlayers.Contains(ev.Player))
+                ev.IsAllowed = false;
         }
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
@@ -141,6 +154,7 @@ namespace CustomItems.Items
 
                 ev.TargetToDamages.Clear();
                 Log.Debug("IG: List cleared.", CustomItems.Instance.Config.IsDebugEnabled);
+                EffectedPlayers = NorthwoodLib.Pools.ListPool<Player>.Shared.Rent();
                 foreach (Player player in copiedList.Keys)
                 {
                     ev.TargetToDamages.Add(player, copiedList[player] * DamageModifier);
@@ -160,6 +174,7 @@ namespace CustomItems.Items
                             Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
                             if (!line)
                             {
+                                EffectedPlayers.Add(player);
                                 Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
                                 break;
                             }
