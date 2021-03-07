@@ -1,4 +1,11 @@
-﻿namespace CustomItems.Commands
+﻿// -----------------------------------------------------------------------
+// <copyright file="C4Charge.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace CustomItems.Commands
 {
     using System;
     using System.Linq;

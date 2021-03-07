@@ -78,7 +78,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public override string Description { get; set; } = "Explosive charge that can be remotly detonated.";
 
-
         /// <summary>
         /// Gets or sets a value indicating whether C4 charge should stick to walls / ceiling.
         /// </summary>
@@ -124,7 +123,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         [YamlIgnore]
         public override bool ExplodeOnCollision { get; set; } = false;
-
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()

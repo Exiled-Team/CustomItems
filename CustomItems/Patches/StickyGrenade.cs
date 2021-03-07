@@ -1,9 +1,15 @@
-﻿namespace CustomItems.Patches
+﻿// -----------------------------------------------------------------------
+// <copyright file="StickyGrenade.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace CustomItems.Patches
 {
+#pragma warning disable SA1313
     using Grenades;
     using HarmonyLib;
-    using Mirror;
-    using System.CodeDom;
     using UnityEngine;
 
     /// <inheritdoc/>

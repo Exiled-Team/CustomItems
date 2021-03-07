@@ -88,7 +88,7 @@ namespace CustomItems.Items
         public HashSet<string> BlacklistedDoorNames { get; set; } = new HashSet<string>();
 
         /// <summary>
-        /// Gets or sets a value indicating if tesla gates will get disabled.
+        /// Gets or sets a value indicating whether if tesla gates will get disabled.
         /// </summary>
         [Description("Whether or not EMP grenades disable tesla gates in the rooms the affect, for their duration.")]
         public bool DisableTeslaGates { get; set; } = true;
