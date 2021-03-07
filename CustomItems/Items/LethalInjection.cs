@@ -92,7 +92,7 @@ namespace CustomItems.Items
                             continue;
 
                         Log.Debug($"{player.Nickname} 096 checks passed.", CustomItems.Instance.Config.IsDebugEnabled);
-                        scp096.ResetEnrage();
+                        scp096.EndEnrage();
                         ev.Player.Kill(DamageTypes.Poison);
                         return;
                     }
