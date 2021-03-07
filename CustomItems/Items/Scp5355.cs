@@ -138,8 +138,11 @@ namespace CustomItems.Items
 
                         break;
                 }
-
-                Target.Scale = NewSize;
+                if(Target.Scale != NewSize)
+                {
+                    Target.Scale = NewSize;
+                }
+                ev.Shooter.ReferenceHub.weaponManager.RpcConfirmShot(true, ev.Shooter.ReferenceHub.weaponManager.curWeapon);
             }
 
             ev.IsAllowed = false;
