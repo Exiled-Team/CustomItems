@@ -5,8 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+#pragma warning disable SA1200
 using CustomItems.Patches;
-using Subclass;
 
 namespace CustomItems
 {
@@ -16,6 +16,7 @@ namespace CustomItems
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using HarmonyLib;
+    using Subclass;
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
