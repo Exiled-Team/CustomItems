@@ -163,8 +163,6 @@ namespace CustomItems
                 return;
 
             Config.ParseSubclassList();
-            Instance.harmonyInstance = new Harmony($"com.customitems.{DateTime.UtcNow.Ticks}");
-            Instance.harmonyInstance.PatchAll();
             Events.AddClassEvent.AddClass += playerHandler.OnAddingSubclass;
         }
     }
