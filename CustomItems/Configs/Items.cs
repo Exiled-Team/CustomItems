@@ -139,9 +139,19 @@ namespace CustomItems.Configs
         /// <summary>
         /// Gets the list of Anti-Memetic Pills.
         /// </summary>
+        [Description("The list of AntiMemeticPills.")]
         public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new List<AntiMemeticPills>
         {
             new AntiMemeticPills { Type = ItemType.SCP500 },
+        };
+
+        /// <summary>
+        /// Gets the list of C4Charges.
+        /// </summary>
+        [Description("The list of C4Charges.")]
+        public List<C4Charge> C4Charges { get; private set; } = new List<C4Charge>
+        {
+            new C4Charge { Type = ItemType.GrenadeFrag },
         };
     }
 }

@@ -53,36 +53,29 @@
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.API.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.API, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Bootstrap, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Bootstrap.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Bootstrap, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.Bootstrap.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.CreditTags.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.CreditTags, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=2.4.4.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\EXILED\bin\Release\Exiled.CustomItems.dll</HintPath>
+    <Reference Include="Exiled.CustomItems, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Events.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Events, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Loader, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Loader.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Loader, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Permissions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Permissions, Version=2.6.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.2.4.2-beta\lib\net472\Exiled.Updater.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.6.0-beta\lib\net472\Exiled.Updater.dll</HintPath>
     </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\Mirror.dll</HintPath>
@@ -111,6 +104,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\C4Charge.cs" />
     <Compile Include="Components\Rock.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Configs\Items.cs" />
@@ -131,9 +125,11 @@
     <Compile Include="Items\Shotgun.cs" />
     <Compile Include="Items\SniperRifle.cs" />
     <Compile Include="Items\ImplosionGrenade.cs" />
+    <Compile Include="Items\C4Charge.cs" />
     <Compile Include="Items\TranquilizerGun.cs" />
     <Compile Include="Patches\AddClass.cs" />
     <Compile Include="CustomItems.cs" />
+    <Compile Include="Patches\StickyGrenade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
