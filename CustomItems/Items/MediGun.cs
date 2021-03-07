@@ -139,10 +139,10 @@ namespace CustomItems.Items
             }
             else if (player.Role == RoleType.Scp0492 && HealZombies)
             {
-                player.MaxAdrenalineHealth = ZombieHealingRequired;
-                player.AdrenalineHealth += damage;
+                player.MaxArtificialHealth = ZombieHealingRequired;
+                player.ArtificialHealth += damage;
 
-                if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)
+                if (player.ArtificialHealth >= player.MaxArtificialHealth)
                     DoReviveZombie(player);
             }
         }

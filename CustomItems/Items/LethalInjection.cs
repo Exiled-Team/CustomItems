@@ -99,10 +99,10 @@ namespace CustomItems.Items
 
                 if (!KillOnFail)
                 {
-                    if (ev.Player.AdrenalineHealth > 30)
-                        ev.Player.AdrenalineHealth -= 30;
+                    if (ev.Player.ArtificialHealth > 30)
+                        ev.Player.ArtificialHealth -= 30;
                     else
-                        ev.Player.AdrenalineHealth = 0;
+                        ev.Player.ArtificialHealth = 0;
                     ev.Player.DisableEffect<Invigorated>();
                     return;
                 }

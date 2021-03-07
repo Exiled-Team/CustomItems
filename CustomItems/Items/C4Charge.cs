@@ -132,8 +132,6 @@ namespace CustomItems.Items
             PlayerEvent.Destroying += OnDestroying;
             PlayerEvent.Died += OnDied;
 
-            MapEvent.ExplodingGrenade += OnExploding;
-
             base.SubscribeEvents();
         }
 
@@ -144,8 +142,6 @@ namespace CustomItems.Items
 
             PlayerEvent.Destroying -= OnDestroying;
             PlayerEvent.Died -= OnDied;
-
-            MapEvent.ExplodingGrenade += OnExploding;
 
             base.UnsubscribeEvents();
         }
@@ -179,6 +175,15 @@ namespace CustomItems.Items
             base.OnThrowing(ev);
         }
 
+        /// <inheritdoc/>
+        protected override void OnExploding(ExplodingGrenadeEventArgs ev)
+        {
+            if (ev.Grenade.TryGetComponent(out Grenade grenade))
+            {
+                PlacedCharges.Remove(grenade);
+            }
+        }
+
         private void OnDestroying(DestroyingEventArgs ev)
         {
             foreach (var charge in PlacedCharges.ToList())
@@ -210,14 +215,6 @@ namespace CustomItems.Items
                     NetworkServer.Destroy(charge.Key.gameObject);
                     PlacedCharges.Remove(charge.Key);
                 }
-            }
-        }
-
-        private void OnExploding(ExplodingGrenadeEventArgs ev)
-        {
-            if (ev.Grenade.TryGetComponent(out Grenade grenade))
-            {
-                PlacedCharges.Remove(grenade);
             }
         }
     }
