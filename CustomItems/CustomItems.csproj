@@ -120,6 +120,7 @@
     <Compile Include="Items\MediGun.cs" />
     <Compile Include="Items\Rock.cs" />
     <Compile Include="Items\Scp127.cs" />
+    <Compile Include="Items\Scp2818.cs" />
     <Compile Include="Items\Scp714.cs" />
     <Compile Include="Items\Scp1499.cs" />
     <Compile Include="Items\Shotgun.cs" />

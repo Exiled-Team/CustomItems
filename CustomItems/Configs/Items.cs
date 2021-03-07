@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="Items.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="Items.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -88,7 +88,7 @@ namespace CustomItems.Configs
         [Description("The list of Scp127s.")]
         public List<Scp127> Scp127s { get; private set; } = new List<Scp127>
         {
-            new Scp127 { Type = ItemType.GunCOM15 },
+            new Scp127 { Type = ItemType.GunProject90 },
         };
 
         /// <summary>
@@ -139,10 +139,19 @@ namespace CustomItems.Configs
         /// <summary>
         /// Gets the list of Anti-Memetic Pills.
         /// </summary>
-        [Description("The list of AntiMemeticPills.")]
+        [Description("The list of Anti-Memetic Pills.")]
         public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new List<AntiMemeticPills>
         {
             new AntiMemeticPills { Type = ItemType.SCP500 },
+        };
+
+        /// <summary>
+        /// Gets the list of <see cref="Scp2818"/>s.
+        /// </summary>
+        [Description("The list of SCP-2818s.")]
+        public List<Scp2818> Scp2818s { get; private set; } = new List<Scp2818>
+        {
+            new Scp2818 { Type = ItemType.GunUSP, },
         };
 
         /// <summary>

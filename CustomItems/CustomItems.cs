@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="CustomItems.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="CustomItems.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -114,6 +114,8 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
+            Instance.Config.ItemConfigs.Scp2818s?.Register();
+
             Instance.Config.ItemConfigs.C4Charges?.Register();
         }
 
@@ -146,6 +148,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.Scp714s?.Unregister();
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
+
+            Instance.Config.ItemConfigs.Scp2818s?.Unregister();
 
             Instance.Config.ItemConfigs.C4Charges?.Unregister();
         }
