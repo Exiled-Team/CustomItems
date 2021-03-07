@@ -69,7 +69,8 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc/>
-        public override Modifiers Modifiers { get; set; } = new Modifiers(3, 4, 0);
+        [YamlIgnore]
+        public override Modifiers Modifiers { get; set; } = default;
 
         /// <inheritdoc/>
         [YamlIgnore]

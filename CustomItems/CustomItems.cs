@@ -49,6 +49,9 @@ namespace CustomItems
             serverHandler = new ServerHandler();
             playerHandler = new PlayerHandler();
 
+            harmonyInstance = new Harmony($"com.{nameof(CustomItems)}.galaxy-{DateTime.Now.Ticks}");
+            harmonyInstance.PatchAll();
+
             Config.LoadItems();
             RegisterItems();
 
