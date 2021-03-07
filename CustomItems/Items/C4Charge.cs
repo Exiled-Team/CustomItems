@@ -1,4 +1,11 @@
-﻿namespace CustomItems.Items
+﻿// -----------------------------------------------------------------------
+// <copyright file="C4Charge.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -9,13 +16,11 @@
     using Exiled.Events.EventArgs;
     using Grenades;
     using Mirror;
+    using UnityEngine;
     using YamlDotNet.Serialization;
-
+    using MapEvent = Exiled.Events.Handlers.Map;
     using PlayerEvent = Exiled.Events.Handlers.Player;
     using ServerEvent = Exiled.Events.Handlers.Server;
-    using MapEvent = Exiled.Events.Handlers.Map;
-    using UnityEngine;
-    using Exiled.CustomItems;
 
     /// <inheritdoc/>
     public class C4Charge : CustomGrenade

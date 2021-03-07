@@ -152,8 +152,9 @@ namespace CustomItems.Configs
         public List<Scp2818> Scp2818s { get; private set; } = new List<Scp2818>
         {
             new Scp2818 { Type = ItemType.GunE11SR, },
-        }
+        };
 
+        /// <summary>
         /// Gets the list of C4Charges.
         /// </summary>
         [Description("The list of C4Charges.")]
