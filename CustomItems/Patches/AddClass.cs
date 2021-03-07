@@ -15,8 +15,7 @@ namespace CustomItems.Patches
     /// <summary>
     /// Patch for <see cref="TrackingAndMethods.AddClass"/>.
     /// </summary>
-    [HarmonyPatch(typeof(TrackingAndMethods), nameof(TrackingAndMethods.AddClass))]
-    public class AddClass
+    internal static class AddClass
     {
         /// <summary>
         /// Postfix - Called after base method finishes.

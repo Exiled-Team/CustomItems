@@ -5,6 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using CustomItems.Patches;
+using Subclass;
+
 namespace CustomItems
 {
     using System;
@@ -163,6 +166,7 @@ namespace CustomItems
                 return;
 
             Config.ParseSubclassList();
+            Instance.harmonyInstance.Patch(HarmonyLib.AccessTools.Method(typeof(TrackingAndMethods), nameof(TrackingAndMethods.AddClass)), postfix: new HarmonyMethod(HarmonyLib.AccessTools.Method(typeof(AddClass), nameof(AddClass.Postfix))));
             Events.AddClassEvent.AddClass += playerHandler.OnAddingSubclass;
         }
     }
