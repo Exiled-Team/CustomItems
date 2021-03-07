@@ -77,8 +77,8 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ChangingItem += OnChangingItem;
-            Exiled.Events.Handlers.Player.Hurting += OnHurting;
+            Exiled.Events.Handlers.Player.ChangingItem -= OnChangingItem;
+            Exiled.Events.Handlers.Player.Hurting -= OnHurting;
 
             base.UnsubscribeEvents();
         }
