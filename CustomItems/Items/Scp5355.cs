@@ -98,8 +98,7 @@ namespace CustomItems.Items
                         modeText = "Shrink";
                         break;
                 }
-                ev.Player.ReferenceHub.hints.Show(new TextHint($"{modeText}", new HintParameter[]
-                    { new StringHintParameter("") }, HintEffectPresets.FadeInAndOut(15f, 1f, 15f), 15f));
+                ev.Player.ShowHint(modeText);
             }
         }
 
