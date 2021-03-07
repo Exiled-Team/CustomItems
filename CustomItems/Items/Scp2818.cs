@@ -1,11 +1,21 @@
+// -----------------------------------------------------------------------
+// <copyright file="Scp2818.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
+    using MEC;
+    using UnityEngine;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -22,6 +32,22 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public override string Description { get; set; } =
             "When this weapon is fired, it uses the biomass of the shooter as the bullet.";
+
+        /// <inheritdoc/>
+        [YamlIgnore]
+        public override uint ClipSize { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets how often the <see cref="ShooterProjectile"/> coroutine will move the player.
+        /// </summary>
+        [Description("How frequently the shooter will be moved towards his target.\n# Note, a lower tick frequency, and lower MaxDistance will make the travel smoother, but be more stressful on your server.")]
+        public float TickFrequency { get; set; } = 0.025f;
+
+        /// <summary>
+        /// Gets or sets the max distance towards the target location the shooter can be moved each tick.
+        /// </summary>
+        [Description("The max distance towards the target location the shooter can be moved each tick.")]
+        public float MaxDistancePerTick { get; set; } = 0.25f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -52,15 +78,31 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            if (Player.Get(ev.Target) == null)
-                ev.Shooter.Kill(DamageTypes.Contain);
+            Timing.RunCoroutine(ShooterProjectile(ev.Shooter, ev.Target.transform.position, Player.Get(ev.Target)));
         }
 
-        /// <inheritdoc/>
-        protected override void OnHurting(HurtingEventArgs ev)
+        private IEnumerator<float> ShooterProjectile(Player player, Vector3 targetPos, Player target = null)
         {
-            ev.Attacker.Kill(DamageTypes.Nuke);
-            ev.Target.Kill(DamageTypes.Nuke);
+            // This is the camera transform used to make grenades appear like they are coming from the player's head instead of their stomach. We move them here so they aren't skidding across the floor.
+            player.Position = player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
+            player.Scale = Vector3.one * 0.15f;
+            if (target != null)
+                while (Vector3.Distance(player.Position, target.Position) > (MaxDistancePerTick + 0.15f))
+                {
+                    player.Position = Vector3.MoveTowards(player.Position, target.Position, MaxDistancePerTick);
+
+                    yield return Timing.WaitForSeconds(TickFrequency);
+                }
+            else
+                while (Vector3.Distance(player.Position, targetPos) > 0.5f)
+                {
+                    player.Position = Vector3.MoveTowards(player.Position, targetPos, MaxDistancePerTick);
+
+                    yield return Timing.WaitForSeconds(TickFrequency);
+                }
+
+            player.Kill(DamageTypes.Nuke);
+            target?.Kill(DamageTypes.Nuke);
         }
     }
 }
