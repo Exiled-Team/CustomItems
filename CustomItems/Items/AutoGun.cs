@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AutoGun.cs" company="Babyboucher20">
+// Copyright (c) Babyboucher20. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
@@ -18,6 +18,7 @@ namespace CustomItems.Items
     using MEC;
     using UnityEngine;
 
+    /// <inheritdoc />
     public class AutoGun : CustomWeapon
     {
 
