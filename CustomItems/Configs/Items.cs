@@ -145,15 +145,6 @@ namespace CustomItems.Configs
         };
 
         /// <summary>
-        /// Gets the list of Scp5355s.
-        /// </summary>
-        [Description("The list of Scp5355s.")]
-        public List<Scp5355> Scp5355s { get; private set; } = new List<Scp5355>
-        {
-            new Scp5355 { Type = ItemType.GunCOM15 },
-        };
-
-        /// <summary>
         /// Gets the list of AutoGuns.
         /// </summary>
         [Description("The list of AutoGuns.")]

@@ -114,8 +114,6 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
-            Instance.Config.ItemConfigs.Scp5355s?.Register();
-
             Instance.Config.ItemConfigs.AutoGuns?.Register();
         }
 
@@ -148,8 +146,6 @@ namespace CustomItems
             Instance.Config.ItemConfigs.Scp714s?.Unregister();
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
-
-            Instance.Config.ItemConfigs.Scp5355s?.Unregister();
 
             Instance.Config.ItemConfigs.AutoGuns?.Unregister();
         }
