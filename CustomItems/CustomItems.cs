@@ -115,6 +115,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
             Instance.Config.ItemConfigs.Scp2818s?.Register();
+
+            Instance.Config.ItemConfigs.C4Charges?.Register();
         }
 
         private void UnregisterItems()
@@ -148,6 +150,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
 
             Instance.Config.ItemConfigs.Scp2818s?.Unregister();
+
+            Instance.Config.ItemConfigs.C4Charges?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()
