@@ -57,7 +57,7 @@ namespace CustomItems.Items
             {
                 new DynamicSpawnPoint
                 {
-                    Chance = 100,
+                    Chance = 60,
                     Location = SpawnLocation.InsideHid,
                 },
                 new DynamicSpawnPoint
