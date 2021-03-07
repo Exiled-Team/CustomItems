@@ -125,6 +125,10 @@ namespace CustomItems.Items
         public override bool ExplodeOnCollision { get; set; } = false;
 
         /// <inheritdoc/>
+        [YamlIgnore]
+        public override ItemType Type { get; set; } = ItemType.GrenadeFrag;
+
+        /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
             Instance = this;
@@ -163,10 +167,7 @@ namespace CustomItems.Items
 
                 ev.Player.RemoveItem(ev.Player.CurrentItem);
 
-                var c4 = Spawn(ev.Player.CameraTransform.position, (ev.Player.Rotation * ThrowMultiplier) + (Vector3.up * 1.5f), FuseTime);
-
-                c4.NetworkthrowerGameObject = ev.Player.GameObject;
-                c4.NetworkthrowerTeam = ev.Player.Team;
+                var c4 = Spawn(ev.Player.CameraTransform.position, (ev.Player.Rotation * ThrowMultiplier) + (Vector3.up * 1.5f), FuseTime, ItemType.GrenadeFrag, ev.Player);
 
                 if (!PlacedCharges.ContainsKey(c4))
                     PlacedCharges.Add(c4, ev.Player);
