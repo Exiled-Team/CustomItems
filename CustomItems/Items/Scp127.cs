@@ -49,7 +49,7 @@ namespace CustomItems.Items
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 15;
+        public override uint ClipSize { get; set; } = 25;
 
         /// <summary>
         /// Gets or sets how often ammo will be regenerated. Regeneration occurs at all times, however this timer is reset when the weapon is picked up or dropped.
