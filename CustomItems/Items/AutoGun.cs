@@ -54,8 +54,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public override uint ClipSize { get; set; } = 5;
 
-
-
         /// <summary>
         /// Gets or sets a value indicating whether if the gun can kill people on the same team.
         /// </summary>
