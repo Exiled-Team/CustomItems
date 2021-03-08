@@ -64,7 +64,7 @@ namespace CustomItems.Items
         /// Gets or sets the max distance at which the auto gun can kill.
         /// </summary>
         [Description("The max distance at which the auto gun can kill")]
-        public float MaxDistance { get; set; } = 100;
+        public float MaxDistance { get; set; } = 100f;
 
         /// <summary>
         /// Gets or sets a value indicating If true 1 ammo is taken per a person hit, false it only takes oe ammo per a shot.
