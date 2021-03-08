@@ -145,12 +145,12 @@ namespace CustomItems.Configs
         };
 
         /// <summary>
-        /// Gets the list of Scp5355s.
+        /// Gets the list of DeflectorSheilds.
         /// </summary>
-        [Description("The list of Scp5355s.")]
-        public List<Scp5355> Scp5355s { get; private set; } = new List<Scp5355>
+        [Description("The list of DeflectorSheilds.")]
+        public List<DeflectorShield> DeflectorSheilds { get; private set; } = new List<DeflectorShield>
         {
-            new Scp5355 { Type = ItemType.GunCOM15 },
+            new DeflectorShield { Type = ItemType.SCP268 },
         };
     }
 }
