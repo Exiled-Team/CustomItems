@@ -101,7 +101,7 @@ namespace CustomItems.Items
                 AmmoUsed = 1;
             }
 
-            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, AmmoUsed);
+            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, ev.Shooter.CurrentItem.durability - AmmoUsed);
             ev.IsAllowed = false;
         }
     }
