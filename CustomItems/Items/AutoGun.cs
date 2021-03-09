@@ -79,13 +79,13 @@ namespace CustomItems.Items
             int AmmoUsed = 0;
             foreach (Player player in Player.List)
             {
-                if (ev.Shooter.ReferenceHub.weaponManager.GetShootPermission(player.ReferenceHub.characterClassManager, Server.FriendlyFire) || TeamKill)
+                if (ev.Shooter.CurrentItem.durability != AmmoUsed || PerHitAmmo && ev.Shooter.CurrentItem.durability != 0)
                 {
-                    if (player != ev.Shooter && Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance)
+                    if (player.Side != ev.Shooter.Side || (player.Side == ev.Shooter.Side && TeamKill))
                     {
-                        if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                        if (player != ev.Shooter && Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance)
                         {
-                            if (ev.Shooter.CurrentItem.durability != AmmoUsed || PerHitAmmo)
+                            if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
                                 AmmoUsed++;
                                 player.Hurt(Damage, ev.Shooter, DamageTypes.Com15);
