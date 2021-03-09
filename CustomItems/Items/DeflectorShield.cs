@@ -85,15 +85,11 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnDropping(DroppingItemEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Player) && Check(ev.Item))
+            if (deflectorPlayers.Contains(ev.Player))
             {
                 ev.IsAllowed = false;
 
                 deflectorPlayers.Remove(ev.Player);
-            }
-            else
-            {
-                base.OnDropping(ev);
             }
         }
 
