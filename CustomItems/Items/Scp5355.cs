@@ -17,7 +17,8 @@ namespace CustomItems.Items
     public class Scp5355 : CustomWeapon
     {
         private readonly Dictionary<Player, Vector3> sizedPlayers = new Dictionary<Player, Vector3>();
-        private int mode = 1;
+        private readonly Dictionary<Player, int> playerMode = new Dictionary<Player, int>();
+
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 16;
@@ -80,9 +81,9 @@ namespace CustomItems.Items
         {
             if (ev.IsAnimationOnly)
             {
-                mode++;
+                playerMode[ev.Player]++;
                 string modeText;
-                switch (mode)
+                switch (playerMode[ev.Player])
                 {
                     case 1:
                         modeText = "Shrink";
@@ -94,10 +95,11 @@ namespace CustomItems.Items
                         modeText = "Return";
                         break;
                     default:
-                        mode = 1;
+                        playerMode[ev.Player] = 1;
                         modeText = "Shrink";
                         break;
                 }
+
                 ev.Player.ShowHint(modeText);
             }
         }
@@ -117,7 +119,7 @@ namespace CustomItems.Items
                 }
 
                 Vector3 NewSize = Target.Scale;
-                switch (mode)
+                switch (playerMode[ev.Shooter])
                 {
                     case 1:
                         NewSize -= new Vector3(SizeChange, SizeChange, SizeChange);
@@ -137,10 +139,12 @@ namespace CustomItems.Items
 
                         break;
                 }
-                if(Target.Scale != NewSize)
+
+                if (Target.Scale != NewSize)
                 {
                     Target.Scale = NewSize;
                 }
+
                 ev.Shooter.ReferenceHub.weaponManager.RpcConfirmShot(true, ev.Shooter.ReferenceHub.weaponManager.curWeapon);
             }
 
