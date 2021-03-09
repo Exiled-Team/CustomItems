@@ -21,7 +21,6 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class AutoGun : CustomWeapon
     {
-
         /// <inheritdoc/>
         public override uint Id { get; set; } = 17;
 
@@ -88,6 +87,8 @@ namespace CustomItems.Items
                             {
                                 AmmoUsed++;
                                 player.Hurt(Damage, ev.Shooter, DamageTypes.Com15);
+                                if (player.IsDead)
+                                    player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
                                 ev.Shooter.ReferenceHub.weaponManager.RpcConfirmShot(true, ev.Shooter.ReferenceHub.weaponManager.curWeapon);
                             }
                         }
@@ -100,7 +101,7 @@ namespace CustomItems.Items
                 AmmoUsed = 1;
             }
 
-            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, ev.Shooter.CurrentItem.durability - AmmoUsed);
+            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)AmmoUsed);
             ev.IsAllowed = false;
         }
     }
