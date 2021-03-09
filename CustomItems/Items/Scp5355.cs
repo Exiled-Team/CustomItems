@@ -76,6 +76,12 @@ namespace CustomItems.Items
             base.UnsubscribeEvents();
         }
 
+        protected override void OnChanging(ChangingItemEventArgs ev)
+        {
+            if (ev.Player.Ammo[2] == 0)
+            ev.Player.Ammo[2] = 1;
+        }
+
         /// <inheritdoc/>
         protected override void OnReloading(ReloadingWeaponEventArgs ev)
         {
