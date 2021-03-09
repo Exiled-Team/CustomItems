@@ -75,7 +75,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            base.OnShooting(ev);
             int AmmoUsed = 0;
             foreach (Player player in Player.List)
             {
