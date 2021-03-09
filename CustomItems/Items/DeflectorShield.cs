@@ -57,7 +57,7 @@ namespace CustomItems.Items
         /// Gets or sets By what will the Damage be multiplied.
         /// </summary>
         [Description("By what will the Damage be multiplied")]
-        public float Multiplier { get; set; } = 1;
+        public float Multiplier { get; set; } = 1f;
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
