@@ -150,7 +150,7 @@ namespace CustomItems.Configs
         [Description("The list of DeflectorSheilds.")]
         public List<DeflectorShield> DeflectorSheilds { get; private set; } = new List<DeflectorShield>
         {
-            new DeflectorShield { Type = ItemType.SCP268 },
+            new DeflectorShield(),
         };
     }
 }
