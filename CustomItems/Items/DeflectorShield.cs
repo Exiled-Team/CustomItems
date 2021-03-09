@@ -26,6 +26,12 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 18;
+        
+        /// <inheritdoc/>
+        private ItemType type = ItemType.Scp268;
+
+        [YamlIgnore]
+        public override ItemType Type { get => type; set => throw new ArgumentException("You cannot change the ItemType of this item."); }
 
         /// <inheritdoc/>
         public override string Name { get; set; } = "Deflector shield";
