@@ -134,7 +134,7 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target) && ev.DamageType.isWeapon)
+            if (deflectorPlayers.Contains(ev.Target) && ev.DamageType.isWeapon && ev.Target != ev.Attacker)
             {
                 ev.IsAllowed = false;
                 ev.Attacker.Hurt(ev.Amount * Multiplier, ev.Target, ev.DamageType);
