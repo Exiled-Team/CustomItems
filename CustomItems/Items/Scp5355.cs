@@ -13,7 +13,7 @@ namespace CustomItems.Items
     using MEC;
     using UnityEngine;
 
-
+    /// <inheritdoc />
     public class Scp5355 : CustomWeapon
     {
         private readonly Dictionary<Player, Vector3> sizedPlayers = new Dictionary<Player, Vector3>();
