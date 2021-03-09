@@ -64,7 +64,6 @@ namespace CustomItems.Items
         {
             Exiled.Events.Handlers.Player.MedicalItemDequipped += OnMedicalItemDeEquipped;
             Exiled.Events.Handlers.Player.Destroying += OnDestroying;
-            Exiled.Events.Handlers.Player.Died += OnDied;
             Exiled.Events.Handlers.Player.Hurting += OnHurt;
 
             base.SubscribeEvents();
@@ -75,7 +74,6 @@ namespace CustomItems.Items
         {
             Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnMedicalItemDeEquipped;
             Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
-            Exiled.Events.Handlers.Player.Died -= OnDied;
             Exiled.Events.Handlers.Player.Hurting -= OnHurt;
 
             base.UnsubscribeEvents();
@@ -101,7 +99,8 @@ namespace CustomItems.Items
             base.OnWaitingForPlayers();
         }
 
-        private void OnDied(DiedEventArgs ev)
+        /// <inheritdoc/>
+        public override void OnOwnerDying(DiedEventArgs ev)
         {
             if (deflectorPlayers.Contains(ev.Target))
                 deflectorPlayers.Remove(ev.Target);
