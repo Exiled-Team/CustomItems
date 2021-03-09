@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="EmpGrenade.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="EmpGrenade.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -27,10 +27,9 @@ namespace CustomItems.Items
     {
         private static readonly List<Room> LockedRooms079 = new List<Room>();
 
-        /// <summary>
-        /// A list of doors locked by the EMP Grenades.
-        /// </summary>
         private readonly List<DoorVariant> lockedDoors = new List<DoorVariant>();
+
+        private readonly List<TeslaGate> disabledTeslaGates = new List<TeslaGate>();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 0;
@@ -89,6 +88,12 @@ namespace CustomItems.Items
         public HashSet<string> BlacklistedDoorNames { get; set; } = new HashSet<string>();
 
         /// <summary>
+        /// Gets or sets a value indicating whether if tesla gates will get disabled.
+        /// </summary>
+        [Description("Whether or not EMP grenades disable tesla gates in the rooms the affect, for their duration.")]
+        public bool DisableTeslaGates { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets how long the EMP effect should last on the rooms affected.
         /// </summary>
         [Description("How long the EMP effect should last on the rooms affected.")]
@@ -101,6 +106,9 @@ namespace CustomItems.Items
             Scp079.InteractingDoor += OnInteractingDoor;
             Map.ExplodingGrenade += OnExplodingGrenade;
 
+            if (DisableTeslaGates)
+                Exiled.Events.Handlers.Player.TriggeringTesla += OnTriggeringTesla;
+
             base.SubscribeEvents();
         }
 
@@ -110,6 +118,9 @@ namespace CustomItems.Items
             Scp079.ChangingCamera -= OnChangingCamera;
             Scp079.InteractingDoor -= OnInteractingDoor;
             Map.ExplodingGrenade -= OnExplodingGrenade;
+
+            if (DisableTeslaGates)
+                Exiled.Events.Handlers.Player.TriggeringTesla -= OnTriggeringTesla;
 
             base.UnsubscribeEvents();
         }
@@ -136,12 +147,24 @@ namespace CustomItems.Items
             ev.IsAllowed = false;
 
             Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade);
+            TeslaGate gate = null;
 
             Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Exiled.API.Features.Map.Rooms.Count}", CustomItems.Instance.Config.IsDebugEnabled);
 
             LockedRooms079.Add(room);
 
             room.TurnOffLights(Duration);
+
+            if (DisableTeslaGates)
+            {
+                foreach (TeslaGate teslaGate in Exiled.API.Features.Map.TeslaGates)
+                    if (Exiled.API.Features.Map.FindParentRoom(teslaGate.gameObject) == room)
+                    {
+                        disabledTeslaGates.Add(teslaGate);
+                        gate = teslaGate;
+                        break;
+                    }
+            }
 
             Log.Debug($"{room.Doors.Count()} - {room.Type}", CustomItems.Instance.Config.IsDebugEnabled);
 
@@ -168,13 +191,34 @@ namespace CustomItems.Items
                 });
             }
 
-            foreach (Player player in Player.Get(RoleType.Scp079))
+            foreach (Player player in Player.List)
             {
-                if (player.Camera != null && player.Camera.Room() == room)
-                    player.SetCamera(198);
+                if (player.Role == RoleType.Scp079)
+                    if (player.Camera != null && player.Camera.Room() == room)
+                        player.SetCamera(198);
+                if (player.CurrentRoom != room)
+                    continue;
+
+                foreach (Inventory.SyncItemInfo item in player.ReferenceHub.inventory.items)
+                    if (item.id == ItemType.Radio)
+                        player.ReferenceHub.inventory.items.ModifyDuration(player.ReferenceHub.GetComponent<Radio>().myRadio, 0f);
+                    else if (player.ReferenceHub.weaponManager.syncFlash)
+                        player.ReferenceHub.weaponManager.syncFlash = false;
             }
 
-            Timing.CallDelayed(Duration, () => LockedRooms079.Remove(room));
+            Timing.CallDelayed(Duration, () =>
+            {
+                LockedRooms079.Remove(room);
+                if (gate != null)
+                    disabledTeslaGates.Remove(gate);
+            });
+        }
+
+        private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
+        {
+            foreach (TeslaGate gate in Exiled.API.Features.Map.TeslaGates)
+                if (Exiled.API.Features.Map.FindParentRoom(gate.gameObject) == ev.Player.CurrentRoom && disabledTeslaGates.Contains(gate))
+                    ev.IsTriggerable = false;
         }
     }
 }

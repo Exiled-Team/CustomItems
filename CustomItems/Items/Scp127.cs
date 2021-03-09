@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="Scp127.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="Scp127.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -49,7 +49,7 @@ namespace CustomItems.Items
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 15;
+        public override uint ClipSize { get; set; } = 25;
 
         /// <summary>
         /// Gets or sets how often ammo will be regenerated. Regeneration occurs at all times, however this timer is reset when the weapon is picked up or dropped.

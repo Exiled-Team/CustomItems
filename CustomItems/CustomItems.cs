@@ -1,9 +1,12 @@
 // -----------------------------------------------------------------------
-// <copyright file="CustomItems.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="CustomItems.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
+
+#pragma warning disable SA1200
+using CustomItems.Patches;
 
 namespace CustomItems
 {
@@ -13,6 +16,7 @@ namespace CustomItems
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using HarmonyLib;
+    using Subclass;
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
@@ -48,6 +52,9 @@ namespace CustomItems
         {
             serverHandler = new ServerHandler();
             playerHandler = new PlayerHandler();
+
+            harmonyInstance = new Harmony($"com.{nameof(CustomItems)}.galaxy-{DateTime.Now.Ticks}");
+            harmonyInstance.PatchAll();
 
             Config.LoadItems();
             RegisterItems();
@@ -115,6 +122,10 @@ namespace CustomItems
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
             Instance.Config.ItemConfigs.DeflectorSheilds?.Register();
+            
+            Instance.Config.ItemConfigs.Scp2818s?.Register();
+
+            Instance.Config.ItemConfigs.C4Charges?.Register();
         }
 
         private void UnregisterItems()
@@ -148,6 +159,10 @@ namespace CustomItems
             Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
 
             Instance.Config.ItemConfigs.DeflectorSheilds?.Unregister();
+
+            Instance.Config.ItemConfigs.Scp2818s?.Unregister();
+
+            Instance.Config.ItemConfigs.C4Charges?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()
@@ -156,8 +171,7 @@ namespace CustomItems
                 return;
 
             Config.ParseSubclassList();
-            Instance.harmonyInstance = new Harmony($"com.customitems.{DateTime.UtcNow.Ticks}");
-            Instance.harmonyInstance.PatchAll();
+            Instance.harmonyInstance.Patch(HarmonyLib.AccessTools.Method(typeof(TrackingAndMethods), nameof(TrackingAndMethods.AddClass)), postfix: new HarmonyMethod(HarmonyLib.AccessTools.Method(typeof(AddClass), nameof(AddClass.Postfix))));
             Events.AddClassEvent.AddClass += playerHandler.OnAddingSubclass;
         }
     }

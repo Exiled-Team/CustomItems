@@ -22,6 +22,8 @@ Rock | 10 | This is a rock. Left-click to melee someone in the face with it. Lef
 SCP-1499 | 11 | The gas mask that teleports you to another dimension, when you put it on.
 SCP-714 | 12 | A coin that, when held in your hand, makes you invulnerable to SCP-049 and SCP-049-2. However, as you hold the coin, your stamina will slowly drain. If you run out, your health will start to drain.
 AM-119 | 13 | Pills that, when consumed, make you forget SCP-096's face if you have recently seen it. Removing you from being one of his targets, with some side effects.
+SCP-2818 | 14 | A weapon that, when fired, will convert the entire biomass of it's shooter into the ammunition it fires.
+C4-119 | 15 | A frag-grenade with a much longer than normal fuse, that will stick to the first solid surface it comes in contact with. It can be detonated using a console command. ".detonate"
 
 ### Item Configs
 Config settings for the individual items will ***NOT*** be found in the default plugin config file. Instead they will be located in ~/.config/EXILED/Configs/CustomItems on Linux or %AppData%\EXILED\Configs\CustomItems on Winblows.
@@ -36,6 +38,7 @@ ci give | (item name/id) [player] | citems.give | Gives the specified item to th
 ci spawn | (item name/id) (location) | citems.spawn | Spawns the specified item at the specified location. This location can either be one of the valid Spawn Location's below, a player's name (it spawns at their feet), or in-game coordinates.
 ci info | (item name/id) | n/a | Prints a more detailed list of info about a specific item, including name, id, description and spawn locations + chances.
 ci list | n/a | n/a | Lists the names and ID's of all installed and enabled custom items on the server.
+.detonate | n/a | n/a | Detonates any C4-Charges you have placed, if you are within range of them.
 
 ### Valid Spawn Location names
 The following list of locations are the only ones that are able to be used in the SpawnLocation configs for each item:

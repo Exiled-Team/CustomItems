@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Scp714.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="Scp714.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -77,8 +77,8 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ChangingItem += OnChangingItem;
-            Exiled.Events.Handlers.Player.Hurting += OnHurting;
+            Exiled.Events.Handlers.Player.ChangingItem -= OnChangingItem;
+            Exiled.Events.Handlers.Player.Hurting -= OnHurting;
 
             base.UnsubscribeEvents();
         }

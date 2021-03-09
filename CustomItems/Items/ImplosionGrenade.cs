@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="ImplosionGrenade.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="ImplosionGrenade.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -19,11 +19,14 @@ namespace CustomItems.Items
     using MEC;
     using UnityEngine;
     using Map = Exiled.Events.Handlers.Map;
+    using Scp106 = Exiled.Events.Handlers.Scp106;
 
     /// <inheritdoc />
     public class ImplosionGrenade : CustomGrenade
     {
         private int layerMask;
+
+        private List<Player> effectedPlayers;
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 2;
@@ -95,6 +98,7 @@ namespace CustomItems.Items
         protected override void SubscribeEvents()
         {
             Map.ExplodingGrenade += OnExplodingGrenade;
+            Scp106.Teleporting += OnTeleporting;
 
             base.SubscribeEvents();
         }
@@ -103,6 +107,7 @@ namespace CustomItems.Items
         protected override void UnsubscribeEvents()
         {
             Map.ExplodingGrenade -= OnExplodingGrenade;
+            Scp106.Teleporting -= OnTeleporting;
 
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
@@ -123,6 +128,14 @@ namespace CustomItems.Items
 
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
+
+            NorthwoodLib.Pools.ListPool<Player>.Shared.Return(effectedPlayers);
+        }
+
+        private void OnTeleporting(TeleportingEventArgs ev)
+        {
+            if (effectedPlayers.Contains(ev.Player))
+                ev.IsAllowed = false;
         }
 
         private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
@@ -141,6 +154,7 @@ namespace CustomItems.Items
 
                 ev.TargetToDamages.Clear();
                 Log.Debug("IG: List cleared.", CustomItems.Instance.Config.IsDebugEnabled);
+                effectedPlayers = NorthwoodLib.Pools.ListPool<Player>.Shared.Rent();
                 foreach (Player player in copiedList.Keys)
                 {
                     ev.TargetToDamages.Add(player, copiedList[player] * DamageModifier);
@@ -160,6 +174,7 @@ namespace CustomItems.Items
                             Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
                             if (!line)
                             {
+                                effectedPlayers.Add(player);
                                 Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
                                 break;
                             }

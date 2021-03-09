@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="LethalInjection.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="LethalInjection.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -92,17 +92,17 @@ namespace CustomItems.Items
                             continue;
 
                         Log.Debug($"{player.Nickname} 096 checks passed.", CustomItems.Instance.Config.IsDebugEnabled);
-                        scp096.ResetEnrage();
+                        scp096.EndEnrage();
                         ev.Player.Kill(DamageTypes.Poison);
                         return;
                     }
 
                 if (!KillOnFail)
                 {
-                    if (ev.Player.AdrenalineHealth > 30)
-                        ev.Player.AdrenalineHealth -= 30;
+                    if (ev.Player.ArtificialHealth > 30)
+                        ev.Player.ArtificialHealth -= 30;
                     else
-                        ev.Player.AdrenalineHealth = 0;
+                        ev.Player.ArtificialHealth = 0;
                     ev.Player.DisableEffect<Invigorated>();
                     return;
                 }

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="AddClass.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="AddClass.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -15,8 +15,7 @@ namespace CustomItems.Patches
     /// <summary>
     /// Patch for <see cref="TrackingAndMethods.AddClass"/>.
     /// </summary>
-    [HarmonyPatch(typeof(TrackingAndMethods), nameof(TrackingAndMethods.AddClass))]
-    public class AddClass
+    internal static class AddClass
     {
         /// <summary>
         /// Postfix - Called after base method finishes.

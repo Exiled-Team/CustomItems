@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="MediGun.cs" company="Galaxy199 and iopietro">
-// Copyright (c) Galaxy199 and iopietro. All rights reserved.
+// <copyright file="MediGun.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -139,10 +139,10 @@ namespace CustomItems.Items
             }
             else if (player.Role == RoleType.Scp0492 && HealZombies)
             {
-                player.MaxAdrenalineHealth = ZombieHealingRequired;
-                player.AdrenalineHealth += damage;
+                player.MaxArtificialHealth = ZombieHealingRequired;
+                player.ArtificialHealth += damage;
 
-                if (player.AdrenalineHealth >= player.MaxAdrenalineHealth)
+                if (player.ArtificialHealth >= player.MaxArtificialHealth)
                     DoReviveZombie(player);
             }
         }
