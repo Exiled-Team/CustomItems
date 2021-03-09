@@ -146,6 +146,14 @@ namespace CustomItems.Configs
         };
 
         /// <summary>
+        /// Gets the list of DeflectorSheilds.
+        /// </summary>
+        [Description("The list of DeflectorSheilds.")]
+        public List<DeflectorShield> DeflectorSheilds { get; private set; } = new List<DeflectorShield>
+        {
+            new DeflectorShield(),
+        }
+
         /// Gets the list of <see cref="Scp2818"/>s.
         /// </summary>
         [Description("The list of SCP-2818s.")]

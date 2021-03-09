@@ -121,6 +121,8 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
+            Instance.Config.ItemConfigs.DeflectorSheilds?.Register();
+            
             Instance.Config.ItemConfigs.Scp2818s?.Register();
 
             Instance.Config.ItemConfigs.C4Charges?.Register();
@@ -155,6 +157,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.Scp714s?.Unregister();
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
+
+            Instance.Config.ItemConfigs.DeflectorSheilds?.Unregister();
 
             Instance.Config.ItemConfigs.Scp2818s?.Unregister();
 
