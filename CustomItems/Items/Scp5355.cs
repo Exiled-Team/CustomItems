@@ -78,8 +78,8 @@ namespace CustomItems.Items
 
         protected override void OnChanging(ChangingItemEventArgs ev)
         {
-            if (ev.Player.Ammo[2] == 0)
-            ev.Player.Ammo[2] = 1;
+            if (ev.Player.Ammo[(int)AmmoType.Nato9] == 0)
+            ev.Player.Ammo[(int)AmmoType.Nato9] = 1;
         }
 
         /// <inheritdoc/>
