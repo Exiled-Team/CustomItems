@@ -1,8 +1,15 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright file="Scp5355.cs" company="Babyboucher20">
+// Copyright (c) Babyboucher20. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
@@ -76,10 +83,17 @@ namespace CustomItems.Items
             base.UnsubscribeEvents();
         }
 
+        /// <inheritdoc/>
         protected override void OnChanging(ChangingItemEventArgs ev)
         {
             if (ev.Player.Ammo[(int)AmmoType.Nato9] == 0)
             ev.Player.Ammo[(int)AmmoType.Nato9] = 1;
+        }
+
+        /// <inheritdoc/>
+        protected override void OnPickingUp(PickingUpItemEventArgs ev)
+        {
+            playerMode.Add(ev.Player, 1);
         }
 
         /// <inheritdoc/>
@@ -161,6 +175,7 @@ namespace CustomItems.Items
         protected override void OnWaitingForPlayers()
         {
             sizedPlayers.Clear();
+            playerMode.Clear();
 
             base.OnWaitingForPlayers();
         }
