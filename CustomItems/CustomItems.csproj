@@ -128,7 +128,7 @@
     <Compile Include="Items\Scp127.cs" />
     <Compile Include="Items\Scp714.cs" />
     <Compile Include="Items\Scp1499.cs" />
-	<Compile Include="Items\Scp5355.cs" />
+    <Compile Include="Items\Scp865.cs" />
     <Compile Include="Items\Shotgun.cs" />
     <Compile Include="Items\SniperRifle.cs" />
     <Compile Include="Items\ImplosionGrenade.cs" />

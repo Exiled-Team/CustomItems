@@ -114,7 +114,7 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
-            Instance.Config.ItemConfigs.Scp5355s?.Register();
+            Instance.Config.ItemConfigs.Scp865s?.Register();
         }
 
         private void UnregisterItems()
@@ -147,7 +147,7 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
 
-            Instance.Config.ItemConfigs.Scp5355s?.Unregister();
+            Instance.Config.ItemConfigs.Scp865s?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()
