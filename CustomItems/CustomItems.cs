@@ -45,7 +45,7 @@ namespace CustomItems
         public static CustomItems Instance => InstanceValue;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 4, 1);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 9, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
