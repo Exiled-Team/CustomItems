@@ -31,6 +31,9 @@ namespace CustomItems.Items
         public override uint ClipSize { get; set; } = 1;
 
         /// <inheritdoc/>
+        public override bool ShouldMessageOnGban { get; } = true;
+
+        /// <inheritdoc/>
         [YamlIgnore]
         public override float Damage { get; set; }
 
