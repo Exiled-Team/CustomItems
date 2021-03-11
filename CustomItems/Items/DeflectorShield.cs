@@ -1,35 +1,36 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="DeflectorShield.cs" company="Babyboucher20">
-// Copyright (c) Babyboucher20. All rights reserved.
+// <copyright file="DeflectorShield.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
 namespace CustomItems.Items
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using CustomPlayerEffects;
-    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.EventArgs;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
-    using UnityEngine;
+    using YamlDotNet.Serialization;
 
     /// <inheritdoc />
     public class DeflectorShield : CustomItem
     {
         private readonly List<Player> deflectorPlayers = new List<Player>();
 
+        private readonly ItemType type = ItemType.SCP268;
+
         /// <inheritdoc/>
         public override uint Id { get; set; } = 18;
-        
-        /// <inheritdoc/>
-        private ItemType type = ItemType.Scp268;
 
+        /// <inheritdoc/>
         [YamlIgnore]
         public override ItemType Type { get => type; set => throw new ArgumentException("You cannot change the ItemType of this item."); }
 
@@ -85,7 +86,6 @@ namespace CustomItems.Items
             base.UnsubscribeEvents();
         }
 
-
         /// <inheritdoc/>
         protected override void OnDropping(DroppingItemEventArgs ev)
         {
@@ -106,7 +106,7 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        public override void OnOwnerDying(DiedEventArgs ev)
+        protected override void OnOwnerDying(OwnerDyingEventArgs ev)
         {
             if (deflectorPlayers.Contains(ev.Target))
                 deflectorPlayers.Remove(ev.Target);
@@ -145,6 +145,5 @@ namespace CustomItems.Items
                 ev.Attacker.Hurt(ev.Amount * Multiplier, ev.Target, ev.DamageType);
             }
         }
-
     }
 }

@@ -122,7 +122,7 @@ namespace CustomItems
             Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
 
             Instance.Config.ItemConfigs.DeflectorSheilds?.Register();
-            
+
             Instance.Config.ItemConfigs.Scp2818s?.Register();
 
             Instance.Config.ItemConfigs.C4Charges?.Register();
