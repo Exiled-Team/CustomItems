@@ -38,7 +38,7 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "Deflector shield";
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = "A deflector shield that relfects bullets back at the shooter";
+        public override string Description { get; set; } = "A deflector shield that reflects bullets back at the shooter";
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -139,7 +139,7 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target) && ev.DamageType.isWeapon && ev.Target != ev.Attacker)
+            if (deflectorPlayers.Contains(ev.Target) && ev.DamageType.isWeapon && ev.Target != ev.Attacker && ev.DamageType != DamageTypes.MicroHid)
             {
                 ev.IsAllowed = false;
                 ev.Attacker.Hurt(ev.Amount * Multiplier, ev.Target, ev.DamageType);
