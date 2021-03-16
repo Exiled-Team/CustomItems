@@ -10,6 +10,7 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -18,9 +19,8 @@ namespace CustomItems.Items
     using Mirror;
     using UnityEngine;
     using YamlDotNet.Serialization;
-    using MapEvent = Exiled.Events.Handlers.Map;
+
     using PlayerEvent = Exiled.Events.Handlers.Player;
-    using ServerEvent = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc/>
     public class C4Charge : CustomGrenade
@@ -29,7 +29,7 @@ namespace CustomItems.Items
         public static C4Charge Instance;
 
         /// <inheritdoc/>
-        public static Dictionary<Grenade, Exiled.API.Features.Player> PlacedCharges = new Dictionary<Grenade, Exiled.API.Features.Player>();
+        public static Dictionary<Grenade, Player> PlacedCharges = new Dictionary<Grenade, Player>();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 15;
@@ -103,10 +103,22 @@ namespace CustomItems.Items
         public ItemType DetonatorItem { get; set; } = ItemType.Radio;
 
         /// <summary>
-        /// Gets or sets a value indicating whether C4 charges be defused and dropped as pickable item when the player who placed them dies.
+        /// Gets or sets a value indicating whether C4 charges will be detonated, destroyed or dropped as a pickup, when player who placed them dies/leaves the game.
         /// </summary>
-        [Description("Should C4 charges be defused and dropped as pickable item when the player who placed them dies.")]
-        public bool DropChargesOnDeath { get; set; } = true;
+        [Description("What happens with C4 charges placed by player, when he dies/leaves the game. (Remove / Detonate / Drop)")]
+        public C4RemoveMethod MethodOnDeath { get; set; } = C4RemoveMethod.Drop;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether C4 can be defused.
+        /// </summary>
+        [Description("Should shooting at C4 charges do something.")]
+        public bool AllowShoot { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether C4 charges will be detonated, destroyed or dropped as a pickup, when they have been shot.
+        /// </summary>
+        [Description("What happens with C4 charges after they are shot. (Remove / Detonate / Drop)")]
+        public C4RemoveMethod ShotMethod { get; set; } = C4RemoveMethod.Remove;
 
         /// <summary>
         /// Gets or sets a value indicating whether maximum distance between C4 Charge and player to detonate.
@@ -135,6 +147,7 @@ namespace CustomItems.Items
 
             PlayerEvent.Destroying += OnDestroying;
             PlayerEvent.Died += OnDied;
+            PlayerEvent.Shooting += OnShooting;
 
             base.SubscribeEvents();
         }
@@ -146,6 +159,7 @@ namespace CustomItems.Items
 
             PlayerEvent.Destroying -= OnDestroying;
             PlayerEvent.Died -= OnDied;
+            PlayerEvent.Shooting -= OnShooting;
 
             base.UnsubscribeEvents();
         }
@@ -191,13 +205,7 @@ namespace CustomItems.Items
             {
                 if (charge.Value == ev.Player)
                 {
-                    if (DropChargesOnDeath)
-                    {
-                        TrySpawn((int)Id, charge.Key.transform.position);
-                    }
-
-                    NetworkServer.Destroy(charge.Key.gameObject);
-                    PlacedCharges.Remove(charge.Key);
+                    C4Handler(charge.Key, MethodOnDeath);
                 }
             }
         }
@@ -208,15 +216,79 @@ namespace CustomItems.Items
             {
                 if (charge.Value == ev.Target)
                 {
-                    if (DropChargesOnDeath)
-                    {
-                        TrySpawn((int)Id, charge.Key.transform.position);
-                    }
-
-                    NetworkServer.Destroy(charge.Key.gameObject);
-                    PlacedCharges.Remove(charge.Key);
+                    C4Handler(charge.Key, MethodOnDeath);
                 }
             }
+        }
+
+        private void OnShooting(ShootingEventArgs ev)
+        {
+            if (!AllowShoot)
+                return;
+
+            Vector3 forward = ev.Shooter.CameraTransform.forward;
+            if (Physics.Raycast(ev.Shooter.CameraTransform.position + forward, forward, out var hit, 500))
+            {
+                Grenade grenade = hit.collider.gameObject.GetComponentInParent<Grenade>();
+                if (grenade == null)
+                {
+                    return;
+                }
+
+                if (PlacedCharges.ContainsKey(grenade))
+                {
+                    C4Handler(grenade, ShotMethod);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enum containing methods indicating how C4 charge can be removed.
+        /// </summary>
+        public enum C4RemoveMethod
+        {
+            /// <summary>
+            /// C4 charge will be removed without exploding.
+            /// </summary>
+            Remove = 0,
+
+            /// <summary>
+            /// C4 charge will be detonated.
+            /// </summary>
+            Detonate = 1,
+
+            /// <summary>
+            /// C4 charge will drop as a pickable item.
+            /// </summary>
+            Drop = 2,
+        }
+
+        /// <inheritdoc/>
+        public void C4Handler(Grenade charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
+        {
+            switch (removeMethod)
+            {
+                case C4RemoveMethod.Remove:
+                    {
+                        NetworkServer.Destroy(charge.gameObject);
+                        break;
+                    }
+
+                case C4RemoveMethod.Detonate:
+                    {
+                        charge.NetworkfuseTime = 0.1f;
+                        break;
+                    }
+
+                case C4RemoveMethod.Drop:
+                    {
+                        TrySpawn((int)Id, charge.transform.position);
+                        NetworkServer.Destroy(charge.gameObject);
+                        break;
+                    }
+            }
+
+            PlacedCharges.Remove(charge);
         }
     }
 }
