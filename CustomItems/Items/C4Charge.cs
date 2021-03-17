@@ -175,17 +175,18 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnThrowing(ThrowingGrenadeEventArgs ev)
         {
-            if (Check(ev.Player.CurrentItem))
-            {
-                ev.IsAllowed = false;
+            ev.IsAllowed = false;
+            ev.Player.RemoveItem(ev.Player.CurrentItem);
 
-                ev.Player.RemoveItem(ev.Player.CurrentItem);
+            float slowThrowMultiplier = 0.1f;
 
-                var c4 = Spawn(ev.Player.CameraTransform.position, (ev.Player.Rotation * ThrowMultiplier) + (Vector3.up * 1.5f), FuseTime, ItemType.GrenadeFrag, ev.Player);
+            if (!ev.IsSlow)
+                slowThrowMultiplier = 1f;
 
-                if (!PlacedCharges.ContainsKey(c4))
-                    PlacedCharges.Add(c4, ev.Player);
-            }
+            Grenade c4 = Spawn(ev.Player.CameraTransform.position, (ev.Player.Rotation * ThrowMultiplier * slowThrowMultiplier) + (Vector3.up * 1.5f), FuseTime, ItemType.GrenadeFrag, ev.Player);
+
+            if (!PlacedCharges.ContainsKey(c4))
+                PlacedCharges.Add(c4, ev.Player);
 
             base.OnThrowing(ev);
         }
