@@ -52,8 +52,7 @@ namespace CustomItems.Commands
 
                 if (Vector3.Distance(charge.Key.transform.position, ply.Position) < Items.C4Charge.Instance.MaxDistance)
                 {
-                    charge.Key.NetworkfuseTime = 0.1f;
-                    Items.C4Charge.PlacedCharges.Remove(charge.Key);
+                    Items.C4Charge.Instance.C4Handler(charge.Key);
 
                     i++;
                 }

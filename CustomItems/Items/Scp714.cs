@@ -7,8 +7,11 @@
 
 namespace CustomItems.Items
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -86,13 +89,18 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnDropping(DroppingItemEventArgs ev)
         {
-            if (Check(ev.Item))
-            {
-                ev.Player.ShowHint(TakeOffMessage);
+            ev.Player.ShowHint(TakeOffMessage);
 
-                foreach (string effect in Scp714Effects)
+            foreach (string effect in Scp714Effects)
+            {
+                try
                 {
-                    ev.Player.ReferenceHub.playerEffectsController.ChangeByString(effect, 0);
+                    ev.Player.DisableEffect((EffectType)Enum.Parse(typeof(EffectType), effect, true));
+                }
+                catch (Exception)
+                {
+                    Log.Error($"\"{effect}\" is not a valid effect name.");
+                    continue;
                 }
             }
 
@@ -105,7 +113,10 @@ namespace CustomItems.Items
             {
                 foreach (string effect in Scp714Effects)
                 {
-                    ev.Player.ReferenceHub.playerEffectsController.EnableByString(effect, 999f, false);
+                    if (!ev.Player.EnableEffect(effect, 999f, false))
+                    {
+                        Log.Error($"\"{effect}\" is not a valid effect name.");
+                    }
                 }
             }
             else
@@ -117,7 +128,15 @@ namespace CustomItems.Items
 
                 foreach (string effect in Scp714Effects)
                 {
-                    ev.Player.ReferenceHub.playerEffectsController.ChangeByString(effect, 0);
+                    try
+                    {
+                        ev.Player.DisableEffect((EffectType)Enum.Parse(typeof(EffectType), effect, true));
+                    }
+                    catch (Exception)
+                    {
+                        Log.Error($"\"{effect}\" is not a valid effect name.");
+                        continue;
+                    }
                 }
             }
         }
