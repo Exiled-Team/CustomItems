@@ -31,6 +31,9 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "In one triger pull, shoot every enemy around you";
 
         /// <inheritdoc/>
+        public override bool ShouldMessageOnGban => true;
+
+        /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
