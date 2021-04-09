@@ -1,9 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="AutoGun.cs" company="Babyboucher20">
-// Copyright (c) Babyboucher20. All rights reserved.
+// <copyright file="AutoGun.cs" company="Galaxy119 and iopietro">
+// Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
+
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
@@ -69,18 +70,18 @@ namespace CustomItems.Items
         public float MaxDistance { get; set; } = 100f;
 
         /// <summary>
-        /// Gets or sets a value indicating If true 1 ammo is taken per a person hit, false it only takes oe ammo per a shot.
+        /// Gets or sets a value indicating whether ammo will be taken per hit(true) or per shot(false).
         /// </summary>
-        [Description("If true 1 ammo is taken per a person hit, false it only takes one ammo per a shot")]
+        [Description("Gets or sets a value indicating whether ammo will be taken per hit(true) or per shot(false).")]
         public bool PerHitAmmo { get; set; } = true;
 
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            int AmmoUsed = 0;
+            int ammoUsed = 0;
             foreach (Player player in Player.List)
             {
-                if (ev.Shooter.CurrentItem.durability != AmmoUsed || PerHitAmmo && ev.Shooter.CurrentItem.durability != 0)
+                if (ev.Shooter.CurrentItem.durability != ammoUsed || (PerHitAmmo && ev.Shooter.CurrentItem.durability != 0))
                 {
                     if (player.Side != ev.Shooter.Side || (player.Side == ev.Shooter.Side && TeamKill))
                     {
@@ -88,7 +89,7 @@ namespace CustomItems.Items
                         {
                             if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                AmmoUsed++;
+                                ammoUsed++;
                                 player.Hurt(Damage, ev.Shooter, DamageTypes.Com15);
                                 if (player.IsDead)
                                     player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
@@ -101,10 +102,10 @@ namespace CustomItems.Items
 
             if (PerHitAmmo)
             {
-                AmmoUsed = 1;
+                ammoUsed = 1;
             }
 
-            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)AmmoUsed);
+            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)ammoUsed);
             ev.IsAllowed = false;
         }
     }
