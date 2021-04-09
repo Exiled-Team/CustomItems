@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AutoGun.cs" company="Babyboucher20">
+// Copyright (c) Babyboucher20. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
 namespace CustomItems.Items
 {
     using System.Collections.Generic;
@@ -18,9 +18,9 @@ namespace CustomItems.Items
     using MEC;
     using UnityEngine;
 
+    /// <inheritdoc />
     public class AutoGun : CustomWeapon
     {
-
         /// <inheritdoc/>
         public override uint Id { get; set; } = 17;
 
@@ -53,8 +53,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public override uint ClipSize { get; set; } = 5;
 
-
-
         /// <summary>
         /// Gets or sets a value indicating whether if the gun can kill people on the same team.
         /// </summary>
@@ -65,7 +63,7 @@ namespace CustomItems.Items
         /// Gets or sets the max distance at which the auto gun can kill.
         /// </summary>
         [Description("The max distance at which the auto gun can kill")]
-        public float MaxDistance { get; set; } = 100;
+        public float MaxDistance { get; set; } = 100f;
 
         /// <summary>
         /// Gets or sets a value indicating If true 1 ammo is taken per a person hit, false it only takes oe ammo per a shot.
@@ -76,20 +74,21 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            base.OnShooting(ev);
             int AmmoUsed = 0;
             foreach (Player player in Player.List)
             {
-                if (ev.Shooter.ReferenceHub.weaponManager.GetShootPermission(player.ReferenceHub.characterClassManager, Server.FriendlyFire) || TeamKill)
+                if (ev.Shooter.CurrentItem.durability != AmmoUsed || PerHitAmmo && ev.Shooter.CurrentItem.durability != 0)
                 {
-                    if (player != ev.Shooter && Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance)
+                    if (player.Side != ev.Shooter.Side || (player.Side == ev.Shooter.Side && TeamKill))
                     {
-                        if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                        if (player != ev.Shooter && Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance)
                         {
-                            if (ev.Shooter.CurrentItem.durability != AmmoUsed || PerHitAmmo)
+                            if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
                                 AmmoUsed++;
                                 player.Hurt(Damage, ev.Shooter, DamageTypes.Com15);
+                                if (player.IsDead)
+                                    player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
                                 ev.Shooter.ReferenceHub.weaponManager.RpcConfirmShot(true, ev.Shooter.ReferenceHub.weaponManager.curWeapon);
                             }
                         }
@@ -102,7 +101,7 @@ namespace CustomItems.Items
                 AmmoUsed = 1;
             }
 
-            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, AmmoUsed);
+            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)AmmoUsed);
             ev.IsAllowed = false;
         }
     }
