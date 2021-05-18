@@ -134,6 +134,9 @@ namespace CustomItems.Items
 
         private void OnTeleporting(TeleportingEventArgs ev)
         {
+            if (ev.Player == null || effectedPlayers == null)
+                return;
+
             if (effectedPlayers.Contains(ev.Player))
                 ev.IsAllowed = false;
         }
