@@ -60,7 +60,7 @@ namespace CustomItems.Commands
                 }
                 else
                 {
-                    ply.SendConsoleMessage($"One of your charges is out of range. You need to get closer by {distance - Items.C4Charge.Instance.MaxDistance} meters.", "yellow");
+                    ply.SendConsoleMessage($"One of your charges is out of range. You need to get closer by {Mathf.Round(distance - Items.C4Charge.Instance.MaxDistance)} meters.", "yellow");
                 }
             }
 
