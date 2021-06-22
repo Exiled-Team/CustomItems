@@ -50,9 +50,9 @@ namespace CustomItems.Commands
                 if (charge.Value != ply)
                     continue;
 
-                float distnace = Vector3.Distance(charge.Key.transform.position, ply.Position);
+                float distance = Vector3.Distance(charge.Key.transform.position, ply.Position);
 
-                if (distnace < Items.C4Charge.Instance.MaxDistance)
+                if (distance < Items.C4Charge.Instance.MaxDistance)
                 {
                     Items.C4Charge.Instance.C4Handler(charge.Key);
 
@@ -60,7 +60,7 @@ namespace CustomItems.Commands
                 }
                 else
                 {
-                    ply.SendConsoleMessage($"One of your charges is out of range. You need to get closer by {distnace - Items.C4Charge.Instance.MaxDistance} meters.", "yellow");
+                    ply.SendConsoleMessage($"One of your charges is out of range. You need to get closer by {distance - Items.C4Charge.Instance.MaxDistance} meters.", "yellow");
                 }
             }
 
