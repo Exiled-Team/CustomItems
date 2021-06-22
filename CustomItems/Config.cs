@@ -79,12 +79,12 @@ namespace CustomItems
             if (!File.Exists(filePath))
             {
                 ItemConfigs = new Configs.Items();
-                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
+                File.WriteAllText(filePath, Loader.Serializer.Serialize(ItemConfigs));
             }
             else
             {
-                ItemConfigs = ConfigManager.Deserializer.Deserialize<Configs.Items>(File.ReadAllText(filePath));
-                File.WriteAllText(filePath, ConfigManager.Serializer.Serialize(ItemConfigs));
+                ItemConfigs = Loader.Deserializer.Deserialize<Configs.Items>(File.ReadAllText(filePath));
+                File.WriteAllText(filePath, Loader.Serializer.Serialize(ItemConfigs));
             }
         }
 

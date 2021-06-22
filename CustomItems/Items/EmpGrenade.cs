@@ -103,7 +103,7 @@ namespace CustomItems.Items
         protected override void SubscribeEvents()
         {
             Scp079.ChangingCamera += OnChangingCamera;
-            Scp079.InteractingDoor += OnInteractingDoor;
+            Scp079.TriggeringDoor += OnInteractingDoor;
             Map.ExplodingGrenade += OnExplodingGrenade;
 
             if (DisableTeslaGates)
@@ -116,7 +116,7 @@ namespace CustomItems.Items
         protected override void UnsubscribeEvents()
         {
             Scp079.ChangingCamera -= OnChangingCamera;
-            Scp079.InteractingDoor -= OnInteractingDoor;
+            Scp079.TriggeringDoor -= OnInteractingDoor;
             Map.ExplodingGrenade -= OnExplodingGrenade;
 
             if (DisableTeslaGates)
