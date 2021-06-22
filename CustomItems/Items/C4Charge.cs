@@ -283,7 +283,7 @@ namespace CustomItems.Items
 
                 case C4RemoveMethod.Drop:
                     {
-                        TrySpawn((int)Id, charge.transform.position);
+                        TrySpawn((int)Id, charge.transform.position, out _);
                         NetworkServer.Destroy(charge.gameObject);
                         break;
                     }
