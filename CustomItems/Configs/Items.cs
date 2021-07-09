@@ -171,5 +171,14 @@ namespace CustomItems.Configs
         {
             new C4Charge { Type = ItemType.GrenadeFrag },
         };
+
+        /// <summary>
+        /// Gets the list of AutoGuns.
+        /// </summary>
+        [Description("The list of AutoGuns.")]
+        public List<AutoGun> AutoGuns { get; private set; } = new List<AutoGun>
+        {
+            new AutoGun { Type = ItemType.GunCOM15 },
+        };
     }
 }
