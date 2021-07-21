@@ -88,7 +88,7 @@ namespace CustomItems.Configs
         [Description("The list of Scp127s.")]
         public List<Scp127> Scp127s { get; private set; } = new List<Scp127>
         {
-            new Scp127 { Type = ItemType.GunProject90 },
+            new Scp127 { Type = ItemType.GunCOM15 },
         };
 
         /// <summary>

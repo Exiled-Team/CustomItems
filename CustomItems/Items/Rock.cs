@@ -125,6 +125,15 @@ namespace CustomItems.Items
             {
                 Timing.CallDelayed(1.25f, () =>
                 {
+                    foreach (Inventory.SyncItemInfo item in ev.Player.Items)
+                    {
+                        if (Check(item))
+                        {
+                            ev.Player.CurrentItem = item;
+                            break;
+                        }
+                    }
+
                     Vector3 forward = ev.Player.CameraTransform.forward;
 
                     if (!Physics.Linecast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.position + (forward * 1.5f), out RaycastHit hit, PlayerLayerMask))

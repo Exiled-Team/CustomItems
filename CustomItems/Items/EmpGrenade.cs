@@ -181,7 +181,7 @@ namespace CustomItems.Items
                 door.NetworkTargetState = true;
                 door.ServerChangeLock(DoorLockReason.NoPower, true);
 
-                if (lockedDoors.Contains(door))
+                if (!lockedDoors.Contains(door))
                     lockedDoors.Add(door);
 
                 Timing.CallDelayed(Duration, () =>
