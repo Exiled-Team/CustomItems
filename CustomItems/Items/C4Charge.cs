@@ -31,6 +31,27 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public static Dictionary<Grenade, Player> PlacedCharges = new Dictionary<Grenade, Player>();
 
+        /// <summary>
+        /// Enum containing methods indicating how C4 charge can be removed.
+        /// </summary>
+        public enum C4RemoveMethod
+        {
+            /// <summary>
+            /// C4 charge will be removed without exploding.
+            /// </summary>
+            Remove = 0,
+
+            /// <summary>
+            /// C4 charge will be detonated.
+            /// </summary>
+            Detonate = 1,
+
+            /// <summary>
+            /// C4 charge will drop as a pickable item.
+            /// </summary>
+            Drop = 2,
+        }
+
         /// <inheritdoc/>
         public override uint Id { get; set; } = 15;
 
@@ -140,6 +161,38 @@ namespace CustomItems.Items
         [YamlIgnore]
         public override ItemType Type { get; set; } = ItemType.GrenadeFrag;
 
+        /// <summary>
+        /// Handles the removal of C4 charges.
+        /// </summary>
+        /// <param name="charge"> The C4 charge to be handled.</param>
+        /// <param name="removeMethod"> The method of removing the charge.</param>
+        public void C4Handler(Grenade charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
+        {
+            switch (removeMethod)
+            {
+                case C4RemoveMethod.Remove:
+                {
+                    NetworkServer.Destroy(charge.gameObject);
+                    break;
+                }
+
+                case C4RemoveMethod.Detonate:
+                {
+                    charge.NetworkfuseTime = 0.1f;
+                    break;
+                }
+
+                case C4RemoveMethod.Drop:
+                {
+                    TrySpawn((int)Id, charge.transform.position, out _);
+                    NetworkServer.Destroy(charge.gameObject);
+                    break;
+                }
+            }
+
+            PlacedCharges.Remove(charge);
+        }
+
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
@@ -241,55 +294,6 @@ namespace CustomItems.Items
                     C4Handler(grenade, ShotMethod);
                 }
             }
-        }
-
-        /// <summary>
-        /// Enum containing methods indicating how C4 charge can be removed.
-        /// </summary>
-        public enum C4RemoveMethod
-        {
-            /// <summary>
-            /// C4 charge will be removed without exploding.
-            /// </summary>
-            Remove = 0,
-
-            /// <summary>
-            /// C4 charge will be detonated.
-            /// </summary>
-            Detonate = 1,
-
-            /// <summary>
-            /// C4 charge will drop as a pickable item.
-            /// </summary>
-            Drop = 2,
-        }
-
-        /// <inheritdoc/>
-        public void C4Handler(Grenade charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
-        {
-            switch (removeMethod)
-            {
-                case C4RemoveMethod.Remove:
-                    {
-                        NetworkServer.Destroy(charge.gameObject);
-                        break;
-                    }
-
-                case C4RemoveMethod.Detonate:
-                    {
-                        charge.NetworkfuseTime = 0.1f;
-                        break;
-                    }
-
-                case C4RemoveMethod.Drop:
-                    {
-                        TrySpawn((int)Id, charge.transform.position, out _);
-                        NetworkServer.Destroy(charge.gameObject);
-                        break;
-                    }
-            }
-
-            PlacedCharges.Remove(charge);
         }
     }
 }
