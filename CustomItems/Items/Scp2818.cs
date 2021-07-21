@@ -74,7 +74,7 @@ namespace CustomItems.Items
         public override Modifiers Modifiers { get; set; } = default;
 
         /// <inheritdoc/>
-        [YamlIgnore]
+        [Description("The amount of damage the weapon deals when the projectile hits another player.")]
         public override float Damage { get; set; } = float.MaxValue;
 
         /// <inheritdoc/>
