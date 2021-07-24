@@ -156,9 +156,10 @@ namespace CustomItems.Items
                 foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
                 {
                     if (TryGet(item, out CustomItem customItem))
+                    {
                         customItem.Spawn(player.Position, item, out _);
-
-                    player.Inventory.items.Remove(item);
+                        player.Inventory.items.Remove(item);
+                    }
                 }
 
                 player.DropItems();

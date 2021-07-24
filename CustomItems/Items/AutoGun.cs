@@ -83,14 +83,14 @@ namespace CustomItems.Items
             {
                 if (ev.Shooter.CurrentItem.durability != ammoUsed || (PerHitAmmo && ev.Shooter.CurrentItem.durability != 0))
                 {
-                    if (player.Side != ev.Shooter.Side || (player.Side == ev.Shooter.Side && TeamKill))
+                    if (player.Role != RoleType.Spectator && (player.Side != ev.Shooter.Side || (player.Side == ev.Shooter.Side && TeamKill)))
                     {
                         if (player != ev.Shooter && Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance)
                         {
                             if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
                                 ammoUsed++;
-                                player.Hurt(Damage, ev.Shooter, DamageTypes.Com15);
+                                player.Hurt(Damage, DamageTypes.Com15, ev.Shooter.Nickname, ev.Shooter.Id);
                                 if (player.IsDead)
                                     player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
                                 ev.Shooter.ReferenceHub.weaponManager.RpcConfirmShot(true, ev.Shooter.ReferenceHub.weaponManager.curWeapon);
