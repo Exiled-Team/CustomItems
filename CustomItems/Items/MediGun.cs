@@ -10,6 +10,7 @@ namespace CustomItems.Items
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
@@ -70,6 +71,12 @@ namespace CustomItems.Items
         /// </summary>
         [Description("Whether or not zombies can be 'cured' by this weapon.")]
         public bool HealZombies { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not zombies who are healed will become allies to the healer.
+        /// </summary>
+        [Description("Whether or not zombies who are healed will become teammates for the healer, or remain as their old class.")]
+        public bool HealZombiesTeamCheck { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the % of damage the weapon would normally deal, that is converted into healing. 1 = 100%, 0.5 = 50%, 0.0 = 0%.
@@ -143,7 +150,7 @@ namespace CustomItems.Items
                 player.ArtificialHealth += damage;
 
                 if (player.ArtificialHealth >= player.MaxArtificialHealth)
-                    DoReviveZombie(player);
+                    DoReviveZombie(player, ev.Shooter);
             }
         }
 
@@ -158,10 +165,16 @@ namespace CustomItems.Items
             previousRoles[ev.Target] = ev.Target.Role;
         }
 
-        private void DoReviveZombie(Player player)
+        private void DoReviveZombie(Player target, Player healer)
         {
-            if (previousRoles.ContainsKey(player))
-                player.SetRole(previousRoles[player], true);
+            if (HealZombiesTeamCheck)
+            {
+                target.SetRole(healer.Side == Side.Mtf ? RoleType.NtfCadet : RoleType.ChaosInsurgency);
+                return;
+            }
+
+            if (previousRoles.ContainsKey(target))
+                target.SetRole(previousRoles[target], true);
         }
     }
 }
