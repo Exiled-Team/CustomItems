@@ -36,7 +36,7 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Name { get; set; } = "EM-119";
-
+#pragma warning disable
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
@@ -59,7 +59,7 @@ namespace CustomItems.Items
                 },
             },
         };
-
+#pragma warning enable
         /// <inheritdoc/>
         public override string Description { get; set; } = "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
 
