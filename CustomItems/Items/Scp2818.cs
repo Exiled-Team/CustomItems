@@ -10,6 +10,7 @@ namespace CustomItems.Items
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
@@ -49,6 +50,12 @@ namespace CustomItems.Items
         /// </summary>
         [Description("The max distance towards the target location the shooter can be moved each tick.")]
         public float MaxDistancePerTick { get; set; } = 0.50f;
+
+        /// <summary>
+        /// Gets or sets a value indicating if the gun should despawn instead of drop when it is fired.
+        /// </summary>
+        [Description("Whether or not the weapon should despawn itself after it's been used.")]
+        public bool DespawnAfterUse { get; set; } = false;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -132,6 +139,11 @@ namespace CustomItems.Items
 
             // Make sure the scale is reset properly *before* killing them. That's important.
             yield return Timing.WaitForSeconds(0.01f);
+
+            if (DespawnAfterUse)
+                foreach (Inventory.SyncItemInfo item in player.Items.ToList())
+                    if (Check(item))
+                        player.RemoveItem(item);
 
             if (player.Role != RoleType.Spectator)
                 player.Kill(DamageTypes.Nuke);
