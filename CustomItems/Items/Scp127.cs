@@ -75,6 +75,13 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
+        protected override void OnHurting(HurtingEventArgs ev)
+        {
+            if (Damage > 0)
+                ev.Amount *= Damage;
+        }
+
+        /// <inheritdoc/>
         protected override void OnReloading(ReloadingWeaponEventArgs ev) => ev.IsAllowed = false;
 
         /// <inheritdoc/>

@@ -136,7 +136,7 @@ namespace CustomItems.Items
             if (player.Role != RoleType.Spectator)
                 player.Kill(DamageTypes.Nuke);
             if (target?.Role != RoleType.Spectator)
-                target?.Kill(DamageTypes.Nuke);
+                target?.Hurt(Damage, DamageTypes.Nuke, player.Nickname, player.Id);
         }
     }
 }
