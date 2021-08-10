@@ -22,6 +22,7 @@ namespace CustomItems.Items
     using MEC;
     using Mirror;
     using UnityEngine;
+    using CollisionHandler = Exiled.API.Features.Components.CollisionHandler;
 
     /// <inheritdoc />
     public class GrenadeLauncher : CustomWeapon

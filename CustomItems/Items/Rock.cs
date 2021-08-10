@@ -8,9 +8,11 @@
 namespace CustomItems.Items
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Features;
+    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Components;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -20,6 +22,7 @@ namespace CustomItems.Items
     using Mirror;
     using UnityEngine;
     using YamlDotNet.Serialization;
+    using CollisionHandler = Exiled.API.Features.Components.CollisionHandler;
 
     /// <inheritdoc />
     public class Rock : CustomGrenade
@@ -36,7 +39,17 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "It's a rock.";
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties();
+        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        {
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new DynamicSpawnPoint
+                {
+                    Chance = 100,
+                    Location = SpawnLocation.InsideLocker,
+                },
+            },
+        };
 
         /// <summary>
         /// Gets or sets how much damage is done when hit with a rock in melee.
