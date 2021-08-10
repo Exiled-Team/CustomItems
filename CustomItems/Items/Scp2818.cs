@@ -52,7 +52,7 @@ namespace CustomItems.Items
         public float MaxDistancePerTick { get; set; } = 0.50f;
 
         /// <summary>
-        /// Gets or sets a value indicating if the gun should despawn instead of drop when it is fired.
+        /// Gets or sets a value indicating whether the gun should despawn instead of drop when it is fired.
         /// </summary>
         [Description("Whether or not the weapon should despawn itself after it's been used.")]
         public bool DespawnAfterUse { get; set; } = false;
