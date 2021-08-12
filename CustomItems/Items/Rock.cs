@@ -171,6 +171,7 @@ namespace CustomItems.Items
 
                     Log.Debug($"{ev.Player.Nickname} hit {target.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
 
+                    ev.Player.ShowHitMarker();
                     target.Hurt(HitDamage, ev.Player, DamageTypes.Wall);
                 });
             }
