@@ -7,6 +7,7 @@
 
 namespace CustomItems.Items
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -19,11 +20,13 @@ namespace CustomItems.Items
     using MEC;
     using Mirror;
     using UnityEngine;
+    using Random = UnityEngine.Random;
 
     /// <inheritdoc />
     public class TranquilizerGun : CustomWeapon
     {
         private readonly Dictionary<Player, float> tranquilizedPlayers = new Dictionary<Player, float>();
+        private readonly List<Player> activeTranqs = new List<Player>();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 11;
@@ -99,18 +102,20 @@ namespace CustomItems.Items
         public int ScpResistChance { get; set; } = 40;
 
         /// <inheritdoc/>
-        public override void Destroy()
+        protected override void UnsubscribeEvents()
         {
+            Exiled.Events.Handlers.Player.PickingUpItem -= OnTranqPickingUpItem;
+            activeTranqs.Clear();
             tranquilizedPlayers.Clear();
             Timing.KillCoroutines($"{nameof(TranquilizerGun)}-{Id}-reducer");
-
-            base.Destroy();
+            base.UnsubscribeEvents();
         }
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
             Timing.RunCoroutine(ReduceResistances(), $"{nameof(TranquilizerGun)}-{Id}-reducer");
+            Exiled.Events.Handlers.Player.PickingUpItem += OnTranqPickingUpItem;
             base.SubscribeEvents();
         }
 
@@ -119,8 +124,19 @@ namespace CustomItems.Items
         {
             base.OnHurting(ev);
 
-            if (ev.Attacker == ev.Target || (ev.Target.Team == Team.SCP && ResistantScps && Random.Range(1, 101) <= ScpResistChance))
+            if (ev.Attacker == ev.Target)
                 return;
+
+            if (ev.Target.Team == Team.SCP)
+            {
+                int r = Random.Range(1, 101);
+                Log.Debug($"{Name}: SCP roll: {r} (must be greater than {ScpResistChance})", CustomItems.Instance.Config.IsDebugEnabled);
+                if (r <= ScpResistChance)
+                {
+                    Log.Debug($"{Name}: {r} is too low, no tranq.", CustomItems.Instance.Config.IsDebugEnabled);
+                    return;
+                }
+            }
 
             float duration = Duration;
 
@@ -128,8 +144,10 @@ namespace CustomItems.Items
                 tranquilizedPlayers.Add(ev.Target, 1);
 
             tranquilizedPlayers[ev.Target] *= ResistanceModifier;
+            Log.Debug($"{Name}: Resistance Duration Mod: {tranquilizedPlayers[ev.Target]}", CustomItems.Instance.Config.IsDebugEnabled);
 
             duration -= tranquilizedPlayers[ev.Target];
+            Log.Debug($"{Name}: Duration: {duration}", CustomItems.Instance.Config.IsDebugEnabled);
 
             if (duration > 0f)
                 Timing.RunCoroutine(DoTranquilize(ev.Target, duration));
@@ -137,9 +155,9 @@ namespace CustomItems.Items
 
         private IEnumerator<float> DoTranquilize(Player player, float duration)
         {
+            activeTranqs.Add(player);
             Vector3 oldPosition = player.Position;
-            Inventory.SyncItemInfo previousItem =
-                player.ReferenceHub.inventory.items[player.ReferenceHub.inventory.GetItemIndex()];
+            Inventory.SyncItemInfo previousItem = player.CurrentItem;
             Vector3 previousScale = player.Scale;
             float newHealth = player.Health - Damage;
             List<PlayerEffect> activeEffects = NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Rent();
@@ -151,21 +169,31 @@ namespace CustomItems.Items
                 if (effect.Enabled)
                     activeEffects.Add(effect);
 
-            if (DropItems)
+            try
             {
-                foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+                if (DropItems)
                 {
-                    if (TryGet(item, out CustomItem customItem))
+                    if (player.Items.Count < 0)
                     {
-                        customItem.Spawn(player.Position, item, out _);
-                        player.Inventory.items.Remove(item);
+                        foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+                        {
+                            if (TryGet(item, out CustomItem customItem))
+                            {
+                                customItem.Spawn(player.Position, item, out _);
+                                player.Inventory.items.Remove(item);
+                            }
+                        }
+
+                        player.DropItems();
                     }
                 }
-
-                player.DropItems();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{nameof(DoTranquilize)}: {e}");
             }
 
-            Ragdoll ragdoll = Map.SpawnRagdoll(player, DamageTypes.None, oldPosition, allowRecall: false);
+            Ragdoll ragdoll = Ragdoll.Spawn(player, DamageTypes.None, oldPosition, allowRecall: false);
 
             player.Inventory.curItem = ItemType.None;
             player.IsInvisible = true;
@@ -178,27 +206,35 @@ namespace CustomItems.Items
 
             yield return Timing.WaitForSeconds(duration);
 
-            if (ragdoll != null)
-                NetworkServer.Destroy(ragdoll.gameObject);
+            try
+            {
+                if (ragdoll != null)
+                    NetworkServer.Destroy(ragdoll.GameObject);
 
-            if (player.GameObject == null)
-                yield break;
+                if (player.GameObject == null)
+                    yield break;
 
-            newHealth = player.Health;
+                newHealth = player.Health;
 
-            player.IsGodModeEnabled = false;
-            player.Scale = previousScale;
-            player.Health = newHealth;
-            player.IsInvisible = false;
+                player.IsGodModeEnabled = false;
+                player.Scale = previousScale;
+                player.Health = newHealth;
+                player.IsInvisible = false;
 
-            if (!DropItems)
-                player.Inventory.CmdSetUnic(previousItem.uniq);
+                if (!DropItems)
+                    player.Inventory.CmdSetUnic(previousItem.uniq);
 
-            foreach (PlayerEffect effect in activeEffects)
-                if ((effect.Duration - duration) > 0)
-                    player.ReferenceHub.playerEffectsController.EnableEffect(effect, effect.Duration - duration);
+                foreach (PlayerEffect effect in activeEffects)
+                    if ((effect.Duration - duration) > 0)
+                        player.ReferenceHub.playerEffectsController.EnableEffect(effect, effect.Duration - duration);
 
-            NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Return(activeEffects);
+                activeTranqs.Remove(player);
+                NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Return(activeEffects);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{nameof(DoTranquilize)}: {e}");
+            }
 
             if (Warhead.IsDetonated && player.Position.y < 900)
             {
@@ -218,6 +254,12 @@ namespace CustomItems.Items
 
                 yield return Timing.WaitForSeconds(ResistanceFalloffDelay);
             }
+        }
+
+        private void OnTranqPickingUpItem(PickingUpItemEventArgs ev)
+        {
+            if (activeTranqs.Contains(ev.Player))
+                ev.IsAllowed = false;
         }
     }
 }

@@ -89,6 +89,13 @@ namespace CustomItems.Items
         {
             try
             {
+                foreach (var item in ev.Shooter.Inventory.items)
+                    if (Check(item))
+                    {
+                        Log.Debug($"SCP-2818: Found a 2818 in inventory of shooter, removing.");
+                        ev.Shooter.RemoveItem(item);
+                    }
+
                 Player target = null;
                 if (ev.Target != null)
                     target = Player.Get(ev.Target);
@@ -141,9 +148,15 @@ namespace CustomItems.Items
             yield return Timing.WaitForSeconds(0.01f);
 
             if (DespawnAfterUse)
+            {
+                Log.Debug($"inv count: {player.Items.Count}");
                 foreach (Inventory.SyncItemInfo item in player.Items.ToList())
                     if (Check(item))
+                    {
+                        Log.Debug("found 2818 in inventory, doing funni");
                         player.RemoveItem(item);
+                    }
+            }
 
             if (player.Role != RoleType.Spectator)
                 player.Kill(DamageTypes.Nuke);

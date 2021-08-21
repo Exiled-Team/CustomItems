@@ -7,6 +7,7 @@
 
 namespace CustomItems.Items
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -208,9 +209,26 @@ namespace CustomItems.Items
 
             Timing.CallDelayed(Duration, () =>
             {
-                LockedRooms079.Remove(room);
+                try
+                {
+                    LockedRooms079.Remove(room);
+                }
+                catch (Exception e)
+                {
+                    Log.Debug($"REMOVING LOCKED ROOM: {e}");
+                }
+
                 if (gate != null)
-                    disabledTeslaGates.Remove(gate);
+                {
+                    try
+                    {
+                        disabledTeslaGates.Remove(gate);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Debug($"REMOVING DISABLED TESLA: {e}");
+                    }
+                }
             });
         }
 
