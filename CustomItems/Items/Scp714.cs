@@ -30,6 +30,9 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "The green ring that protects you from SCP-049.";
 
         /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.15f;
+
+        /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
@@ -121,7 +124,7 @@ namespace CustomItems.Items
             }
             else
 
-            if (Check(ev.OldItem))
+            if (Check(ev.Player.CurrentItem))
             {
                 if (!string.IsNullOrEmpty(TakeOffMessage))
                     ev.Player.ShowHint(TakeOffMessage);

@@ -11,6 +11,7 @@ namespace CustomItems.Items
     using System.ComponentModel;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -30,6 +31,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Description { get; set; } = "In one triger pull, shoot every enemy around you";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 2.35f;
 
         /// <inheritdoc/>
         public override bool ShouldMessageOnGban => true;
@@ -55,7 +59,7 @@ namespace CustomItems.Items
         public override float Damage { get; set; } = 25;
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 5;
+        public override byte ClipSize { get; set; } = 5;
 
         /// <summary>
         /// Gets or sets a value indicating whether if the gun can kill people on the same team.
@@ -78,35 +82,34 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            int ammoUsed = 0;
-            foreach (Player player in Player.List)
+            if (ev.Shooter.CurrentItem is Firearm firearm)
             {
-                if (ev.Shooter.CurrentItem.durability != ammoUsed || (PerHitAmmo && ev.Shooter.CurrentItem.durability != 0))
+                int ammoUsed = 0;
+                foreach (Player player in Player.List)
                 {
-                    if (player.Role != RoleType.Spectator && (player.Side != ev.Shooter.Side || (player.Side == ev.Shooter.Side && TeamKill)))
-                    {
-                        if (player != ev.Shooter && Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance)
-                        {
-                            if (!Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
-                            {
-                                ammoUsed++;
-                                player.Hurt(Damage, DamageTypes.Com15, ev.Shooter.Nickname, ev.Shooter.Id);
-                                if (player.IsDead)
-                                    player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
-                                ev.Shooter.ReferenceHub.weaponManager.RpcConfirmShot(true, ev.Shooter.ReferenceHub.weaponManager.curWeapon);
-                            }
-                        }
-                    }
+                    if (firearm.Ammo == ammoUsed &&
+                        (!PerHitAmmo || firearm.Ammo == 0 || player.Role == RoleType.Spectator ||
+                         (player.Side == ev.Shooter.Side && (player.Side != ev.Shooter.Side || !TeamKill)) ||
+                         player == ev.Shooter ||
+                         !(Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance) ||
+                         Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces)))
+                        continue;
+
+                    ammoUsed++;
+                    player.Hurt(Damage, DamageTypes.Com15, ev.Shooter.Nickname, ev.Shooter.Id);
+                    if (player.IsDead)
+                        player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
+                    ev.Shooter.ShowHitMarker();
                 }
-            }
 
-            if (PerHitAmmo)
-            {
-                ammoUsed = 1;
-            }
+                if (PerHitAmmo)
+                {
+                    ammoUsed = 1;
+                }
 
-            ev.Shooter.SetWeaponAmmo(ev.Shooter.CurrentItem, (int)ev.Shooter.CurrentItem.durability - (int)ammoUsed);
-            ev.IsAllowed = false;
+                firearm.Ammo -= (byte)ammoUsed;
+                ev.IsAllowed = false;
+            }
         }
     }
 }

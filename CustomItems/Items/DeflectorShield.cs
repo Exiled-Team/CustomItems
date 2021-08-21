@@ -11,6 +11,8 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using CustomPlayerEffects;
+    using Exiled.API.Enums;
+    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.EventArgs;
@@ -25,7 +27,7 @@ namespace CustomItems.Items
     {
         private readonly List<Player> deflectorPlayers = new List<Player>();
 
-        private readonly ItemType type = ItemType.SCP268;
+        private readonly ItemType type = ItemType.Scp268;
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 18;
@@ -39,6 +41,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Description { get; set; } = "A deflector shield that reflects bullets back at the shooter";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.65f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -69,7 +74,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemDequipped += OnMedicalItemDeEquipped;
+            Exiled.Events.Handlers.Player.ItemUsed += OnItemUsed;
             Exiled.Events.Handlers.Player.Destroying += OnDestroying;
             Exiled.Events.Handlers.Player.Hurting += OnHurt;
 
@@ -79,7 +84,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnMedicalItemDeEquipped;
+            Exiled.Events.Handlers.Player.ItemUsed -= OnItemUsed;
             Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
             Exiled.Events.Handlers.Player.Hurting -= OnHurt;
 
@@ -118,7 +123,7 @@ namespace CustomItems.Items
                 deflectorPlayers.Remove(ev.Player);
         }
 
-        private void OnMedicalItemDeEquipped(DequippedMedicalItemEventArgs ev)
+        private void OnItemUsed(UsedItemEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
@@ -126,7 +131,7 @@ namespace CustomItems.Items
             if (!deflectorPlayers.Contains(ev.Player))
                 deflectorPlayers.Add(ev.Player);
 
-            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Scp268>();
+            ev.Player.DisableEffect(EffectType.Invisible);
 
             if (Duration > 0)
             {
@@ -139,7 +144,7 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target) && ev.DamageType.isWeapon && ev.Target != ev.Attacker && ev.DamageType != DamageTypes.MicroHid)
+            if (deflectorPlayers.Contains(ev.Target) && ((ItemType)ev.DamageType.Weapon).IsWeapon() && ev.Target != ev.Attacker && !ev.DamageType.Equals(DamageTypes.MicroHID))
             {
                 ev.IsAllowed = false;
                 ev.Attacker.Hurt(ev.Amount * Multiplier, ev.Target, ev.DamageType);

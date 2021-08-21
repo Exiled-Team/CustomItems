@@ -13,6 +13,7 @@ namespace CustomItems.Items
     using System.Linq;
     using CustomPlayerEffects;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -37,6 +38,9 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         public override string Description { get; set; } = "This modifier USP fires non-lethal tranquilizing darts. Those affected will be rendered unconscious for a short duration. Unreliable against SCPs. Repeated tranquilizing of the same person will render them resistant to it's effect.";
 
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.55f;
+
         /// <inheritdoc />
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
@@ -60,7 +64,7 @@ namespace CustomItems.Items
         public override Modifiers Modifiers { get; set; } = default;
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 2;
+        public override byte ClipSize { get; set; } = 2;
 
         /// <inheritdoc/>
         public override float Damage { get; set; }
@@ -157,7 +161,7 @@ namespace CustomItems.Items
         {
             activeTranqs.Add(player);
             Vector3 oldPosition = player.Position;
-            Inventory.SyncItemInfo previousItem = player.CurrentItem;
+            Item previousItem = player.CurrentItem;
             Vector3 previousScale = player.Scale;
             float newHealth = player.Health - Damage;
             List<PlayerEffect> activeEffects = NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Rent();
@@ -166,7 +170,7 @@ namespace CustomItems.Items
                 yield break;
 
             foreach (PlayerEffect effect in player.ReferenceHub.playerEffectsController.AllEffects.Values)
-                if (effect.Enabled)
+                if (effect.IsEnabled)
                     activeEffects.Add(effect);
 
             try
@@ -175,12 +179,12 @@ namespace CustomItems.Items
                 {
                     if (player.Items.Count < 0)
                     {
-                        foreach (Inventory.SyncItemInfo item in player.Inventory.items.ToList())
+                        foreach (Item item in player.Items.ToList())
                         {
                             if (TryGet(item, out CustomItem customItem))
                             {
                                 customItem.Spawn(player.Position, item, out _);
-                                player.Inventory.items.Remove(item);
+                                player.RemoveItem(item);
                             }
                         }
 
@@ -195,7 +199,6 @@ namespace CustomItems.Items
 
             Ragdoll ragdoll = Ragdoll.Spawn(player, DamageTypes.None, oldPosition, allowRecall: false);
 
-            player.Inventory.curItem = ItemType.None;
             player.IsInvisible = true;
             player.Scale = Vector3.one * 0.2f;
             player.Health = newHealth;
@@ -222,7 +225,7 @@ namespace CustomItems.Items
                 player.IsInvisible = false;
 
                 if (!DropItems)
-                    player.Inventory.CmdSetUnic(previousItem.uniq);
+                    player.CurrentItem = previousItem;
 
                 foreach (PlayerEffect effect in activeEffects)
                     if ((effect.Duration - duration) > 0)

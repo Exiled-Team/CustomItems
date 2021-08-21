@@ -11,15 +11,21 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Exiled.Events.Handlers;
     using Interactables.Interobjects.DoorUtils;
+    using InventorySystem.Items.Firearms.Attachments;
     using MEC;
+    using UnityEngine;
+    using Item = Exiled.API.Features.Items.Item;
+    using KeycardPermissions = Interactables.Interobjects.DoorUtils.KeycardPermissions;
     using Map = Exiled.Events.Handlers.Map;
     using Player = Exiled.API.Features.Player;
 
@@ -28,7 +34,7 @@ namespace CustomItems.Items
     {
         private static readonly List<Room> LockedRooms079 = new List<Room>();
 
-        private readonly List<DoorVariant> lockedDoors = new List<DoorVariant>();
+        private readonly List<Door> lockedDoors = new List<Door>();
 
         private readonly List<TeslaGate> disabledTeslaGates = new List<TeslaGate>();
 
@@ -37,7 +43,10 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Name { get; set; } = "EM-119";
-#pragma warning disable
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.15f;
+
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
@@ -56,11 +65,11 @@ namespace CustomItems.Items
                 {
                     Chance = 50,
                     Name = "somewhere",
-                    Position = new Vector(100, 25, 40),
+                    Position = new Vector3(100, 25, 40),
                 },
             },
         };
-#pragma warning enable
+
         /// <inheritdoc/>
         public override string Description { get; set; } = "This flashbang has been modified to emit a short-range EMP when it detonates. When detonated, any lights, doors, cameras and in the room, as well as all speakers in the facility, will be disabled for a short time.";
 
@@ -105,7 +114,6 @@ namespace CustomItems.Items
         {
             Scp079.ChangingCamera += OnChangingCamera;
             Scp079.TriggeringDoor += OnInteractingDoor;
-            Map.ExplodingGrenade += OnExplodingGrenade;
 
             if (DisableTeslaGates)
                 Exiled.Events.Handlers.Player.TriggeringTesla += OnTriggeringTesla;
@@ -118,7 +126,6 @@ namespace CustomItems.Items
         {
             Scp079.ChangingCamera -= OnChangingCamera;
             Scp079.TriggeringDoor -= OnInteractingDoor;
-            Map.ExplodingGrenade -= OnExplodingGrenade;
 
             if (DisableTeslaGates)
                 Exiled.Events.Handlers.Player.TriggeringTesla -= OnTriggeringTesla;
@@ -126,28 +133,11 @@ namespace CustomItems.Items
             base.UnsubscribeEvents();
         }
 
-        private static void OnChangingCamera(ChangingCameraEventArgs ev)
+        /// <inheritdoc/>
+        protected override void OnExploding(ExplodingGrenadeEventArgs ev)
         {
-            Room room = ev.Camera.Room();
-
-            if (room != null && LockedRooms079.Contains(room))
-                ev.IsAllowed = false;
-        }
-
-        private void OnInteractingDoor(InteractingDoorEventArgs ev)
-        {
-            if (lockedDoors.Contains(ev.Door))
-                ev.IsAllowed = false;
-        }
-
-        private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
-        {
-            if (!Check(ev.Grenade))
-                return;
-
             ev.IsAllowed = false;
-
-            Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade);
+            Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade.gameObject);
             TeslaGate gate = null;
 
             Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Exiled.API.Features.Map.Rooms.Count}", CustomItems.Instance.Config.IsDebugEnabled);
@@ -169,25 +159,25 @@ namespace CustomItems.Items
 
             Log.Debug($"{room.Doors.Count()} - {room.Type}", CustomItems.Instance.Config.IsDebugEnabled);
 
-            foreach (DoorVariant door in room.Doors)
+            foreach (Door door in room.Doors)
             {
                 if (door == null ||
-                    (!string.IsNullOrEmpty(door.GetNametag()) && BlacklistedDoorNames.Contains(door.GetNametag())) ||
-                    (door.NetworkActiveLocks > 0 && !OpenLockedDoors) ||
+                    (!string.IsNullOrEmpty(door.Nametag) && BlacklistedDoorNames.Contains(door.Nametag)) ||
+                    (door.DoorLockType > 0 && !OpenLockedDoors) ||
                     (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors))
                     continue;
 
                 Log.Debug("Opening a door!", CustomItems.Instance.Config.IsDebugEnabled);
 
-                door.NetworkTargetState = true;
-                door.ServerChangeLock(DoorLockReason.NoPower, true);
+                door.Open = true;
+                door.DoorLockType = DoorLockType.NoPower;
 
                 if (!lockedDoors.Contains(door))
                     lockedDoors.Add(door);
 
                 Timing.CallDelayed(Duration, () =>
                 {
-                    door.ServerChangeLock(DoorLockReason.NoPower, false);
+                    door.DoorLockType = DoorLockType.None;
                     lockedDoors.Remove(door);
                 });
             }
@@ -200,11 +190,25 @@ namespace CustomItems.Items
                 if (player.CurrentRoom != room)
                     continue;
 
-                foreach (Inventory.SyncItemInfo item in player.ReferenceHub.inventory.items)
-                    if (item.id == ItemType.Radio)
-                        player.ReferenceHub.inventory.items.ModifyDuration(player.ReferenceHub.GetComponent<Radio>().myRadio, 0f);
-                    else if (player.ReferenceHub.weaponManager.syncFlash)
-                        player.ReferenceHub.weaponManager.syncFlash = false;
+                foreach (Item item in player.Items)
+                {
+                    switch (item)
+                    {
+                        case Radio radio:
+                            radio.Disable();
+                            break;
+                        case Flashlight flashlight:
+                            flashlight.Active = false;
+                            break;
+                        case Firearm firearm:
+                        {
+                            foreach (FirearmAttachment attachment in firearm.Attachments)
+                                if (attachment.Name == AttachmentNameTranslation.Flashlight)
+                                    attachment.IsEnabled = false;
+                            break;
+                        }
+                    }
+                }
             }
 
             Timing.CallDelayed(Duration, () =>
@@ -230,6 +234,20 @@ namespace CustomItems.Items
                     }
                 }
             });
+        }
+
+        private static void OnChangingCamera(ChangingCameraEventArgs ev)
+        {
+            Room room = ev.Camera.Room();
+
+            if (room != null && LockedRooms079.Contains(room))
+                ev.IsAllowed = false;
+        }
+
+        private void OnInteractingDoor(InteractingDoorEventArgs ev)
+        {
+            if (lockedDoors.Contains(ev.Door))
+                ev.IsAllowed = false;
         }
 
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)

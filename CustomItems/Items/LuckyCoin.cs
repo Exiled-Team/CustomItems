@@ -9,7 +9,9 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -34,6 +36,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Description { get; set; } = "This coin has magical properties when it is dropped inside of SCP-106's pocket dimension.";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 0f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -79,7 +84,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {
-            if (ev.Pickup.itemId == ItemType.Coin && ev.Player.CurrentRoom.Name == "PocketWorld")
+            if (ev.Pickup.Type == ItemType.Coin && ev.Player.CurrentRoom.Name == "PocketWorld")
                 ev.IsAllowed = false;
 
             base.OnPickingUp(ev);
@@ -141,9 +146,9 @@ namespace CustomItems.Items
                 Vector3 spawnPos = Vector3.MoveTowards(tpPos, ev.Position, 15);
                 Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}", CustomItems.Instance.Config.IsDebugEnabled);
 
-                Pickup coin = Exiled.API.Extensions.Item.Spawn(ItemType.Coin, 0f, spawnPos);
+                Pickup coin = new Item(ItemType.Coin).Spawn(spawnPos);
 
-                Timing.CallDelayed(Duration, () => coin.Delete());
+                Timing.CallDelayed(Duration, () => coin.Destroy());
                 Timing.CallDelayed(120f, () => onCooldown = false);
                 break;
             }

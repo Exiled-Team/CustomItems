@@ -17,7 +17,10 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms;
+    using InventorySystem.Items.Firearms.Modules;
     using UnityEngine;
+    using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
     public class MediGun : CustomWeapon
@@ -34,13 +37,16 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "A specialized weapon that fires darts filled with a special mixture of Painkillers, Antibiotics, Antiseptics and other medicines. When fires at friendly targets, they will be healed. When fired at instances of SCP-049-2, they will be slowly converted back to human form. Does nothing when fired at anyone else.";
 
         /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.95f;
+
+        /// <inheritdoc/>
         public override Modifiers Modifiers { get; set; } = default;
 
         /// <inheritdoc/>
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 10;
+        public override byte ClipSize { get; set; } = 10;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -119,22 +125,20 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.DamageType == DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
+            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.Attacker.CurrentItem is Firearm firearm && ev.DamageType.Equals(firearm.DamageType))
                 ev.Amount = 0f;
         }
 
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            if (!Check(ev.Shooter.CurrentItem))
+            if (!(Player.Get(ev.TargetNetId) is Player player))
+                return;
+            if (!(ev.Shooter.CurrentItem is Firearm firearm))
                 return;
 
-            if (!(Player.Get(ev.Target) is Player player))
-                return;
-
-            float num3 = Vector3.Distance(ev.Shooter.CameraTransform.transform.position, ev.Target.transform.position);
-            float num4 = ev.Shooter.ReferenceHub.weaponManager.weapons[ev.Shooter.ReferenceHub.weaponManager.curWeapon].damageOverDistance.Evaluate(num3);
-            float damage = num4 * ev.Shooter.ReferenceHub.weaponManager.weapons[ev.Shooter.ReferenceHub.weaponManager.curWeapon].allEffects.damageMultiplier * ev.Shooter.ReferenceHub.weaponManager.overallDamagerFactor;
+            float num3 = Vector3.Distance(ev.Shooter.CameraTransform.transform.position, ev.ShotPosition);
+            float damage = firearm.Base.HitregModule.BaseStats.DamageAtDistance(firearm.Base, num3);
 
             if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
             {
@@ -147,7 +151,7 @@ namespace CustomItems.Items
             else if (player.Role == RoleType.Scp0492 && HealZombies)
             {
                 player.MaxArtificialHealth = ZombieHealingRequired;
-                player.ArtificialHealth += damage;
+                player.ArtificialHealth += (ushort)damage;
 
                 if (player.ArtificialHealth >= player.MaxArtificialHealth)
                     DoReviveZombie(player, ev.Shooter);
@@ -169,12 +173,12 @@ namespace CustomItems.Items
         {
             if (HealZombiesTeamCheck)
             {
-                target.SetRole(healer.Side == Side.Mtf ? RoleType.NtfCadet : RoleType.ChaosInsurgency);
+                target.SetRole(healer.Side == Side.Mtf ? RoleType.NtfPrivate : RoleType.ChaosConscript);
                 return;
             }
 
             if (previousRoles.ContainsKey(target))
-                target.SetRole(previousRoles[target], true);
+                target.SetRole(previousRoles[target]);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
-    using Grenades;
+    using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
     using UnityEngine;
     using Map = Exiled.Events.Handlers.Map;
@@ -36,6 +36,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Description { get; set; } = "This grenade does almost 0 damage, however it will succ nearby players towards the center of the implosion area.";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 0.65f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -97,7 +100,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Map.ExplodingGrenade += OnExplodingGrenade;
             Scp106.Teleporting += OnTeleporting;
 
             base.SubscribeEvents();
@@ -106,13 +108,60 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Map.ExplodingGrenade -= OnExplodingGrenade;
             Scp106.Teleporting -= OnTeleporting;
 
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
 
             base.UnsubscribeEvents();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnExploding(ExplodingGrenadeEventArgs ev)
+        {
+            ev.IsAllowed = false;
+            Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", CustomItems.Instance.Config.IsDebugEnabled);
+            List<Player> copiedList = new List<Player>();
+            foreach (Player player in ev.TargetsToAffect)
+            {
+                copiedList.Add(player);
+            }
+
+            ev.TargetsToAffect.Clear();
+            Log.Debug("IG: List cleared.", CustomItems.Instance.Config.IsDebugEnabled);
+            effectedPlayers = NorthwoodLib.Pools.ListPool<Player>.Shared.Rent();
+            foreach (Player player in copiedList)
+            {
+                if (BlacklistedRoles.Contains(player.Role))
+                    continue;
+
+                Log.Debug($"{player.Nickname} starting suction", CustomItems.Instance.Config.IsDebugEnabled);
+
+                try
+                {
+                    if (layerMask == 0)
+                    {
+                        if (ev.Grenade is ExplosionGrenade explosionGrenade)
+                            layerMask = explosionGrenade._detectionMask;
+                    }
+
+                    foreach (Transform grenadePoint in player.ReferenceHub.playerStats.grenadePoints)
+                    {
+                        bool line = Physics.Linecast(ev.Grenade.transform.position, grenadePoint.position, layerMask);
+                        Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
+                        if (!line)
+                        {
+                            effectedPlayers.Add(player);
+                            Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
+                            break;
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Log.Error($"{nameof(OnExploding)} error: {exception}");
+                }
+            }
         }
 
         private IEnumerator<float> DoSuction(Player player, Vector3 position)
@@ -139,56 +188,6 @@ namespace CustomItems.Items
 
             if (effectedPlayers.Contains(ev.Player))
                 ev.IsAllowed = false;
-        }
-
-        private void OnExplodingGrenade(ExplodingGrenadeEventArgs ev)
-        {
-            if (Check(ev.Grenade))
-            {
-                Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", CustomItems.Instance.Config.IsDebugEnabled);
-                Dictionary<Player, float> copiedList = new Dictionary<Player, float>();
-                foreach (KeyValuePair<Player, float> kvp in ev.TargetToDamages)
-                {
-                    if (kvp.Value > 0)
-                    {
-                        copiedList.Add(kvp.Key, kvp.Value);
-                    }
-                }
-
-                ev.TargetToDamages.Clear();
-                Log.Debug("IG: List cleared.", CustomItems.Instance.Config.IsDebugEnabled);
-                effectedPlayers = NorthwoodLib.Pools.ListPool<Player>.Shared.Rent();
-                foreach (Player player in copiedList.Keys)
-                {
-                    ev.TargetToDamages.Add(player, copiedList[player] * DamageModifier);
-                    if (BlacklistedRoles.Contains(player.Role))
-                        continue;
-
-                    Log.Debug($"{player.Nickname} starting suction", CustomItems.Instance.Config.IsDebugEnabled);
-
-                    try
-                    {
-                        if (layerMask == 0)
-                            layerMask = ev.Grenade.GetComponent<FragGrenade>().hurtLayerMask;
-
-                        foreach (Transform grenadePoint in player.ReferenceHub.playerStats.grenadePoints)
-                        {
-                            bool line = Physics.Linecast(ev.Grenade.transform.position, grenadePoint.position, layerMask);
-                            Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
-                            if (!line)
-                            {
-                                effectedPlayers.Add(player);
-                                Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
-                                break;
-                            }
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        Log.Error($"{nameof(OnExplodingGrenade)} error: {exception}");
-                    }
-                }
-            }
         }
     }
 }

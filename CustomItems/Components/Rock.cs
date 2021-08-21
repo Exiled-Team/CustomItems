@@ -12,13 +12,13 @@ namespace CustomItems.Components
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.CustomItems.API.Features;
-    using Grenades;
+    using InventorySystem.Items.ThrowableProjectiles;
     using UnityEngine;
 
     /// <summary>
     /// Special collision handler for rocks.
     /// </summary>
-    public class Rock : Scp018Grenade
+    public class Rock : Scp018Projectile
     {
         /// <summary>
         /// Gets the owner of the 'rock'.
@@ -59,12 +59,11 @@ namespace CustomItems.Components
         /// The collision handler.
         /// </summary>
         /// <param name="collision">The <see cref="Collision"/> occuring.</param>
-        /// <param name="relativeSpeed">The <see cref="float"/> indicating the speed.</param>
-        public override void OnSpeedCollisionEnter(Collision collision, float relativeSpeed)
+        public override void ProcessCollision(Collision collision)
         {
             try
             {
-                if (collision.gameObject == Owner || collision.gameObject.TryGetComponent<Grenade>(out _))
+                if (collision.gameObject == Owner)
                 {
                     return;
                 }
@@ -80,7 +79,7 @@ namespace CustomItems.Components
             }
             catch (Exception exception)
             {
-                Log.Error($"{nameof(OnSpeedCollisionEnter)} error: {exception}");
+                Log.Error($"{nameof(ProcessCollision)} error: {exception}");
             }
         }
     }

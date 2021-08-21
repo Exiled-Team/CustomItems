@@ -10,11 +10,14 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms;
     using MEC;
+    using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
     public class Scp127 : CustomWeapon
@@ -27,6 +30,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Description { get; set; } = "SCP-127 is a pistol that slowly regenerates it's ammo over time but cannot be reloaded normally.";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.45f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -49,7 +55,7 @@ namespace CustomItems.Items
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 25;
+        public override byte ClipSize { get; set; } = 25;
 
         /// <summary>
         /// Gets or sets how often ammo will be regenerated. Regeneration occurs at all times, however this timer is reset when the weapon is picked up or dropped.
@@ -61,7 +67,7 @@ namespace CustomItems.Items
         /// Gets or sets the amount of ammo that will be regenerated each regeneration cycle.
         /// </summary>
         [Description("The amount of ammo that will be regenerated each regeneration cycle.")]
-        public int RegenerationAmount { get; set; } = 2;
+        public byte RegenerationAmount { get; set; } = 2;
 
         private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
 
@@ -103,23 +109,13 @@ namespace CustomItems.Items
 
                 bool hasItem = false;
 
-                for (int i = 0; i < player.Inventory.items.Count; i++)
+                foreach (Item item in player.Items)
                 {
-                    if (!Check(player.Inventory.items[i]))
+                    if (!Check(item) || !(item is Firearm firearm))
                         continue;
-
+                    if (firearm.Ammo < RegenerationAmount)
+                        firearm.Ammo += RegenerationAmount;
                     hasItem = true;
-
-                    if (!(player.Inventory.items[i].durability < ClipSize))
-                        continue;
-
-                    Inventory.SyncItemInfo newInfo = player.Inventory.items[i];
-
-                    if ((newInfo.durability + RegenerationAmount) > ClipSize)
-                        newInfo.durability = ClipSize;
-                    else
-                        newInfo.durability += RegenerationAmount;
-                    player.Inventory.items[i] = newInfo;
                 }
 
                 if (!hasItem)
@@ -135,9 +131,9 @@ namespace CustomItems.Items
 
                 foreach (Pickup pickup in Spawned)
                 {
-                    if (Check(pickup) && pickup.durability < ClipSize)
+                    if (Check(pickup) && pickup.Base is FirearmPickup firearmPickup && firearmPickup.NetworkStatus.Ammo < ClipSize)
                     {
-                        pickup.durability += RegenerationAmount;
+                        firearmPickup.NetworkStatus = new FirearmStatus((byte)(firearmPickup.NetworkStatus.Ammo + RegenerationAmount), firearmPickup.NetworkStatus.Flags, firearmPickup.NetworkStatus.Attachments);
 
                         yield return Timing.WaitForSeconds(0.5f);
                     }

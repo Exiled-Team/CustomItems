@@ -12,6 +12,7 @@ namespace CustomItems.Items
     using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -36,8 +37,11 @@ namespace CustomItems.Items
             "When this weapon is fired, it uses the biomass of the shooter as the bullet.";
 
         /// <inheritdoc/>
+        public override float Weight { get; set; } = 3.95f;
+
+        /// <inheritdoc/>
         [YamlIgnore]
-        public override uint ClipSize { get; set; } = 1;
+        public override byte ClipSize { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets how often the <see cref="ShooterProjectile"/> coroutine will move the player.
@@ -89,24 +93,22 @@ namespace CustomItems.Items
         {
             try
             {
-                foreach (var item in ev.Shooter.Inventory.items)
+                foreach (Item item in ev.Shooter.Items)
                     if (Check(item))
                     {
                         Log.Debug($"SCP-2818: Found a 2818 in inventory of shooter, removing.");
                         ev.Shooter.RemoveItem(item);
                     }
 
-                Player target = null;
-                if (ev.Target != null)
-                    target = Player.Get(ev.Target);
-                if (ev.Position == Vector3.zero || Vector3.Distance(ev.Shooter.Position, ev.Position) > 100f)
+                Player target = Player.Get(ev.TargetNetId);
+                if (ev.ShotPosition == Vector3.zero || (ev.Shooter.Position - ev.ShotPosition).sqrMagnitude > 1000f)
                 {
                     ev.Shooter.Kill(DamageTypes.Nuke);
                     ev.IsAllowed = false;
                     return;
                 }
 
-                Timing.RunCoroutine(ShooterProjectile(ev.Shooter, ev.Position, target));
+                Timing.RunCoroutine(ShooterProjectile(ev.Shooter, ev.ShotPosition, target));
             }
             catch (Exception e)
             {
@@ -150,7 +152,7 @@ namespace CustomItems.Items
             if (DespawnAfterUse)
             {
                 Log.Debug($"inv count: {player.Items.Count}");
-                foreach (Inventory.SyncItemInfo item in player.Items.ToList())
+                foreach (Item item in player.Items)
                     if (Check(item))
                     {
                         Log.Debug("found 2818 in inventory, doing funni");

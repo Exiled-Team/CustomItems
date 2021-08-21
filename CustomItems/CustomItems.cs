@@ -111,8 +111,6 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.Scp1499s?.Register();
 
-            Instance.Config.ItemConfigs.Shotguns?.Register();
-
             Instance.Config.ItemConfigs.SniperRifle?.Register();
 
             Instance.Config.ItemConfigs.TranquilizerGun?.Register();
@@ -149,8 +147,6 @@ namespace CustomItems
             Instance.Config.ItemConfigs.Scp127s?.Unregister();
 
             Instance.Config.ItemConfigs.Scp1499s?.Unregister();
-
-            Instance.Config.ItemConfigs.Shotguns?.Unregister();
 
             Instance.Config.ItemConfigs.SniperRifle?.Unregister();
 

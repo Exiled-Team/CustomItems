@@ -9,6 +9,7 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
@@ -28,7 +29,10 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "This modified E-11 Rifle fires high-velocity anti-personnel sniper rounds.";
 
         /// <inheritdoc/>
-        public override uint ClipSize { get; set; } = 1;
+        public override float Weight { get; set; } = 3.25f;
+
+        /// <inheritdoc/>
+        public override byte ClipSize { get; set; } = 1;
 
         /// <inheritdoc/>
         public override bool ShouldMessageOnGban { get; } = true;
@@ -68,7 +72,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != ev.Target && ev.DamageType == DamageTypes.FromWeaponId(ev.Attacker.ReferenceHub.weaponManager.curWeapon))
+            if (ev.Attacker != ev.Target && ev.Attacker.CurrentItem is Firearm firearm && ev.DamageType.Equals(firearm.DamageType))
                 ev.Amount *= DamageMultiplier;
         }
     }

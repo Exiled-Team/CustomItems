@@ -37,7 +37,7 @@ namespace CustomItems.Commands
                 return false;
             }
 
-            if (Items.C4Charge.Instance.RequireDetonator && ply.CurrentItem.id != Items.C4Charge.Instance.DetonatorItem)
+            if (Items.C4Charge.Instance.RequireDetonator && ply.CurrentItem.Type != Items.C4Charge.Instance.DetonatorItem)
             {
                 response = $"\n<color=red>You need to have a Remote Detonator ({Items.C4Charge.Instance.DetonatorItem}) in your hand to detonate C4!</color>";
                 return false;
@@ -50,7 +50,7 @@ namespace CustomItems.Commands
                 if (charge.Value != ply)
                     continue;
 
-                float distance = Vector3.Distance(charge.Key.transform.position, ply.Position);
+                float distance = Vector3.Distance(charge.Key.Position, ply.Position);
 
                 if (distance < Items.C4Charge.Instance.MaxDistance)
                 {

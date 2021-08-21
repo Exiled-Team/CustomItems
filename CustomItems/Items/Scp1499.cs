@@ -36,6 +36,9 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "The gas mask that temporarily teleports you to another dimension, when you put it on.";
 
         /// <inheritdoc/>
+        public override float Weight { get; set; } = 1.5f;
+
+        /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
@@ -58,7 +61,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemDequipped += OnMedicalItemDeEquipped;
+            Exiled.Events.Handlers.Player.ItemUsed += OnUsedItem;
             Exiled.Events.Handlers.Player.Destroying += OnDestroying;
             Exiled.Events.Handlers.Player.Died += OnDied;
 
@@ -68,7 +71,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.MedicalItemDequipped -= OnMedicalItemDeEquipped;
+            Exiled.Events.Handlers.Player.ItemUsed -= OnUsedItem;
             Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
             Exiled.Events.Handlers.Player.Died -= OnDied;
 
@@ -110,7 +113,7 @@ namespace CustomItems.Items
                 scp1499Players.Remove(ev.Player);
         }
 
-        private void OnMedicalItemDeEquipped(DequippedMedicalItemEventArgs ev)
+        private void OnUsedItem(UsedItemEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
@@ -121,7 +124,7 @@ namespace CustomItems.Items
                 scp1499Players.Add(ev.Player, ev.Player.Position);
 
             ev.Player.Position = scp1499DimensionPos;
-            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Scp268>();
+            ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Invisible>();
 
             if (Duration > 0)
             {
@@ -161,7 +164,7 @@ namespace CustomItems.Items
                 if (shouldKill)
                     player.Kill(DamageTypes.Nuke);
             }
-            else if (Map.IsLCZDecontaminated)
+            else if (Map.IsLczDecontaminated)
             {
                 if (player.CurrentRoom.Zone == ZoneType.LightContainment)
                 {

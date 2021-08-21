@@ -33,6 +33,9 @@ namespace CustomItems.Items
         public override string Description { get; set; } = "This is a Lethal Injection that, when used, will cause SCP-096 to immediately leave his enrage, regardless of how many targets he currently has, if you are one of his current targets. You always die when using this, even if there's no enrage to break, or you are not a target.";
 
         /// <inheritdoc/>
+        public override float Weight { get; set; } = 1f;
+
+        /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             Limit = 1,
@@ -55,7 +58,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Player.UsingMedicalItem += OnUsingMedicalItem;
+            Player.UsingItem += OnUsingItem;
 
             base.SubscribeEvents();
         }
@@ -63,12 +66,12 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Player.UsingMedicalItem -= OnUsingMedicalItem;
+            Player.UsingItem -= OnUsingItem;
 
             base.UnsubscribeEvents();
         }
 
-        private void OnUsingMedicalItem(UsingMedicalItemEventArgs ev)
+        private void OnUsingItem(UsedItemEventArgs ev)
         {
             Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}", CustomItems.Instance.Config.IsDebugEnabled);
             if (!Check(ev.Player.CurrentItem))

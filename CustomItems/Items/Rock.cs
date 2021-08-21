@@ -11,13 +11,16 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
-    using Exiled.CustomItems.API.Components;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
-    using Grenades;
+    using Footprinting;
+    using InventorySystem.Items.Pickups;
+    using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
     using Mirror;
     using UnityEngine;
@@ -37,6 +40,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Description { get; set; } = "It's a rock.";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 0.1f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -83,48 +89,57 @@ namespace CustomItems.Items
         public override float FuseTime { get; set; } = int.MaxValue;
 
         /// <inheritdoc/>
-        public override Grenade Spawn(Vector3 position, Vector3 velocity, float fuseTime = 3, ItemType grenadeType = ItemType.GrenadeFrag, Player player = null)
+        public override Pickup Throw(Vector3 position, float force, float fuseTime = 3f, ItemType grenadeType = ItemType.GrenadeHe, Player player = null)
         {
             if (player == null)
                 player = Server.Host;
 
-            GrenadeManager grenadeManager = player.GrenadeManager;
-            GrenadeSettings settings =
-                grenadeManager.availableGrenades.FirstOrDefault(g => g.inventoryID == grenadeType);
+            Throwable throwable = grenadeType == ItemType.Scp018 || grenadeType == ItemType.GrenadeHe
+                ? (Throwable)new ExplosiveGrenade(grenadeType)
+                : new FlashGrenade(grenadeType);
 
-            Grenade grenade = GameObject.Instantiate(settings.grenadeInstance).GetComponent<Grenade>();
-
-            grenade.FullInitData(grenadeManager, position, Quaternion.Euler(grenade.throwStartAngle), velocity, grenade.throwAngularVelocity, player == Server.Host ? Team.RIP : player.Team);
-            grenade.NetworkfuseTime = NetworkTime.time + fuseTime;
-
-            Tracked.Add(grenade.gameObject);
-
-            GameObject grenadeObject = grenade.gameObject;
-            UnityEngine.Object.Destroy(grenadeObject.GetComponent<Scp018Grenade>());
-            grenadeObject.AddComponent<Components.Rock>().Init(player.GameObject, player.Side, FriendlyFire, ThrownDamage);
-            NetworkServer.Spawn(grenadeObject);
+            ThrownProjectile thrownProjectile = UnityEngine.Object.Instantiate(throwable.Projectile, position, throwable.Owner.CameraTransform.rotation);
+            Transform transform = thrownProjectile.transform;
+            PickupSyncInfo newInfo = new PickupSyncInfo()
+            {
+                ItemId = (global::ItemType)throwable.Type,
+                Locked = !throwable.Base._repickupable,
+                Serial = throwable.Serial,
+                Weight = Weight,
+                Position = transform.position,
+                Rotation = new LowPrecisionQuaternion(transform.rotation),
+            };
+            thrownProjectile.NetworkInfo = newInfo;
+            thrownProjectile.PreviousOwner = new Footprint(throwable.Owner.ReferenceHub);
+            NetworkServer.Spawn(thrownProjectile.gameObject);
+            thrownProjectile.InfoReceived(default, newInfo);
+            Rigidbody component;
+            if (thrownProjectile.TryGetComponent(out component))
+                throwable.Base.PropelBody(component, throwable.Base.FullThrowSettings.StartTorque, force, throwable.Base.FullThrowSettings.UpwardsFactor);
+            thrownProjectile.gameObject.AddComponent<Components.Rock>().Init(player.GameObject, player.Side, FriendlyFire, ThrownDamage);
+            Tracked.Add(thrownProjectile);
 
             if (ExplodeOnCollision)
-                grenade.gameObject.AddComponent<CollisionHandler>().Init(player.GameObject, grenade);
+                thrownProjectile.gameObject.AddComponent<CollisionHandler>().Init(player.GameObject, (EffectGrenade)thrownProjectile);
 
-            return grenade;
+            return Pickup.Get(thrownProjectile);
         }
 
         /// <summary>
         /// Handling the throwing event for this grenade.
         /// </summary>
-        /// <param name="ev"><see cref="ThrowingGrenadeEventArgs"/>.</param>
-        protected override void OnThrowing(ThrowingGrenadeEventArgs ev)
+        /// <param name="ev"><see cref="ThrowingItemEventArgs"/>.</param>
+        protected override void OnThrowing(ThrowingItemEventArgs ev)
         {
             ev.IsAllowed = false;
-            if (ev.IsSlow)
+            if (ev.RequestType == ThrowRequest.WeakThrow)
             {
                 Timing.CallDelayed(1f, () =>
                 {
                     try
                     {
                         Vector3 pos = ev.Player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
-                        Spawn(pos, ev.Player.CameraTransform.forward * ThrowSpeed, 3f, Type, ev.Player);
+                        Throw(pos, ThrowSpeed, 3f, Type, ev.Player);
 
                         ev.Player.RemoveItem(ev.Player.CurrentItem);
                     }
@@ -134,11 +149,11 @@ namespace CustomItems.Items
                     }
                 });
             }
-            else
+            else if (ev.RequestType == ThrowRequest.FullForceThrow)
             {
                 Timing.CallDelayed(1.25f, () =>
                 {
-                    foreach (Inventory.SyncItemInfo item in ev.Player.Items)
+                    foreach (Item item in ev.Player.Items)
                     {
                         if (Check(item))
                         {

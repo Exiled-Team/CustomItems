@@ -10,12 +10,14 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
-    using Grenades;
+    using InventorySystem.Items.ThrowableProjectiles;
     using Mirror;
     using UnityEngine;
     using YamlDotNet.Serialization;
@@ -25,11 +27,15 @@ namespace CustomItems.Items
     /// <inheritdoc/>
     public class C4Charge : CustomGrenade
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// The instance of this item manager.
+        /// </summary>
         public static C4Charge Instance;
 
-        /// <inheritdoc/>
-        public static Dictionary<Grenade, Player> PlacedCharges = new Dictionary<Grenade, Player>();
+        /// <summary>
+        /// All of the currently placed charges.
+        /// </summary>
+        public static Dictionary<Pickup, Player> PlacedCharges = new Dictionary<Pickup, Player>();
 
         /// <summary>
         /// Enum containing methods indicating how C4 charge can be removed.
@@ -57,6 +63,9 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         public override string Name { get; set; } = "C4-119";
+
+        /// <inheritdoc/>
+        public override float Weight { get; set; } = 0.75f;
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
@@ -159,33 +168,35 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         [YamlIgnore]
-        public override ItemType Type { get; set; } = ItemType.GrenadeFrag;
+        public override ItemType Type { get; set; } = ItemType.GrenadeHe;
 
         /// <summary>
         /// Handles the removal of C4 charges.
         /// </summary>
         /// <param name="charge"> The C4 charge to be handled.</param>
         /// <param name="removeMethod"> The method of removing the charge.</param>
-        public void C4Handler(Grenade charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
+        public void C4Handler(Pickup charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
         {
             switch (removeMethod)
             {
                 case C4RemoveMethod.Remove:
                 {
-                    NetworkServer.Destroy(charge.gameObject);
+                    charge.Destroy();
                     break;
                 }
 
                 case C4RemoveMethod.Detonate:
                 {
-                    charge.NetworkfuseTime = 0.1f;
+                    EffectGrenade projectile = (EffectGrenade)charge.Base;
+                    projectile._fuseTime = 0.1f;
+                    projectile.ServerActivate();
                     break;
                 }
 
                 case C4RemoveMethod.Drop:
                 {
-                    TrySpawn((int)Id, charge.transform.position, out _);
-                    NetworkServer.Destroy(charge.gameObject);
+                    TrySpawn((int)Id, charge.Position, out _);
+                    charge.Destroy();
                     break;
                 }
             }
@@ -226,17 +237,17 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        protected override void OnThrowing(ThrowingGrenadeEventArgs ev)
+        protected override void OnThrowing(ThrowingItemEventArgs ev)
         {
             ev.IsAllowed = false;
             ev.Player.RemoveItem(ev.Player.CurrentItem);
 
             float slowThrowMultiplier = 0.1f;
 
-            if (!ev.IsSlow)
+            if (ev.RequestType != ThrowRequest.WeakThrow)
                 slowThrowMultiplier = 1f;
 
-            Grenade c4 = Spawn(ev.Player.CameraTransform.position, (ev.Player.Rotation * ThrowMultiplier * slowThrowMultiplier) + (Vector3.up * 1.5f), FuseTime, ItemType.GrenadeFrag, ev.Player);
+            Pickup c4 = Throw(ev.Player.CameraTransform.position, ThrowMultiplier * slowThrowMultiplier, FuseTime, Type, ev.Player);
 
             if (!PlacedCharges.ContainsKey(c4))
                 PlacedCharges.Add(c4, ev.Player);
@@ -247,10 +258,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnExploding(ExplodingGrenadeEventArgs ev)
         {
-            if (ev.Grenade.TryGetComponent(out Grenade grenade))
-            {
-                PlacedCharges.Remove(grenade);
-            }
+            PlacedCharges.Remove(Pickup.Get(ev.Grenade));
         }
 
         private void OnDestroying(DestroyingEventArgs ev)
@@ -283,15 +291,15 @@ namespace CustomItems.Items
             Vector3 forward = ev.Shooter.CameraTransform.forward;
             if (Physics.Raycast(ev.Shooter.CameraTransform.position + forward, forward, out var hit, 500))
             {
-                Grenade grenade = hit.collider.gameObject.GetComponentInParent<Grenade>();
+                EffectGrenade grenade = hit.collider.gameObject.GetComponentInParent<EffectGrenade>();
                 if (grenade == null)
                 {
                     return;
                 }
 
-                if (PlacedCharges.ContainsKey(grenade))
+                if (PlacedCharges.ContainsKey(Pickup.Get(grenade)))
                 {
-                    C4Handler(grenade, ShotMethod);
+                    C4Handler(Pickup.Get(grenade), ShotMethod);
                 }
             }
         }

@@ -8,18 +8,21 @@
 namespace CustomItems.Patches
 {
 #pragma warning disable SA1313
-    using Grenades;
+    using Exiled.API.Features.Items;
     using HarmonyLib;
+    using InventorySystem.Items.Pickups;
+    using InventorySystem.Items.ThrowableProjectiles;
     using UnityEngine;
 
-    /// <inheritdoc/>
-    [HarmonyPatch(typeof(Grenade), nameof(Grenade.OnCollisionEnter))]
-    public class StickyGrenade
+    /// <summary>
+    /// Patches <see cref="CollisionDetectionPickup.OnCollisionEnter"/>.
+    /// </summary>
+    [HarmonyPatch(typeof(CollisionDetectionPickup), nameof(CollisionDetectionPickup.OnCollisionEnter))]
+    internal class StickyGrenade
     {
-        /// <inheritdoc/>
-        public static void Prefix(Grenade __instance)
+        private static void Prefix(EffectGrenade __instance)
         {
-            if (Items.C4Charge.Instance.IsSticky && Items.C4Charge.PlacedCharges.ContainsKey(__instance))
+            if (Items.C4Charge.Instance.IsSticky && Items.C4Charge.PlacedCharges.ContainsKey(Pickup.Get(__instance)))
             {
                 var rigidbody = __instance.gameObject.GetComponent<Rigidbody>();
                 rigidbody.isKinematic = false;

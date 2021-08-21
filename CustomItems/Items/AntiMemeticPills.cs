@@ -30,6 +30,9 @@ namespace CustomItems.Items
             "Drugs that make you forget things. If you use these while you are targeted by SCP-096, you will forget what his face looks like, and thus no longer be a target.";
 
         /// <inheritdoc/>
+        public override float Weight { get; set; } = 1f;
+
+        /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
         {
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
@@ -41,22 +44,18 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.UsingMedicalItem += OnUsingMedicalItem;
+            Exiled.Events.Handlers.Player.UsingItem += OnUsingItem;
             base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.UsingMedicalItem -= OnUsingMedicalItem;
+            Exiled.Events.Handlers.Player.UsingItem -= OnUsingItem;
             base.UnsubscribeEvents();
         }
 
-        /// <summary>
-        /// Handles the using of this item.
-        /// </summary>
-        /// <param name="ev"><see cref="UsingMedicalItemEventArgs"/>.</param>
-        private void OnUsingMedicalItem(UsingMedicalItemEventArgs ev)
+        private void OnUsingItem(UsingItemEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
