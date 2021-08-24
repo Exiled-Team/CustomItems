@@ -45,7 +45,7 @@ namespace CustomItems.Configs
         [Description("The list of implosion grenades.")]
         public List<ImplosionGrenade> ImplosionGrenades { get; private set; } = new List<ImplosionGrenade>
         {
-            new ImplosionGrenade { Type = ItemType.GrenadeHe },
+            new ImplosionGrenade { Type = ItemType.GrenadeHE },
         };
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace CustomItems.Configs
         [Description("The list of mediGuns.")]
         public List<MediGun> MediGuns { get; private set; } = new List<MediGun>
         {
-            new MediGun { Type = ItemType.GunCom15 },
+            new MediGun { Type = ItemType.GunFSP9 },
         };
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace CustomItems.Configs
         [Description("The list of Rocks.")]
         public List<Rock> Rocks { get; private set; } = new List<Rock>
         {
-            new Rock { Type = ItemType.Scp018 },
+            new Rock { Type = ItemType.SCP018 },
         };
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace CustomItems.Configs
         [Description("The list of Scp127s.")]
         public List<Scp127> Scp127s { get; private set; } = new List<Scp127>
         {
-            new Scp127 { Type = ItemType.GunCom18 },
+            new Scp127 { Type = ItemType.GunCOM18 },
         };
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace CustomItems.Configs
         [Description("The list of Scp1499s.")]
         public List<Scp1499> Scp1499s { get; private set; } = new List<Scp1499>
         {
-            new Scp1499 { Type = ItemType.Scp268 },
+            new Scp1499 { Type = ItemType.SCP268 },
         };
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace CustomItems.Configs
         [Description("The list of sniper rifles.")]
         public List<SniperRifle> SniperRifle { get; private set; } = new List<SniperRifle>
         {
-            new SniperRifle { Type = ItemType.GunE11Sr },
+            new SniperRifle { Type = ItemType.GunE11SR },
         };
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace CustomItems.Configs
         [Description("The list of tranquilizer guns.")]
         public List<TranquilizerGun> TranquilizerGun { get; private set; } = new List<TranquilizerGun>
         {
-            new TranquilizerGun { Type = ItemType.GunFsp9 },
+            new TranquilizerGun { Type = ItemType.GunCOM18 },
         };
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace CustomItems.Configs
         [Description("The list of Anti-Memetic Pills.")]
         public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new List<AntiMemeticPills>
         {
-            new AntiMemeticPills { Type = ItemType.Scp500 },
+            new AntiMemeticPills { Type = ItemType.SCP500 },
         };
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace CustomItems.Configs
         [Description("The list of SCP-2818s.")]
         public List<Scp2818> Scp2818s { get; private set; } = new List<Scp2818>
         {
-            new Scp2818 { Type = ItemType.GunE11Sr, },
+            new Scp2818 { Type = ItemType.GunE11SR, },
         };
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace CustomItems.Configs
         [Description("The list of C4Charges.")]
         public List<C4Charge> C4Charges { get; private set; } = new List<C4Charge>
         {
-            new C4Charge { Type = ItemType.GrenadeHe },
+            new C4Charge { Type = ItemType.GrenadeHE },
         };
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace CustomItems.Configs
         [Description("The list of AutoGuns.")]
         public List<AutoGun> AutoGuns { get; private set; } = new List<AutoGun>
         {
-            new AutoGun { Type = ItemType.GunCom15 },
+            new AutoGun { Type = ItemType.GunCOM15 },
         };
     }
 }

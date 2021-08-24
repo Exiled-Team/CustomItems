@@ -27,7 +27,7 @@ namespace CustomItems.Items
     {
         private readonly List<Player> deflectorPlayers = new List<Player>();
 
-        private readonly ItemType type = ItemType.Scp268;
+        private readonly ItemType type = ItemType.SCP268;
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 18;

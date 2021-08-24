@@ -168,7 +168,7 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         [YamlIgnore]
-        public override ItemType Type { get; set; } = ItemType.GrenadeHe;
+        public override ItemType Type { get; set; } = ItemType.GrenadeHE;
 
         /// <summary>
         /// Handles the removal of C4 charges.

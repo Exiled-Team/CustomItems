@@ -98,9 +98,6 @@ namespace CustomItems.Items
             base.ShowPickedUpMessage(player);
         }
 
-        /// <inheritdoc/>
-        protected override void OnPickingUp(PickingUpItemEventArgs ev) => Coroutines.Add(Timing.RunCoroutine(DoInventoryRegeneration(ev.Player)));
-
         private IEnumerator<float> DoInventoryRegeneration(Player player)
         {
             while (true)
@@ -129,7 +126,7 @@ namespace CustomItems.Items
             {
                 yield return Timing.WaitForSeconds(RegenerationDelay);
 
-                foreach (Pickup pickup in Spawned)
+                foreach (Pickup pickup in Map.Pickups)
                 {
                     if (Check(pickup) && pickup.Base is FirearmPickup firearmPickup && firearmPickup.NetworkStatus.Ammo < ClipSize)
                     {

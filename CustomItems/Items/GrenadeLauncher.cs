@@ -17,6 +17,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms.BasicMessages;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
     using Mirror;
@@ -105,11 +106,12 @@ namespace CustomItems.Items
                 if (!(ev.Player.CurrentItem is Firearm firearm) || firearm.Ammo >= ClipSize)
                     return;
 
-                Log.Debug($"{ev.Player.Nickname} is reloading a {Name}!", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} is reloading!", CustomItems.Instance.Config.IsDebugEnabled);
 
                 foreach (Item item in ev.Player.Items.ToList())
                 {
-                    if (item.Type != ItemType.GrenadeHe && item.Type != ItemType.GrenadeFlash && item.Type != ItemType.Scp018)
+                    Log.Debug($"{Name}.{nameof(OnReloading)}: Found item: {item.Type} - {item.Serial}", CustomItems.Instance.Config.IsDebugEnabled);
+                    if (item.Type != ItemType.GrenadeHE && item.Type != ItemType.GrenadeFlash && item.Type != ItemType.SCP018)
                         continue;
                     if (TryGet(item, out CustomItem cItem))
                     {
@@ -121,24 +123,19 @@ namespace CustomItems.Items
                     }
 
                     ev.Player.DisableEffect(EffectType.Invisible);
-                    ev.Player.ReloadWeapon();
+                    ev.Player.Connection.Send(new RequestMessage(ev.Firearm.Serial, RequestType.Reload));
 
-                    firearm.Ammo = ClipSize;
-                    Log.Debug($"{ev.Player.Nickname} successfully reloaded a {Name}.", CustomItems.Instance.Config.IsDebugEnabled);
-                    Timing.CallDelayed(4.5f, () => { ev.Player.ReloadWeapon(); });
+                    Timing.CallDelayed(3f, () => firearm.Ammo = ClipSize);
 
-                    ev.Player.RemoveItem(item);
                     loadedGrenade = item.Type == ItemType.GrenadeFlash ? GrenadeType.Flashbang :
-                        item.Type == ItemType.GrenadeHe ? GrenadeType.FragGrenade : GrenadeType.Scp018;
+                        item.Type == ItemType.GrenadeHE ? GrenadeType.FragGrenade : GrenadeType.Scp018;
+                    Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} successfully reloaded. Grenade type: {loadedGrenade} IsCustom: {loadedCustomGrenade != null}", CustomItems.Instance.Config.IsDebugEnabled);
+                    ev.Player.RemoveItem(item);
 
-                    break;
+                    return;
                 }
 
-                Log.Debug($"{ev.Player.Nickname} was unable to reload their {Name} - No grenades in inventory.", CustomItems.Instance.Config.IsDebugEnabled);
-            }
-            else
-            {
-                base.OnReloading(ev);
+                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} was unable to reload - No grenades in inventory.", CustomItems.Instance.Config.IsDebugEnabled);
             }
         }
 
@@ -174,7 +171,12 @@ namespace CustomItems.Items
                 }
             }
 
-            projectile.gameObject.gameObject.AddComponent<CollisionHandler>().Init(ev.Shooter.GameObject, projectile);
+            var comp = projectile.gameObject.AddComponent<CollisionHandler>();
+            comp.Init(ev.Shooter.GameObject, projectile);
+            if (comp.Owner == null || comp.Grenade == null)
+            {
+                Log.Debug($"{nameof(Name)}.{nameof(OnShooting)}: Grenade or owner is null, destroying collision component!", CustomItems.Instance.Config.IsDebugEnabled);
+            }
         }
     }
 }

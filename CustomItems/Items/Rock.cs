@@ -89,12 +89,12 @@ namespace CustomItems.Items
         public override float FuseTime { get; set; } = int.MaxValue;
 
         /// <inheritdoc/>
-        public override Pickup Throw(Vector3 position, float force, float fuseTime = 3f, ItemType grenadeType = ItemType.GrenadeHe, Player player = null)
+        public override Pickup Throw(Vector3 position, float force, float fuseTime = 3f, ItemType grenadeType = ItemType.GrenadeHE, Player player = null)
         {
             if (player == null)
                 player = Server.Host;
 
-            Throwable throwable = grenadeType == ItemType.Scp018 || grenadeType == ItemType.GrenadeHe
+            Throwable throwable = grenadeType == ItemType.SCP018 || grenadeType == ItemType.GrenadeHE
                 ? (Throwable)new ExplosiveGrenade(grenadeType)
                 : new FlashGrenade(grenadeType);
 
