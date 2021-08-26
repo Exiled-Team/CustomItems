@@ -76,15 +76,6 @@ namespace CustomItems.Configs
         };
 
         /// <summary>
-        /// Gets the list of Rocks.
-        /// </summary>
-        [Description("The list of Rocks.")]
-        public List<Rock> Rocks { get; private set; } = new List<Rock>
-        {
-            new Rock { Type = ItemType.SCP018 },
-        };
-
-        /// <summary>
         /// Gets the list of Scp127s.
         /// </summary>
         [Description("The list of Scp127s.")]

@@ -45,7 +45,7 @@ namespace CustomItems
         public static CustomItems Instance => InstanceValue;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 12, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -105,8 +105,6 @@ namespace CustomItems
 
             Instance.Config.ItemConfigs.MediGuns?.Register();
 
-            Instance.Config.ItemConfigs.Rocks?.Register();
-
             Instance.Config.ItemConfigs.Scp127s?.Register();
 
             Instance.Config.ItemConfigs.Scp1499s?.Register();
@@ -141,8 +139,6 @@ namespace CustomItems
             Instance.Config.ItemConfigs.LuckyCoins?.Unregister();
 
             Instance.Config.ItemConfigs.MediGuns?.Unregister();
-
-            Instance.Config.ItemConfigs.Rocks?.Unregister();
 
             Instance.Config.ItemConfigs.Scp127s?.Unregister();
 
