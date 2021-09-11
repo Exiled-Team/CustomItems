@@ -160,13 +160,13 @@ namespace CustomItems.Items
                 switch (loadedGrenade)
                 {
                     case GrenadeType.Scp018:
-                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.Scp018).Projectile;
+                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.Scp018).Base.Projectile;
                         break;
                     case GrenadeType.Flashbang:
-                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.Flashbang).Projectile;
+                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.Flashbang).Base.Projectile;
                         break;
                     default:
-                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.FragGrenade).Projectile;
+                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.FragGrenade).Base.Projectile;
                         break;
                 }
             }

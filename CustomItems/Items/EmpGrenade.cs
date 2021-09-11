@@ -169,15 +169,15 @@ namespace CustomItems.Items
 
                 Log.Debug("Opening a door!", CustomItems.Instance.Config.IsDebugEnabled);
 
-                door.Open = true;
-                door.DoorLockType = DoorLockType.NoPower;
+                door.IsOpen = true;
+                door.ChangeLock(DoorLockType.NoPower);
 
                 if (!lockedDoors.Contains(door))
                     lockedDoors.Add(door);
 
                 Timing.CallDelayed(Duration, () =>
                 {
-                    door.DoorLockType = DoorLockType.None;
+                    door.Unlock();
                     lockedDoors.Remove(door);
                 });
             }
