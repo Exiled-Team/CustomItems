@@ -27,22 +27,16 @@ namespace CustomItems
         /// </summary>
         public Random Rng = new Random();
 
-        private static readonly CustomItems InstanceValue = new CustomItems();
-
         private Harmony harmonyInstance;
 
         private ServerHandler serverHandler;
 
         private PlayerHandler playerHandler;
 
-        private CustomItems()
-        {
-        }
-
         /// <summary>
         /// Gets the Plugin instance.
         /// </summary>
-        public static CustomItems Instance => InstanceValue;
+        public static CustomItems Instance { get; private set; }
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
@@ -50,6 +44,7 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnEnabled()
         {
+            Instance = this;
             serverHandler = new ServerHandler();
             playerHandler = new PlayerHandler();
 
@@ -87,6 +82,7 @@ namespace CustomItems
 
             serverHandler = null;
             playerHandler = null;
+            Instance = null;
 
             base.OnDisabled();
         }
