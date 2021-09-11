@@ -151,7 +151,7 @@ namespace CustomItems.Items
             else if (player.Role == RoleType.Scp0492 && HealZombies)
             {
                 player.MaxArtificialHealth = ZombieHealingRequired;
-                player.ArtificialHealth += (ushort)damage;
+                player.ArtificialHealth += damage;
 
                 if (player.ArtificialHealth >= player.MaxArtificialHealth)
                     DoReviveZombie(player, ev.Shooter);
