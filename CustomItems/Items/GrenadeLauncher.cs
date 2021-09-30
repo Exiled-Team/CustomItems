@@ -13,17 +13,15 @@ namespace CustomItems.Items
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using InventorySystem.Items.Firearms.BasicMessages;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
-    using Mirror;
     using UnityEngine;
     using CollisionHandler = Exiled.API.Features.Components.CollisionHandler;
-    using Debug = System.Diagnostics.Debug;
 
     /// <inheritdoc />
     public class GrenadeLauncher : CustomWeapon

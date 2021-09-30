@@ -9,15 +9,12 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
-    using Hints;
-    using MEC;
     using UnityEngine;
 
     /// <inheritdoc />

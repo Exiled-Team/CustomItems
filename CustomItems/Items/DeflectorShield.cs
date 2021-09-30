@@ -10,14 +10,13 @@ namespace CustomItems.Items
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.EventArgs;
     using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using MEC;
     using YamlDotNet.Serialization;

@@ -9,7 +9,6 @@ namespace CustomItems.Patches
 {
     using Events;
     using Exiled.API.Features;
-    using HarmonyLib;
     using Subclass;
 
     /// <summary>

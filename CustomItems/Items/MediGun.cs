@@ -7,18 +7,15 @@
 
 namespace CustomItems.Items
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms;
-    using InventorySystem.Items.Firearms.Modules;
     using UnityEngine;
     using Firearm = Exiled.API.Features.Items.Firearm;
 
@@ -138,7 +135,7 @@ namespace CustomItems.Items
                 return;
 
             float num3 = Vector3.Distance(ev.Shooter.CameraTransform.transform.position, ev.ShotPosition);
-            float damage = firearm.Base.HitregModule.BaseStats.DamageAtDistance(firearm.Base, num3);
+            float damage = firearm.Base.BaseStats.DamageAtDistance(firearm.Base, num3);
 
             if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
             {

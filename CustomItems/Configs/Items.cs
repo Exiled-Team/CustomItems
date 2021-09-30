@@ -14,8 +14,6 @@ namespace CustomItems.Configs
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    using Exiled.API.Enums;
-
     /// <summary>
     /// All item config settings.
     /// </summary>

@@ -15,18 +15,16 @@ namespace CustomItems.Items
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using Exiled.Events.Handlers;
-    using Interactables.Interobjects.DoorUtils;
     using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using UnityEngine;
     using Item = Exiled.API.Features.Items.Item;
     using KeycardPermissions = Interactables.Interobjects.DoorUtils.KeycardPermissions;
-    using Map = Exiled.Events.Handlers.Map;
     using Player = Exiled.API.Features.Player;
 
     /// <inheritdoc />

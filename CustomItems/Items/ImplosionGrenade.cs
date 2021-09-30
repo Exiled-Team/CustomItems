@@ -11,14 +11,13 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features;
+    using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
-    using Exiled.CustomItems.API.Spawn;
     using Exiled.Events.EventArgs;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
     using UnityEngine;
-    using Map = Exiled.Events.Handlers.Map;
     using Scp106 = Exiled.Events.Handlers.Scp106;
 
     /// <inheritdoc />

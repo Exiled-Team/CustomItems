@@ -7,8 +7,6 @@
 
 #pragma warning disable SA1200
 
-using CustomItems.Configs;
-
 namespace CustomItems
 {
     using System;
