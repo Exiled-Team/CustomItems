@@ -135,7 +135,7 @@ namespace CustomItems.Items
             foreach (PocketDimensionTeleport teleport in teleports)
             {
                 Log.Debug($"{ev.Player.Nickname} - Checking teleporter..", CustomItems.Instance.Config.IsDebugEnabled);
-                if (teleport.type != PocketDimensionTeleport.PDTeleportType.Exit)
+                if (teleport._type != PocketDimensionTeleport.PDTeleportType.Exit)
                     continue;
 
                 onCooldown = true;
