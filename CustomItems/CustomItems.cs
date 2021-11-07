@@ -6,17 +6,13 @@
 // -----------------------------------------------------------------------
 
 #pragma warning disable SA1200
-using CustomItems.Patches;
-
 namespace CustomItems
 {
     using System;
-    using System.Linq;
     using Events;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
     using HarmonyLib;
-    using Subclass;
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
@@ -31,8 +27,6 @@ namespace CustomItems
 
         private ServerHandler serverHandler;
 
-        private PlayerHandler playerHandler;
-
         /// <summary>
         /// Gets the Plugin instance.
         /// </summary>
@@ -46,24 +40,12 @@ namespace CustomItems
         {
             Instance = this;
             serverHandler = new ServerHandler();
-            playerHandler = new PlayerHandler();
 
             harmonyInstance = new Harmony($"com.{nameof(CustomItems)}.galaxy-{DateTime.Now.Ticks}");
             harmonyInstance.PatchAll();
 
             Config.LoadItems();
             RegisterItems();
-
-            Log.Debug("Checking for Subclassing...", Config.IsDebugEnabled);
-
-            try
-            {
-                CheckAndPatchSubclassing();
-            }
-            catch (Exception)
-            {
-                Log.Debug("Subclassing not installed.", Config.IsDebugEnabled);
-            }
 
             Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 
@@ -76,12 +58,10 @@ namespace CustomItems
             UnregisterItems();
 
             Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
-            Events.AddClassEvent.AddClass -= playerHandler.OnAddingSubclass;
 
             harmonyInstance?.UnpatchAll();
 
             serverHandler = null;
-            playerHandler = null;
             Instance = null;
 
             base.OnDisabled();
@@ -155,16 +135,6 @@ namespace CustomItems
             Instance.Config.ItemConfigs.C4Charges?.Unregister();
 
             Instance.Config.ItemConfigs.AutoGuns?.Unregister();
-        }
-
-        private void CheckAndPatchSubclassing()
-        {
-            if (Exiled.Loader.Loader.Plugins.All(pugin => pugin.Name != "Subclass"))
-                return;
-
-            Config.ParseSubclassList();
-            Instance.harmonyInstance.Patch(HarmonyLib.AccessTools.Method(typeof(TrackingAndMethods), nameof(TrackingAndMethods.AddClass)), postfix: new HarmonyMethod(HarmonyLib.AccessTools.Method(typeof(AddClass), nameof(AddClass.Postfix))));
-            Events.AddClassEvent.AddClass += playerHandler.OnAddingSubclass;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace CustomItems.Items
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
@@ -92,7 +93,7 @@ namespace CustomItems.Items
         {
             try
             {
-                foreach (Item item in ev.Shooter.Items)
+                foreach (Item item in ev.Shooter.Items.ToList())
                     if (Check(item))
                     {
                         Log.Debug($"SCP-2818: Found a 2818 in inventory of shooter, removing.");

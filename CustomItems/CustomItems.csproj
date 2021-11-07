@@ -53,43 +53,40 @@
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.API.dll</HintPath>
+    <Reference Include="Exiled.API, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.Bootstrap, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.Bootstrap.dll</HintPath>
+    <Reference Include="Exiled.Bootstrap, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.Bootstrap.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.CreditTags.dll</HintPath>
+    <Reference Include="Exiled.CreditTags, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.CreditTags.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.CustomItems.dll</HintPath>
+    <Reference Include="Exiled.CustomItems, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.CustomItems.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.CustomRoles, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.CustomRoles.dll</HintPath>
+    <Reference Include="Exiled.CustomRoles, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.CustomRoles.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.Events, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.Events.dll</HintPath>
+    <Reference Include="Exiled.Events, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.Events.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.Example, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\EXILED\bin\Debug\Exiled.Example.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Loader, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.Loader.dll</HintPath>
+    <Reference Include="Exiled.Loader, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.Loader.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Exiled.Permissions, Version=3.0.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.Permissions.dll</HintPath>
+    <Reference Include="Exiled.Permissions, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.Permissions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.3.0.3\lib\net472\Exiled.Updater.dll</HintPath>
+      <HintPath>..\packages\EXILED.3.1.1\lib\net472\Exiled.Updater.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -97,9 +94,6 @@
     </Reference>
     <Reference Include="NorthwoodLib, Version=1.2.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\References\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Subclass">
-      <HintPath>$(EXILED_REFERENCES)\Subclass.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -123,10 +117,7 @@
     <Compile Include="Components\Rock.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Configs\Items.cs" />
-    <Compile Include="Events\PlayerHandler.cs" />
     <Compile Include="Events\ServerHandler.cs" />
-    <Compile Include="Events\AddClassEvent.cs" />
-    <Compile Include="Events\AddClassEventArgs.cs" />
     <Compile Include="Items\AntiMemeticPills.cs" />
 	  <Compile Include="Items\AutoGun.cs" />
     <Compile Include="Items\DeflectorShield.cs" />
@@ -144,7 +135,6 @@
     <Compile Include="Items\ImplosionGrenade.cs" />
     <Compile Include="Items\C4Charge.cs" />
     <Compile Include="Items\TranquilizerGun.cs" />
-    <Compile Include="Patches\AddClass.cs" />
     <Compile Include="CustomItems.cs" />
     <Compile Include="Patches\StickyGrenade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
