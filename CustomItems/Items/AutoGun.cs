@@ -96,7 +96,7 @@ namespace CustomItems.Items
                     player.Hurt(Damage, DamageTypes.Com15, ev.Shooter.Nickname, ev.Shooter.Id);
                     if (player.IsDead)
                         player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
-                    ev.Shooter.ShowHitMarker();
+                    ev.Shooter.ShowHitMarker(1f);
                 }
 
                 if (PerHitAmmo)

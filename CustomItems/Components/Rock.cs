@@ -71,7 +71,7 @@ namespace CustomItems.Components
                 if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || FriendlyFire))
                 {
                     target.Hurt(ThrownDamage, DamageTypes.Wall, "ROCK");
-                    Player.Get(Owner).ShowHitMarker();
+                    Player.Get(Owner).ShowHitMarker(1f);
                 }
 
                 CustomItem.Registered.First(customItem => customItem.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);

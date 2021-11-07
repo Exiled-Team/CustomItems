@@ -197,7 +197,7 @@ namespace CustomItems.Items
                 Log.Error($"{nameof(DoTranquilize)}: {e}");
             }
 
-            Ragdoll ragdoll = Ragdoll.Spawn(player, DamageTypes.None, oldPosition, allowRecall: false);
+            Ragdoll ragdoll = Ragdoll.Spawn(player, DamageTypes.None, oldPosition, default, default, false, false);
 
             player.IsInvisible = true;
             player.Scale = Vector3.one * 0.2f;
