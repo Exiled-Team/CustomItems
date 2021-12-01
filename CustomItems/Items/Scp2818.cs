@@ -18,6 +18,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
     using MEC;
+    using PlayerStatsSystem;
     using UnityEngine;
     using YamlDotNet.Serialization;
 
@@ -103,7 +104,7 @@ namespace CustomItems.Items
                 Player target = Player.Get(ev.TargetNetId);
                 if (ev.ShotPosition == Vector3.zero || (ev.Shooter.Position - ev.ShotPosition).sqrMagnitude > 1000f)
                 {
-                    ev.Shooter.Kill(DamageTypes.Nuke);
+                    ev.Shooter.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Warhead));
                     ev.IsAllowed = false;
                     return;
                 }
@@ -161,9 +162,9 @@ namespace CustomItems.Items
             }
 
             if (player.Role != RoleType.Spectator)
-                player.Kill(DamageTypes.Nuke);
+                player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Warhead));
             if (target?.Role != RoleType.Spectator)
-                target?.Hurt(Damage, DamageTypes.Nuke, player.Nickname, player.Id);
+                target?.Hurt(new UniversalDamageHandler(Damage, DeathTranslations.Warhead));
         }
     }
 }

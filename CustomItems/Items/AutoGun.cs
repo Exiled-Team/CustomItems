@@ -9,12 +9,15 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
+    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using PlayerStatsSystem;
     using UnityEngine;
 
     /// <inheritdoc />
@@ -93,7 +96,7 @@ namespace CustomItems.Items
                         continue;
 
                     ammoUsed++;
-                    player.Hurt(Damage, DamageTypes.Com15, ev.Shooter.Nickname, ev.Shooter.Id);
+                    player.Hurt(new FirearmDamageHandler(firearm.Base, Damage, player.Role.GetSide() != Side.Scp));
                     if (player.IsDead)
                         player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
                     ev.Shooter.ShowHitMarker(1f);

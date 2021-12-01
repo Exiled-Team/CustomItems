@@ -14,6 +14,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using PlayerStatsSystem;
     using YamlDotNet.Serialization;
 
     /// <inheritdoc />
@@ -72,7 +73,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != ev.Target && ev.Attacker.CurrentItem is Firearm firearm && ev.DamageType.Equals(firearm.DamageType))
+            if (ev.Attacker != ev.Target && ev.DamageHandler is FirearmDamageHandler firearmDamageHandler && firearmDamageHandler.WeaponType == ev.Attacker.CurrentItem.Type)
                 ev.Amount *= DamageMultiplier;
         }
     }

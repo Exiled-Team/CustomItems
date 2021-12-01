@@ -70,7 +70,7 @@ namespace CustomItems.Components
 
                 if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || FriendlyFire))
                 {
-                    target.Hurt(ThrownDamage, DamageTypes.Wall, "ROCK");
+                    target.Hurt("Rock", ThrownDamage);
                     Player.Get(Owner).ShowHitMarker(1f);
                 }
 

@@ -18,8 +18,11 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.EventArgs;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms;
     using MEC;
+    using PlayerStatsSystem;
     using YamlDotNet.Serialization;
+    using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
     public class DeflectorShield : CustomItem
@@ -143,10 +146,10 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target) && ((ItemType)ev.DamageType.Weapon).IsWeapon() && ev.Target != ev.Attacker && !ev.DamageType.Equals(DamageTypes.MicroHID))
+            if (deflectorPlayers.Contains(ev.Target) && (ev.DamageHandler is FirearmDamageHandler && ev.Target != ev.Attacker))
             {
                 ev.IsAllowed = false;
-                ev.Attacker.Hurt(ev.Amount * Multiplier, ev.Target, ev.DamageType);
+                ev.Attacker.Hurt(new FirearmDamageHandler(((Firearm)ev.Attacker.CurrentItem).Base, ev.Amount * Multiplier, ev.Attacker.Side != Side.Scp));
             }
         }
     }

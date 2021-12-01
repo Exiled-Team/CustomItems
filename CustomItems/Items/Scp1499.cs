@@ -17,6 +17,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
     using MEC;
+    using PlayerStatsSystem;
     using UnityEngine;
 
     /// <inheritdoc />
@@ -162,7 +163,7 @@ namespace CustomItems.Items
                 }
 
                 if (shouldKill)
-                    player.Kill(DamageTypes.Nuke);
+                    player.Hurt(new WarheadDamageHandler());
             }
             else if (Map.IsLczDecontaminated)
             {
@@ -183,7 +184,7 @@ namespace CustomItems.Items
                 }
 
                 if (shouldKill)
-                    player.Kill(DamageTypes.Decont);
+                    player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Decontamination));
             }
 
             scp1499Players.Remove(player);

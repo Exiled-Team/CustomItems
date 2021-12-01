@@ -16,6 +16,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using PlayerStatsSystem;
     using UnityEngine;
     using Firearm = Exiled.API.Features.Items.Firearm;
 
@@ -122,7 +123,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.Attacker.CurrentItem is Firearm firearm && ev.DamageType.Equals(firearm.DamageType))
+            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.DamageHandler is FirearmDamageHandler firearmHandler && firearmHandler.WeaponType == ev.Attacker.CurrentItem.Type)
                 ev.Amount = 0f;
         }
 

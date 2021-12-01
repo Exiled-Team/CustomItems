@@ -20,7 +20,9 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
     using MEC;
     using Mirror;
+    using PlayerStatsSystem;
     using UnityEngine;
+    using Ragdoll = Exiled.API.Features.Ragdoll;
     using Random = UnityEngine.Random;
 
     /// <inheritdoc />
@@ -197,7 +199,7 @@ namespace CustomItems.Items
                 Log.Error($"{nameof(DoTranquilize)}: {e}");
             }
 
-            Ragdoll ragdoll = Ragdoll.Spawn(player, DamageTypes.None, oldPosition, default, default, false, false);
+            Ragdoll ragdoll = new Ragdoll(player, new UniversalDamageHandler(0f, DeathTranslations.Warhead), true);
 
             player.IsInvisible = true;
             player.Scale = Vector3.one * 0.2f;
@@ -241,7 +243,7 @@ namespace CustomItems.Items
 
             if (Warhead.IsDetonated && player.Position.y < 900)
             {
-                player.Kill(DamageTypes.Nuke);
+                player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Warhead));
                 yield break;
             }
 

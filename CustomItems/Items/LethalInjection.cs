@@ -17,6 +17,7 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
     using MEC;
     using PlayableScps;
+    using PlayerStatsSystem;
     using Player = Exiled.Events.Handlers.Player;
     using Scp096 = PlayableScps.Scp096;
 
@@ -96,7 +97,7 @@ namespace CustomItems.Items
 
                         Log.Debug($"{player.Nickname} 096 checks passed.", CustomItems.Instance.Config.IsDebugEnabled);
                         scp096.EndEnrage();
-                        ev.Player.Kill(DamageTypes.Poison);
+                        ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Poisoned));
                         return;
                     }
 
@@ -111,7 +112,7 @@ namespace CustomItems.Items
                 }
 
                 Log.Debug($"{Name} kill on fail: {ev.Player.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
-                ev.Player.Kill(DamageTypes.Poison);
+                ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Poisoned));
             });
 
             ev.Player.RemoveItem(ev.Player.CurrentItem);

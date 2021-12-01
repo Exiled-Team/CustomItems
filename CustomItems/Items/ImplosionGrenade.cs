@@ -144,16 +144,12 @@ namespace CustomItems.Items
                             layerMask = explosionGrenade._detectionMask;
                     }
 
-                    foreach (Transform grenadePoint in player.ReferenceHub.playerStats.grenadePoints)
+                    bool line = Physics.Linecast(ev.Grenade.transform.position, player.Position, layerMask);
+                    Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
+                    if (!line)
                     {
-                        bool line = Physics.Linecast(ev.Grenade.transform.position, grenadePoint.position, layerMask);
-                        Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
-                        if (!line)
-                        {
-                            effectedPlayers.Add(player);
-                            Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
-                            break;
-                        }
+                        effectedPlayers.Add(player);
+                        Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
                     }
                 }
                 catch (Exception exception)
