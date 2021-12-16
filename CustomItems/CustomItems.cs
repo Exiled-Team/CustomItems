@@ -128,6 +128,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.C4Charges?.Register();
 
             Instance.Config.ItemConfigs.AutoGuns?.Register();
+
+            Instance.Config.ItemConfigs.TantrumGrenades?.Register();
         }
 
         private void UnregisterItems()
@@ -167,6 +169,8 @@ namespace CustomItems
             Instance.Config.ItemConfigs.C4Charges?.Unregister();
 
             Instance.Config.ItemConfigs.AutoGuns?.Unregister();
+
+            Instance.Config.ItemConfigs.TantrumGrenades?.Unregister();
         }
 
         private void CheckAndPatchSubclassing()

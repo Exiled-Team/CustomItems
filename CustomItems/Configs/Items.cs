@@ -180,5 +180,14 @@ namespace CustomItems.Configs
         {
             new AutoGun { Type = ItemType.GunCOM15 },
         };
+
+        /// <summary>
+        /// Gets the list of TantrumGrenades.
+        /// </summary>
+        [Description("The list of TantrumGrenades.")]
+        public List<TantrumGrenade> TantrumGrenades { get; private set; } = new List<TantrumGrenade>
+        {
+            new TantrumGrenade { Type = ItemType.GrenadeHE },
+        };
     }
 }
