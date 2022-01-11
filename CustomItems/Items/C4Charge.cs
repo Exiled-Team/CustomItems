@@ -12,6 +12,7 @@ namespace CustomItems.Items
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
@@ -24,6 +25,7 @@ namespace CustomItems.Items
     using PlayerEvent = Exiled.Events.Handlers.Player;
 
     /// <inheritdoc/>
+    [ExiledSerializable]
     public class C4Charge : CustomGrenade
     {
         /// <summary>

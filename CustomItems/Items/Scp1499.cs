@@ -12,6 +12,7 @@ namespace CustomItems.Items
     using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
@@ -21,6 +22,7 @@ namespace CustomItems.Items
     using UnityEngine;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class Scp1499 : CustomItem
     {
         // This position is where is unused terrain on the Surface

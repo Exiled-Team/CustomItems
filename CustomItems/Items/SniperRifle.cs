@@ -9,15 +9,18 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms.Attachments;
     using PlayerStatsSystem;
     using YamlDotNet.Serialization;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class SniperRifle : CustomWeapon
     {
         /// <inheritdoc/>
@@ -62,7 +65,11 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc />
-        public override Modifiers Modifiers { get; set; } = new Modifiers(3, 4, 0);
+        public override AttachmentNameTranslation[] Attachments { get; set; } = new[]
+        {
+            AttachmentNameTranslation.ExtendedBarrel,
+            AttachmentNameTranslation.ScopeSight,
+        };
 
         /// <summary>
         /// Gets or sets the amount of extra damage this weapon does, as a multiplier.
@@ -73,7 +80,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != ev.Target && ev.DamageHandler is FirearmDamageHandler firearmDamageHandler && firearmDamageHandler.WeaponType == ev.Attacker.CurrentItem.Type)
+            if (ev.Attacker != ev.Target && ev.Handler.Base is FirearmDamageHandler firearmDamageHandler && firearmDamageHandler.WeaponType == ev.Attacker.CurrentItem.Type)
                 ev.Amount *= DamageMultiplier;
         }
     }

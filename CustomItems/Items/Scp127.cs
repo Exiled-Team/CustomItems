@@ -10,16 +10,19 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
     using InventorySystem.Items.Firearms;
+    using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class Scp127 : CustomWeapon
     {
         /// <inheritdoc/>
@@ -49,7 +52,7 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc/>
-        public override Modifiers Modifiers { get; set; } = default;
+        public override AttachmentNameTranslation[] Attachments { get; set; }
 
         /// <inheritdoc/>
         public override float Damage { get; set; }

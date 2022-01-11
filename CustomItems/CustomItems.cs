@@ -12,6 +12,7 @@ namespace CustomItems
     using Events;
     using Exiled.API.Features;
     using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
     using HarmonyLib;
     using Server = Exiled.Events.Handlers.Server;
 
@@ -45,7 +46,7 @@ namespace CustomItems
             harmonyInstance.PatchAll();
 
             Config.LoadItems();
-            RegisterItems();
+            CustomItem.RegisterItems();
 
             Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 
@@ -55,7 +56,7 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            UnregisterItems();
+            CustomItem.RegisterItems();
 
             Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
 
@@ -65,76 +66,6 @@ namespace CustomItems
             Instance = null;
 
             base.OnDisabled();
-        }
-
-        private void RegisterItems()
-        {
-            Instance.Config.ItemConfigs.EmpGrenades?.Register();
-
-            Instance.Config.ItemConfigs.GrenadeLaunchers?.Register();
-
-            Instance.Config.ItemConfigs.ImplosionGrenades?.Register();
-
-            Instance.Config.ItemConfigs.LethalInjections?.Register();
-
-            Instance.Config.ItemConfigs.LuckyCoins?.Register();
-
-            Instance.Config.ItemConfigs.MediGuns?.Register();
-
-            Instance.Config.ItemConfigs.Scp127s?.Register();
-
-            Instance.Config.ItemConfigs.Scp1499s?.Register();
-
-            Instance.Config.ItemConfigs.SniperRifle?.Register();
-
-            Instance.Config.ItemConfigs.TranquilizerGun?.Register();
-
-            Instance.Config.ItemConfigs.Scp714s?.Register();
-
-            Instance.Config.ItemConfigs.AntiMemeticPills?.Register();
-
-            Instance.Config.ItemConfigs.DeflectorSheilds?.Register();
-
-            Instance.Config.ItemConfigs.Scp2818s?.Register();
-
-            Instance.Config.ItemConfigs.C4Charges?.Register();
-
-            Instance.Config.ItemConfigs.AutoGuns?.Register();
-        }
-
-        private void UnregisterItems()
-        {
-            Instance.Config.ItemConfigs.EmpGrenades?.Unregister();
-
-            Instance.Config.ItemConfigs.GrenadeLaunchers?.Unregister();
-
-            Instance.Config.ItemConfigs.ImplosionGrenades?.Unregister();
-
-            Instance.Config.ItemConfigs.LethalInjections?.Unregister();
-
-            Instance.Config.ItemConfigs.LuckyCoins?.Unregister();
-
-            Instance.Config.ItemConfigs.MediGuns?.Unregister();
-
-            Instance.Config.ItemConfigs.Scp127s?.Unregister();
-
-            Instance.Config.ItemConfigs.Scp1499s?.Unregister();
-
-            Instance.Config.ItemConfigs.SniperRifle?.Unregister();
-
-            Instance.Config.ItemConfigs.TranquilizerGun?.Register();
-
-            Instance.Config.ItemConfigs.Scp714s?.Unregister();
-
-            Instance.Config.ItemConfigs.AntiMemeticPills?.Unregister();
-
-            Instance.Config.ItemConfigs.DeflectorSheilds?.Unregister();
-
-            Instance.Config.ItemConfigs.Scp2818s?.Unregister();
-
-            Instance.Config.ItemConfigs.C4Charges?.Unregister();
-
-            Instance.Config.ItemConfigs.AutoGuns?.Unregister();
         }
     }
 }

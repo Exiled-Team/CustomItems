@@ -13,6 +13,7 @@ namespace CustomItems.Items
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.EventArgs;
@@ -25,6 +26,7 @@ namespace CustomItems.Items
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class DeflectorShield : CustomItem
     {
         private readonly List<Player> deflectorPlayers = new List<Player>();
@@ -146,7 +148,7 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target) && (ev.DamageHandler is FirearmDamageHandler && ev.Target != ev.Attacker))
+            if (deflectorPlayers.Contains(ev.Target) && (ev.Handler.Base is FirearmDamageHandler && ev.Target != ev.Attacker))
             {
                 ev.IsAllowed = false;
                 ev.Attacker.Hurt(new FirearmDamageHandler(((Firearm)ev.Attacker.CurrentItem).Base, ev.Amount * Multiplier, ev.Attacker.Side != Side.Scp));

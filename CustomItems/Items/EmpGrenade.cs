@@ -14,6 +14,7 @@ namespace CustomItems.Items
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
@@ -28,6 +29,7 @@ namespace CustomItems.Items
     using Player = Exiled.API.Features.Player;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class EmpGrenade : CustomGrenade
     {
         private static readonly List<Room> LockedRooms079 = new List<Room>();

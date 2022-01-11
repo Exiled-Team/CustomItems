@@ -12,11 +12,13 @@ namespace CustomItems.Items
     using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using PlayerStatsSystem;
     using UnityEngine;
@@ -25,6 +27,7 @@ namespace CustomItems.Items
     /// <summary>
     /// A gun that kills you.
     /// </summary>
+    [ExiledSerializable]
     public class Scp2818 : CustomWeapon
     {
         /// <inheritdoc/>
@@ -83,7 +86,7 @@ namespace CustomItems.Items
 
         /// <inheritdoc/>
         [YamlIgnore]
-        public override Modifiers Modifiers { get; set; } = default;
+        public override AttachmentNameTranslation[] Attachments { get; set; }
 
         /// <inheritdoc/>
         [Description("The amount of damage the weapon deals when the projectile hits another player.")]

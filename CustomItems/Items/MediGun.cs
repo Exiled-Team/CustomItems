@@ -12,15 +12,18 @@ namespace CustomItems.Items
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms.Attachments;
     using PlayerStatsSystem;
     using UnityEngine;
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class MediGun : CustomWeapon
     {
         private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
@@ -38,7 +41,7 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.95f;
 
         /// <inheritdoc/>
-        public override Modifiers Modifiers { get; set; } = default;
+        public override AttachmentNameTranslation[] Attachments { get; set; } = default;
 
         /// <inheritdoc/>
         public override float Damage { get; set; }
@@ -123,7 +126,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.DamageHandler is FirearmDamageHandler firearmHandler && firearmHandler.WeaponType == ev.Attacker.CurrentItem.Type)
+            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.Handler.Base is FirearmDamageHandler firearmHandler && firearmHandler.WeaponType == ev.Attacker.CurrentItem.Type)
                 ev.Amount = 0f;
         }
 
@@ -158,7 +161,7 @@ namespace CustomItems.Items
 
         private void OnDying(DyingEventArgs ev)
         {
-            if (!ev.Target.IsHuman || ev.Killer.Role != RoleType.Scp049)
+            if (!ev.Target.IsHuman || (ev.Killer != null && ev.Killer.Role != RoleType.Scp049))
                 return;
 
             if (!previousRoles.ContainsKey(ev.Target))

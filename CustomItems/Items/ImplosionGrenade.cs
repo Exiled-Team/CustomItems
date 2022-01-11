@@ -11,6 +11,7 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
@@ -21,6 +22,7 @@ namespace CustomItems.Items
     using Scp106 = Exiled.Events.Handlers.Scp106;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class ImplosionGrenade : CustomGrenade
     {
         private int layerMask;

@@ -10,6 +10,7 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
@@ -21,6 +22,7 @@ namespace CustomItems.Items
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class LuckyCoin : CustomItem
     {
         private readonly List<PocketDimensionTeleport> teleports = new List<PocketDimensionTeleport>();
@@ -145,7 +147,7 @@ namespace CustomItems.Items
                 Vector3 spawnPos = Vector3.MoveTowards(tpPos, ev.Position, 15);
                 Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}", CustomItems.Instance.Config.IsDebugEnabled);
 
-                Pickup coin = new Item(ItemType.Coin).Spawn(spawnPos);
+                Pickup coin = Item.Create(ItemType.Coin).Spawn(spawnPos);
 
                 Timing.CallDelayed(Duration, () => coin.Destroy());
                 Timing.CallDelayed(120f, () => onCooldown = false);

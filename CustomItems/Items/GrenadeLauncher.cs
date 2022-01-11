@@ -12,11 +12,13 @@ namespace CustomItems.Items
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.BasicMessages;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
@@ -24,6 +26,7 @@ namespace CustomItems.Items
     using CollisionHandler = Exiled.API.Features.Components.CollisionHandler;
 
     /// <inheritdoc />
+    [ExiledSerializable]
     public class GrenadeLauncher : CustomWeapon
     {
         private CustomGrenade loadedCustomGrenade;
@@ -62,7 +65,7 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc/>
-        public override Modifiers Modifiers { get; set; } = default;
+        public override AttachmentNameTranslation[] Attachments { get; set; }
 
         /// <inheritdoc/>
         public override float Damage { get; set; }
