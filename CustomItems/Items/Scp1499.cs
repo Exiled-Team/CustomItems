@@ -14,6 +14,7 @@ namespace CustomItems.Items
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
+    using Exiled.API.Structs;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
@@ -64,7 +65,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ItemUsed += OnUsedItem;
+            Exiled.Events.Handlers.Player.UsedItem += OnUsedItem;
             Exiled.Events.Handlers.Player.Destroying += OnDestroying;
             Exiled.Events.Handlers.Player.Died += OnDied;
 
@@ -74,7 +75,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ItemUsed -= OnUsedItem;
+            Exiled.Events.Handlers.Player.UsedItem -= OnUsedItem;
             Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
             Exiled.Events.Handlers.Player.Died -= OnDied;
 
@@ -155,9 +156,9 @@ namespace CustomItems.Items
                 else
                 {
                     foreach (Lift lift in Map.Lifts)
-                        if (lift.elevatorName.Contains("Gate"))
-                            foreach (Lift.Elevator elevator in lift.elevators)
-                                if (Vector3.Distance(player.Position, elevator.target.position) <= 3.5f)
+                        if (lift.Name.Contains("Gate"))
+                            foreach (Elevator elevator in lift.Elevators)
+                                if (Vector3.Distance(player.Position, elevator.Target.position) <= 3.5f)
                                 {
                                     shouldKill = true;
                                     break;
@@ -176,9 +177,9 @@ namespace CustomItems.Items
                 else
                 {
                     foreach (Lift lift in Map.Lifts)
-                        if (lift.elevatorName.Contains("El"))
-                            foreach (Lift.Elevator elevator in lift.elevators)
-                                if (Vector3.Distance(player.Position, elevator.target.position) <= 3.5f)
+                        if (lift.Name.Contains("El"))
+                            foreach (Elevator elevator in lift.Elevators)
+                                if (Vector3.Distance(player.Position, elevator.Target.position) <= 3.5f)
                                 {
                                     shouldKill = true;
                                     break;

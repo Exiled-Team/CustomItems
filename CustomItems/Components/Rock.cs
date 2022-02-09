@@ -68,7 +68,7 @@ namespace CustomItems.Components
                     return;
                 }
 
-                if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Side != Side || FriendlyFire))
+                if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Role.Side != Side || FriendlyFire))
                 {
                     target.Hurt("Rock", ThrownDamage);
                     Player.Get(Owner).ShowHitMarker(1f);

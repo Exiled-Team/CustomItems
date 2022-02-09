@@ -78,7 +78,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ItemUsed += OnItemUsed;
+            Exiled.Events.Handlers.Player.UsedItem += OnItemUsed;
             Exiled.Events.Handlers.Player.Destroying += OnDestroying;
             Exiled.Events.Handlers.Player.Hurting += OnHurt;
 
@@ -88,7 +88,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ItemUsed -= OnItemUsed;
+            Exiled.Events.Handlers.Player.UsedItem -= OnItemUsed;
             Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
             Exiled.Events.Handlers.Player.Hurting -= OnHurt;
 
@@ -151,7 +151,7 @@ namespace CustomItems.Items
             if (deflectorPlayers.Contains(ev.Target) && (ev.Handler.Base is FirearmDamageHandler && ev.Target != ev.Attacker))
             {
                 ev.IsAllowed = false;
-                ev.Attacker.Hurt(new FirearmDamageHandler(((Firearm)ev.Attacker.CurrentItem).Base, ev.Amount * Multiplier, ev.Attacker.Side != Side.Scp));
+                ev.Attacker.Hurt(new FirearmDamageHandler(((Firearm)ev.Attacker.CurrentItem).Base, ev.Amount * Multiplier, ev.Attacker.Role.Side != Side.Scp));
             }
         }
     }

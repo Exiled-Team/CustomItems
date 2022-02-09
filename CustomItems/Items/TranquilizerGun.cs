@@ -136,7 +136,7 @@ namespace CustomItems.Items
             if (ev.Attacker == ev.Target)
                 return;
 
-            if (ev.Target.Team == Team.SCP)
+            if (ev.Target.Role.Team == Team.SCP)
             {
                 int r = Random.Range(1, 101);
                 Log.Debug($"{Name}: SCP roll: {r} (must be greater than {ScpResistChance})", CustomItems.Instance.Config.IsDebugEnabled);

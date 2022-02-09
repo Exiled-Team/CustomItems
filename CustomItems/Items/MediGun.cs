@@ -141,7 +141,7 @@ namespace CustomItems.Items
             float num3 = Vector3.Distance(ev.Shooter.CameraTransform.transform.position, ev.ShotPosition);
             float damage = firearm.Base.BaseStats.DamageAtDistance(firearm.Base, num3);
 
-            if (player.Team.GetSide() == ev.Shooter.Team.GetSide())
+            if (player.Role.Side == ev.Shooter.Role.Side)
             {
                 float amount = damage * HealingModifier;
                 if (player.Health + amount > player.MaxHealth)
@@ -174,7 +174,7 @@ namespace CustomItems.Items
         {
             if (HealZombiesTeamCheck)
             {
-                target.SetRole(healer.Side == Side.Mtf ? RoleType.NtfPrivate : RoleType.ChaosConscript);
+                target.SetRole(healer.Role.Side == Side.Mtf ? RoleType.NtfPrivate : RoleType.ChaosConscript);
                 return;
             }
 

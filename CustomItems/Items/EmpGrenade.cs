@@ -16,6 +16,7 @@ namespace CustomItems.Items
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Roles;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
@@ -149,7 +150,7 @@ namespace CustomItems.Items
             if (DisableTeslaGates)
             {
                 foreach (TeslaGate teslaGate in Exiled.API.Features.Map.TeslaGates)
-                    if (Exiled.API.Features.Map.FindParentRoom(teslaGate.gameObject) == room)
+                    if (Exiled.API.Features.Map.FindParentRoom(teslaGate.GameObject) == room)
                     {
                         disabledTeslaGates.Add(teslaGate);
                         gate = teslaGate;
@@ -184,9 +185,10 @@ namespace CustomItems.Items
 
             foreach (Player player in Player.List)
             {
-                if (player.Role == RoleType.Scp079)
-                    if (player.Camera != null && player.Camera.Room() == room)
-                        player.SetCamera(198);
+                if (player.Role.As<Scp079Role>() is Scp079Role scp079)
+                    if (scp079.Camera != null && scp079.Camera.Room == room)
+                        scp079.SetCamera(198);
+
                 if (player.CurrentRoom != room)
                     continue;
 
@@ -238,7 +240,7 @@ namespace CustomItems.Items
 
         private static void OnChangingCamera(ChangingCameraEventArgs ev)
         {
-            Room room = ev.Camera.Room();
+            Room room = ev.Camera.Room;
 
             if (room != null && LockedRooms079.Contains(room))
                 ev.IsAllowed = false;
@@ -253,7 +255,7 @@ namespace CustomItems.Items
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
             foreach (TeslaGate gate in Exiled.API.Features.Map.TeslaGates)
-                if (Exiled.API.Features.Map.FindParentRoom(gate.gameObject) == ev.Player.CurrentRoom && disabledTeslaGates.Contains(gate))
+                if (Exiled.API.Features.Map.FindParentRoom(gate.GameObject) == ev.Player.CurrentRoom && disabledTeslaGates.Contains(gate))
                     ev.IsTriggerable = false;
         }
     }
