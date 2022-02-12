@@ -19,7 +19,6 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
 
     /// <inheritdoc/>
-    [ExiledSerializable]
     public class Scp714 : CustomItem
     {
         /// <inheritdoc/>

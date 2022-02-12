@@ -23,7 +23,6 @@ namespace CustomItems.Items
     using Scp096 = PlayableScps.Scp096;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class LethalInjection : CustomItem
     {
         /// <inheritdoc/>

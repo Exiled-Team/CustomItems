@@ -23,7 +23,6 @@ namespace CustomItems.Items
     using UnityEngine;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class AutoGun : CustomWeapon
     {
         /// <inheritdoc/>

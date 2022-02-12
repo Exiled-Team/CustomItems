@@ -22,7 +22,6 @@ namespace CustomItems.Items
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class LuckyCoin : CustomItem
     {
         private readonly List<PocketDimensionTeleport> teleports = new List<PocketDimensionTeleport>();

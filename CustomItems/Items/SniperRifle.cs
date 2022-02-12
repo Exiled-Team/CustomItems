@@ -20,7 +20,6 @@ namespace CustomItems.Items
     using YamlDotNet.Serialization;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class SniperRifle : CustomWeapon
     {
         /// <inheritdoc/>

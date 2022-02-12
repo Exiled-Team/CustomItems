@@ -22,7 +22,6 @@ namespace CustomItems.Items
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class Scp127 : CustomWeapon
     {
         /// <inheritdoc/>

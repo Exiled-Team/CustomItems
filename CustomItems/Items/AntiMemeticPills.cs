@@ -18,7 +18,6 @@ namespace CustomItems.Items
     using MEC;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class AntiMemeticPills : CustomItem
     {
         /// <inheritdoc/>

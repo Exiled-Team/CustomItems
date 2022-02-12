@@ -27,7 +27,6 @@ namespace CustomItems.Items
     /// <summary>
     /// A gun that kills you.
     /// </summary>
-    [ExiledSerializable]
     public class Scp2818 : CustomWeapon
     {
         /// <inheritdoc/>

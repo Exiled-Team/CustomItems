@@ -26,7 +26,6 @@ namespace CustomItems.Items
     using CollisionHandler = Exiled.API.Features.Components.CollisionHandler;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class GrenadeLauncher : CustomWeapon
     {
         private CustomGrenade loadedCustomGrenade;

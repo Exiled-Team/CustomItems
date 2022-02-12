@@ -23,7 +23,6 @@ namespace CustomItems.Items
     using UnityEngine;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class Scp1499 : CustomItem
     {
         // This position is where is unused terrain on the Surface

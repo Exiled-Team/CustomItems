@@ -22,7 +22,6 @@ namespace CustomItems.Items
     using Scp106 = Exiled.Events.Handlers.Scp106;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class ImplosionGrenade : CustomGrenade
     {
         private int layerMask;

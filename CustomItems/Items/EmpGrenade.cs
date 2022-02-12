@@ -30,7 +30,6 @@ namespace CustomItems.Items
     using Player = Exiled.API.Features.Player;
 
     /// <inheritdoc />
-    [ExiledSerializable]
     public class EmpGrenade : CustomGrenade
     {
         private static readonly List<Room> LockedRooms079 = new List<Room>();

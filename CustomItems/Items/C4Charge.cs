@@ -25,7 +25,6 @@ namespace CustomItems.Items
     using PlayerEvent = Exiled.Events.Handlers.Player;
 
     /// <inheritdoc/>
-    [ExiledSerializable]
     public class C4Charge : CustomGrenade
     {
         /// <summary>
