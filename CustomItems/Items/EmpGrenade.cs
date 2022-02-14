@@ -140,7 +140,7 @@ namespace CustomItems.Items
             Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade.gameObject);
             TeslaGate gate = null;
 
-            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Exiled.API.Features.Map.Rooms.Count}", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Room.List.Count()}", CustomItems.Instance.Config.IsDebugEnabled);
 
             LockedRooms079.Add(room);
 
@@ -148,7 +148,7 @@ namespace CustomItems.Items
 
             if (DisableTeslaGates)
             {
-                foreach (TeslaGate teslaGate in Exiled.API.Features.Map.TeslaGates)
+                foreach (TeslaGate teslaGate in TeslaGate.List)
                     if (Exiled.API.Features.Map.FindParentRoom(teslaGate.GameObject) == room)
                     {
                         disabledTeslaGates.Add(teslaGate);
@@ -253,7 +253,7 @@ namespace CustomItems.Items
 
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
-            foreach (TeslaGate gate in Exiled.API.Features.Map.TeslaGates)
+            foreach (TeslaGate gate in TeslaGate.List)
                 if (Exiled.API.Features.Map.FindParentRoom(gate.GameObject) == ev.Player.CurrentRoom && disabledTeslaGates.Contains(gate))
                     ev.IsTriggerable = false;
         }

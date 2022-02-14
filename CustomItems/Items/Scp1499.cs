@@ -154,7 +154,7 @@ namespace CustomItems.Items
                 }
                 else
                 {
-                    foreach (Lift lift in Map.Lifts)
+                    foreach (Lift lift in Lift.List)
                         if (lift.Name.Contains("Gate"))
                             foreach (Elevator elevator in lift.Elevators)
                                 if (Vector3.Distance(player.Position, elevator.Target.position) <= 3.5f)
@@ -175,7 +175,7 @@ namespace CustomItems.Items
                 }
                 else
                 {
-                    foreach (Lift lift in Map.Lifts)
+                    foreach (Lift lift in Lift.List)
                         if (lift.Name.Contains("El"))
                             foreach (Elevator elevator in lift.Elevators)
                                 if (Vector3.Distance(player.Position, elevator.Target.position) <= 3.5f)
