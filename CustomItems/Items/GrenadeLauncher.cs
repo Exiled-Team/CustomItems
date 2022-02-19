@@ -64,9 +64,6 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc/>
-        public override AttachmentNameTranslation[] Attachments { get; set; }
-
-        /// <inheritdoc/>
         public override float Damage { get; set; }
 
         /// <inheritdoc/>

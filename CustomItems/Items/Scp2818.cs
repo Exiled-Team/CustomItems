@@ -84,10 +84,6 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc/>
-        [YamlIgnore]
-        public override AttachmentNameTranslation[] Attachments { get; set; }
-
-        /// <inheritdoc/>
         [Description("The amount of damage the weapon deals when the projectile hits another player.")]
         public override float Damage { get; set; } = float.MaxValue;
 

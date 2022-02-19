@@ -40,9 +40,6 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.95f;
 
         /// <inheritdoc/>
-        public override AttachmentNameTranslation[] Attachments { get; set; } = default;
-
-        /// <inheritdoc/>
         public override float Damage { get; set; }
 
         /// <inheritdoc/>

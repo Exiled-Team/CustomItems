@@ -65,9 +65,6 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc/>
-        public override AttachmentNameTranslation[] Attachments { get; set; }
-
-        /// <inheritdoc/>
         public override byte ClipSize { get; set; } = 2;
 
         /// <inheritdoc/>
