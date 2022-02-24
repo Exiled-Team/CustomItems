@@ -24,7 +24,6 @@ namespace CustomItems.Items
     /// <inheritdoc />
     public class LuckyCoin : CustomItem
     {
-        private readonly List<PocketDimensionTeleport> teleports = new List<PocketDimensionTeleport>();
         private bool isDropped;
         private bool onCooldown;
 
@@ -68,7 +67,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Server.RoundStarted += OnRoundStart;
             Player.EnteringPocketDimension += OnEnterPocketDimension;
             base.SubscribeEvents();
         }
@@ -76,7 +74,6 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Server.RoundStarted -= OnRoundStart;
             Player.EnteringPocketDimension -= OnEnterPocketDimension;
             base.UnsubscribeEvents();
         }
@@ -109,17 +106,6 @@ namespace CustomItems.Items
             }
         }
 
-        private void OnRoundStart()
-        {
-            teleports.Clear();
-
-            foreach (PocketDimensionTeleport teleport in Object.FindObjectsOfType<PocketDimensionTeleport>())
-            {
-                teleports.Add(teleport);
-                Log.Debug("Adding PD Teleport..", CustomItems.Instance.Config.IsDebugEnabled);
-            }
-        }
-
         private void OnEnterPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
             Log.Debug($"{ev.Player.Nickname} Entering Pocket Dimension.", CustomItems.Instance.Config.IsDebugEnabled);
@@ -133,7 +119,7 @@ namespace CustomItems.Items
                 return;
 
             Log.Debug($"{ev.Player.Nickname} - EPD checks passed.", CustomItems.Instance.Config.IsDebugEnabled);
-            foreach (PocketDimensionTeleport teleport in teleports)
+            foreach (PocketDimensionTeleport teleport in Map.PocketDimensionTeleports)
             {
                 Log.Debug($"{ev.Player.Nickname} - Checking teleporter..", CustomItems.Instance.Config.IsDebugEnabled);
                 if (teleport._type != PocketDimensionTeleport.PDTeleportType.Exit)

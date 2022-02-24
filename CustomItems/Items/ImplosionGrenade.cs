@@ -147,7 +147,7 @@ namespace CustomItems.Items
 
                     bool line = Physics.Linecast(ev.Grenade.transform.position, player.Position, layerMask);
                     Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
-                    if (!line)
+                    if (line)
                     {
                         effectedPlayers.Add(player);
                         Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
