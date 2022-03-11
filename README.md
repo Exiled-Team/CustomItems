@@ -73,6 +73,53 @@ InsideHidRight
 InsideLczWc
 InsideServersBottom
 ```
+### Attachment Names
+```
+None
+IronSights
+DotSight
+HoloSight
+NightVisionSight
+AmmoSight
+ScopeSight
+StandardStock
+ExtendedStock
+RetractedStock
+LightweightStock
+HeavyStock
+RecoilReducingStock
+Foregrip
+Laser
+Flashlight
+AmmoCounter
+StandardBarrel
+ExtendedBarrel
+SoundSuppressor
+FlashHider
+MuzzleBrake
+MuzzleBooster
+StandardMagFMJ
+StandardMagAP
+StandardMagJHP
+ExtendedMagFMJ
+ExtendedMagAP
+ExtendedMagJHP
+DrumMagFMJ
+DrumMagAP
+DrumMagJHP,
+LowcapMagFMJ
+LowcapMagAP
+LowcapMagJHP
+CylinderMag4
+CylinderMag6
+CylinderMag8
+CarbineBody
+RifleBody
+ShortBarrel
+ShotgunChoke
+ShotgunExtendedBarrel
+NoRifleStock
+```
 
 ### API Notes **(FOR DEVELOPERS ONLY)**
 Tl;dr - All you need to do is make a class that inherits CustomItem, CustomWeapon or CustomGrenade (depending on what kind of item you're making), override LoadEvents() and UnloadEvents() to register event handlers to the weapon, then inside the event handlers, start everything with
