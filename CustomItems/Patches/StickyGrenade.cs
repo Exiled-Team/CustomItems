@@ -24,13 +24,7 @@ namespace CustomItems.Patches
         {
             if (Items.C4Charge.Instance.IsSticky && Items.C4Charge.PlacedCharges.ContainsKey(Pickup.Get(__instance)))
             {
-                var rigidbody = __instance.gameObject.GetComponent<Rigidbody>();
-                rigidbody.isKinematic = false;
-                rigidbody.useGravity = false;
-                rigidbody.velocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
-                rigidbody.freezeRotation = true;
-                rigidbody.mass = 100000;
+                __instance.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             }
         }
     }
