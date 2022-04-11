@@ -65,10 +65,10 @@ namespace CustomItems.Items
 
         /// <inheritdoc />
         [YamlIgnore]
-        public override AttachmentNameTranslation[] Attachments { get; set; } = new[]
+        public override AttachmentName[] Attachments { get; set; } = new[]
         {
-            AttachmentNameTranslation.ExtendedBarrel,
-            AttachmentNameTranslation.ScopeSight,
+            AttachmentName.ExtendedBarrel,
+            AttachmentName.ScopeSight,
         };
 
         /// <summary>

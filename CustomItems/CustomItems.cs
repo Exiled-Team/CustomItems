@@ -46,6 +46,7 @@ namespace CustomItems
             harmonyInstance.PatchAll();
 
             Config.LoadItems();
+            /*
             Config.ItemConfigs.Scp127s.Register();
             Config.ItemConfigs.Scp714s.Register();
             Config.ItemConfigs.Scp1499s.Register();
@@ -62,7 +63,9 @@ namespace CustomItems
             Config.ItemConfigs.SniperRifle.Register();
             Config.ItemConfigs.TranquilizerGun.Register();
             Config.ItemConfigs.AntiMemeticPills.Register();
+            */
 
+            CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
             Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 
             base.OnEnabled();

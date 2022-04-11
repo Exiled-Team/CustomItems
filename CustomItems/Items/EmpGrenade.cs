@@ -23,6 +23,7 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
     using Exiled.Events.Handlers;
     using InventorySystem.Items.Firearms.Attachments;
+    using InventorySystem.Items.Firearms.Attachments.Components;
     using MEC;
     using UnityEngine;
     using Item = Exiled.API.Features.Items.Item;
@@ -203,8 +204,8 @@ namespace CustomItems.Items
                             break;
                         case Firearm firearm:
                         {
-                            foreach (FirearmAttachment attachment in firearm.Attachments)
-                                if (attachment.Name == AttachmentNameTranslation.Flashlight)
+                            foreach (Attachment attachment in firearm.Attachments)
+                                if (attachment.Name == AttachmentName.Flashlight)
                                     attachment.IsEnabled = false;
                             break;
                         }
