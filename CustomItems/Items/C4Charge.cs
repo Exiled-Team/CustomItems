@@ -25,6 +25,7 @@ namespace CustomItems.Items
     using PlayerEvent = Exiled.Events.Handlers.Player;
 
     /// <inheritdoc/>
+    [CustomItem(ItemType.GrenadeHE)]
     public class C4Charge : CustomGrenade
     {
         /// <summary>

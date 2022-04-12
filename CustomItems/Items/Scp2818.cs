@@ -27,6 +27,7 @@ namespace CustomItems.Items
     /// <summary>
     /// A gun that kills you.
     /// </summary>
+    [CustomItem(ItemType.GunE11SR)]
     public class Scp2818 : CustomWeapon
     {
         /// <inheritdoc/>

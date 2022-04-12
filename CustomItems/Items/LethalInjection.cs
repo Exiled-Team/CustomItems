@@ -23,6 +23,7 @@ namespace CustomItems.Items
     using Scp096 = PlayableScps.Scp096;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.Adrenaline)]
     public class LethalInjection : CustomItem
     {
         /// <inheritdoc/>

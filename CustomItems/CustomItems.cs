@@ -65,6 +65,7 @@ namespace CustomItems
             Config.ItemConfigs.AntiMemeticPills.Register();
             */
 
+            Log.Debug("Registering items..", Config.IsDebugEnabled);
             CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
             Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 

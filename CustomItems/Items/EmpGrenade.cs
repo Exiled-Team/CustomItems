@@ -31,6 +31,7 @@ namespace CustomItems.Items
     using Player = Exiled.API.Features.Player;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.GrenadeFlash)]
     public class EmpGrenade : CustomGrenade
     {
         private static readonly List<Room> LockedRooms079 = new List<Room>();

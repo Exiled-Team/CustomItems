@@ -18,6 +18,7 @@ namespace CustomItems.Items
     using MEC;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.SCP500)]
     public class AntiMemeticPills : CustomItem
     {
         /// <inheritdoc/>

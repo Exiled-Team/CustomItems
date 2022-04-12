@@ -23,6 +23,7 @@ namespace CustomItems.Items
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.GunFSP9)]
     public class MediGun : CustomWeapon
     {
         private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();

@@ -22,6 +22,7 @@ namespace CustomItems.Items
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.Coin)]
     public class LuckyCoin : CustomItem
     {
         private bool isDropped;

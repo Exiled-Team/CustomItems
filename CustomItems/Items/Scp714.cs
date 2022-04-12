@@ -19,6 +19,7 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
 
     /// <inheritdoc/>
+    [CustomItem(ItemType.Coin)]
     public class Scp714 : CustomItem
     {
         /// <inheritdoc/>

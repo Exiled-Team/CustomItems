@@ -23,6 +23,7 @@ namespace CustomItems.Items
     using UnityEngine;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.GunCOM15)]
     public class AutoGun : CustomWeapon
     {
         /// <inheritdoc/>

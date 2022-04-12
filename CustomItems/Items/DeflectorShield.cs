@@ -26,6 +26,7 @@ namespace CustomItems.Items
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.SCP268)]
     public class DeflectorShield : CustomItem
     {
         private readonly List<Player> deflectorPlayers = new List<Player>();

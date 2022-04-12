@@ -28,6 +28,7 @@ namespace CustomItems.Items
     using Random = UnityEngine.Random;
 
     /// <inheritdoc />
+    [CustomItem(ItemType.GunCOM18)]
     public class TranquilizerGun : CustomWeapon
     {
         private readonly Dictionary<Player, float> tranquilizedPlayers = new Dictionary<Player, float>();
