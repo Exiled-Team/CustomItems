@@ -46,24 +46,6 @@ namespace CustomItems
             harmonyInstance.PatchAll();
 
             Config.LoadItems();
-            /*
-            Config.ItemConfigs.Scp127s.Register();
-            Config.ItemConfigs.Scp714s.Register();
-            Config.ItemConfigs.Scp1499s.Register();
-            Config.ItemConfigs.Scp2818s.Register();
-            Config.ItemConfigs.AutoGuns.Register();
-            Config.ItemConfigs.C4Charges.Register();
-            Config.ItemConfigs.DeflectorSheilds.Register();
-            Config.ItemConfigs.EmpGrenades.Register();
-            Config.ItemConfigs.GrenadeLaunchers.Register();
-            Config.ItemConfigs.ImplosionGrenades.Register();
-            Config.ItemConfigs.LethalInjections.Register();
-            Config.ItemConfigs.LuckyCoins.Register();
-            Config.ItemConfigs.MediGuns.Register();
-            Config.ItemConfigs.SniperRifle.Register();
-            Config.ItemConfigs.TranquilizerGun.Register();
-            Config.ItemConfigs.AntiMemeticPills.Register();
-            */
 
             Log.Debug("Registering items..", Config.IsDebugEnabled);
             CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
@@ -75,22 +57,7 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            Config.ItemConfigs.Scp127s.Unregister();
-            Config.ItemConfigs.Scp714s.Unregister();
-            Config.ItemConfigs.Scp1499s.Unregister();
-            Config.ItemConfigs.Scp2818s.Unregister();
-            Config.ItemConfigs.AutoGuns.Unregister();
-            Config.ItemConfigs.C4Charges.Unregister();
-            Config.ItemConfigs.DeflectorSheilds.Unregister();
-            Config.ItemConfigs.EmpGrenades.Unregister();
-            Config.ItemConfigs.GrenadeLaunchers.Unregister();
-            Config.ItemConfigs.ImplosionGrenades.Unregister();
-            Config.ItemConfigs.LethalInjections.Unregister();
-            Config.ItemConfigs.LuckyCoins.Unregister();
-            Config.ItemConfigs.MediGuns.Unregister();
-            Config.ItemConfigs.SniperRifle.Unregister();
-            Config.ItemConfigs.TranquilizerGun.Unregister();
-            Config.ItemConfigs.AntiMemeticPills.Unregister();
+            CustomItem.UnregisterItems();
 
             Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
 
