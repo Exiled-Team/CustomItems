@@ -185,7 +185,7 @@ namespace CustomItems.Items
                         {
                             if (TryGet(item, out CustomItem customItem))
                             {
-                                customItem.Spawn(player.Position, item);
+                                customItem.Spawn(player.Position, item, player);
                                 player.RemoveItem(item);
                             }
                         }
