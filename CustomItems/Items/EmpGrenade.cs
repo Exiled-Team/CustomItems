@@ -164,7 +164,7 @@ namespace CustomItems.Items
             foreach (Door door in room.Doors)
             {
                 if (door == null ||
-                    (!string.IsNullOrEmpty(door.Nametag) && BlacklistedDoorTypes.Contains(door.Type)) ||
+                    BlacklistedDoorTypes.Contains(door.Type) ||
                     (door.DoorLockType > 0 && !OpenLockedDoors) ||
                     (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors))
                     continue;
