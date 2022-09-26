@@ -74,7 +74,7 @@ namespace CustomItems.Components
                     Player.Get(Owner).ShowHitMarker(1f);
                 }
 
-                CustomItem.Registered.First(customItem => customItem.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up);
+                CustomItem.Registered.First(customItem => customItem.Name == "Rock").Spawn(collision.GetContact(0).point + Vector3.up, Player.Get(Owner));
                 Destroy(gameObject);
             }
             catch (Exception exception)

@@ -97,7 +97,7 @@ namespace CustomItems.Items
         /// Gets or sets a value indicating what doors will never be opened by EMP grenades.
         /// </summary>
         [Description("A list of door names that will not be opened with EMP grenades regardless of the above configs.")]
-        public HashSet<string> BlacklistedDoorNames { get; set; } = new HashSet<string>();
+        public HashSet<DoorType> BlacklistedDoorTypes { get; set; } = new HashSet<DoorType>();
 
         /// <summary>
         /// Gets or sets a value indicating whether if tesla gates will get disabled.
@@ -164,7 +164,7 @@ namespace CustomItems.Items
             foreach (Door door in room.Doors)
             {
                 if (door == null ||
-                    (!string.IsNullOrEmpty(door.Nametag) && BlacklistedDoorNames.Contains(door.Nametag)) ||
+                    BlacklistedDoorTypes.Contains(door.Type) ||
                     (door.DoorLockType > 0 && !OpenLockedDoors) ||
                     (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors))
                     continue;

@@ -11,7 +11,6 @@ namespace CustomItems
     using System;
     using Events;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using HarmonyLib;
     using Server = Exiled.Events.Handlers.Server;
@@ -34,7 +33,7 @@ namespace CustomItems
         public static CustomItems Instance { get; private set; }
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(5, 2, 2);
 
         /// <inheritdoc/>
         public override void OnEnabled()
