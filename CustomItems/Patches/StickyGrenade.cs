@@ -22,7 +22,7 @@ namespace CustomItems.Patches
     {
         private static void Prefix(EffectGrenade __instance)
         {
-            if (Items.C4Charge.Instance.IsSticky && Items.C4Charge.PlacedCharges.ContainsKey(Pickup.Get(__instance)))
+            if (Items.C4Charge.Instance is not null && Items.C4Charge.Instance.IsSticky && Items.C4Charge.PlacedCharges.ContainsKey(Pickup.Get(__instance)))
             {
                 __instance.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             }

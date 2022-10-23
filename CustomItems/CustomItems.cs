@@ -21,7 +21,7 @@ namespace CustomItems
         /// <summary>
         /// Random Number Generator.
         /// </summary>
-        public Random Rng = new Random();
+        public Random Rng = new ();
 
         private Harmony harmonyInstance;
 

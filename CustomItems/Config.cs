@@ -31,7 +31,7 @@ namespace CustomItems
         /// <summary>
         /// The list of <see cref="CustomItem"/>s and their spawn chances for each Subclass.
         /// </summary>
-        public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
+        public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new ();
 
         /// <inheritdoc/>
         [Description("Whether or not this plugin is enabled.")]
@@ -47,7 +47,7 @@ namespace CustomItems
         /// Gets or sets a value indicating what subclasses should get what items, and their spawn chances.
         /// </summary>
         [Description("A list of each item and the subclasses that can spawn with it, and the % chance of them receiving it. **This is only used if Advanced Subclassing is installed!**")]
-        public Dictionary<string, Dictionary<string, float>> SubclassList { get; set; } = new Dictionary<string, Dictionary<string, float>>
+        public Dictionary<string, Dictionary<string, float>> SubclassList { get; set; } = new ()
         {
             {
                 "ExampleSubclass", new Dictionary<string, float> { { "SR-119", 100 }, { "SG-119", 50 } }

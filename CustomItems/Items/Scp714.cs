@@ -35,12 +35,12 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.15f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside049Armory,
@@ -52,7 +52,7 @@ namespace CustomItems.Items
         /// Gets or sets which roles shouldn't be able to deal damage to the player that has SCP-714 put on.
         /// </summary>
         [Description("Which roles shouldn't be able to deal damage to the player that has SCP-714 put on.")]
-        public List<RoleType> Scp714Roles { get; set; } = new List<RoleType>()
+        public List<RoleType> Scp714Roles { get; set; } = new ()
         {
             RoleType.Scp049,
             RoleType.Scp0492,
@@ -62,7 +62,7 @@ namespace CustomItems.Items
         /// Gets or sets which effects should be given to the player, when he will put on SCP-714.
         /// </summary>
         [Description("Which effects should be given to the player, when he will put on SCP-714.")]
-        public List<string> Scp714Effects { get; set; } = new List<string>
+        public List<string> Scp714Effects { get; set; } = new ()
         {
             "Asphyxiated",
         };

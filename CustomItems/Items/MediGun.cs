@@ -10,14 +10,12 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Enums;
-    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms.Attachments;
     using PlayerStatsSystem;
     using UnityEngine;
     using Firearm = Exiled.API.Features.Items.Firearm;
@@ -26,7 +24,7 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GunFSP9)]
     public class MediGun : CustomWeapon
     {
-        private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
+        private readonly Dictionary<Player, RoleType> previousRoles = new ();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 5;
@@ -47,22 +45,22 @@ namespace CustomItems.Items
         public override byte ClipSize { get; set; } = 10;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideGr18,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideGateA,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideGateB,

@@ -12,7 +12,6 @@ namespace CustomItems.Items
     using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Enums;
-    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
@@ -34,11 +33,11 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GrenadeFlash)]
     public class EmpGrenade : CustomGrenade
     {
-        private static readonly List<Room> LockedRooms079 = new List<Room>();
+        private static readonly List<Room> LockedRooms079 = new ();
 
-        private readonly List<Door> lockedDoors = new List<Door>();
+        private readonly List<Door> lockedDoors = new ();
 
-        private readonly List<TeslaGate> disabledTeslaGates = new List<TeslaGate>();
+        private readonly List<TeslaGate> disabledTeslaGates = new ();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 0;
@@ -50,12 +49,12 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.15f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 100,
                     Location = SpawnLocation.Inside173Gate,
@@ -63,7 +62,7 @@ namespace CustomItems.Items
             },
             StaticSpawnPoints = new List<StaticSpawnPoint>
             {
-                new StaticSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Name = "somewhere",
@@ -97,7 +96,7 @@ namespace CustomItems.Items
         /// Gets or sets a value indicating what doors will never be opened by EMP grenades.
         /// </summary>
         [Description("A list of door names that will not be opened with EMP grenades regardless of the above configs.")]
-        public HashSet<DoorType> BlacklistedDoorTypes { get; set; } = new HashSet<DoorType>();
+        public HashSet<DoorType> BlacklistedDoorTypes { get; set; } = new ();
 
         /// <summary>
         /// Gets or sets a value indicating whether if tesla gates will get disabled.

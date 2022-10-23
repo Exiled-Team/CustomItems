@@ -19,7 +19,6 @@ namespace CustomItems.Items
     using MEC;
     using UnityEngine;
     using Player = Exiled.Events.Handlers.Player;
-    using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
     [CustomItem(ItemType.Coin)]
@@ -41,17 +40,17 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 100,
                     Location = SpawnLocation.Inside012Locker,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside173Armory,

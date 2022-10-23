@@ -21,7 +21,7 @@ namespace CustomItems.Commands
         public string Command { get; } = "detonate";
 
         /// <inheritdoc/>
-        public string[] Aliases { get; } = new string[] { "det" };
+        public string[] Aliases { get; } = { "det" };
 
         /// <inheritdoc/>
         public string Description { get; } = "Detonate command for detonating C4 charges";
@@ -30,7 +30,6 @@ namespace CustomItems.Commands
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player ply = Player.Get((sender as CommandSender).SenderId);
-
             if (!Items.C4Charge.PlacedCharges.ContainsValue(ply))
             {
                 response = "\n<color=red>You've haven't placed any C4 charges!</color>";
