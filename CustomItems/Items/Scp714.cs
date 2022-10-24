@@ -148,6 +148,8 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
+            if (ev.Target.CurrentItem is null || ev.Attacker is null || ev.Target is null)
+                return;
             if (Check(ev.Target.CurrentItem))
             {
                 if (Scp714Roles.Contains(ev.Attacker.Role))
