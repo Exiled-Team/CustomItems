@@ -69,36 +69,36 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0.75f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 5,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 10,
                     Location = SpawnLocation.InsideLczArmory,
                 },
 
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 25,
                     Location = SpawnLocation.InsideHczArmory,
                 },
 
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideNukeArmory,
                 },
 
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside049Armory,
                 },
 
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideSurfaceNuke,

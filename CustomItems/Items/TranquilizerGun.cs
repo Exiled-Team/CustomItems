@@ -19,7 +19,6 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using Mirror;
     using PlayerStatsSystem;
@@ -31,8 +30,8 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GunCOM18)]
     public class TranquilizerGun : CustomWeapon
     {
-        private readonly Dictionary<Player, float> tranquilizedPlayers = new Dictionary<Player, float>();
-        private readonly List<Player> activeTranqs = new List<Player>();
+        private readonly Dictionary<Player, float> tranquilizedPlayers = new ();
+        private readonly List<Player> activeTranqs = new ();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 11;
@@ -47,17 +46,17 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.55f;
 
         /// <inheritdoc />
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideGr18,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 80,
                     Location = SpawnLocation.Inside173Armory,

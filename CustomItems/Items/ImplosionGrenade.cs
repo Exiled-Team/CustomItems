@@ -42,17 +42,17 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0.65f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside012Locker,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideHczArmory,
@@ -94,9 +94,9 @@ namespace CustomItems.Items
         /// Gets or sets a list of roles unable to be affected by Implosion grenades.
         /// </summary>
         [Description("What roles will not be able to be affected by Implosion Grenades. Keeping SCP-173 on this list is highly recommended.")]
-        public HashSet<RoleType> BlacklistedRoles { get; set; } = new HashSet<RoleType> { RoleType.Scp173, RoleType.Tutorial, };
+        public HashSet<RoleType> BlacklistedRoles { get; set; } = new () { RoleType.Scp173, RoleType.Tutorial, };
 
-        private List<CoroutineHandle> Coroutines { get; set; } = new List<CoroutineHandle>();
+        private List<CoroutineHandle> Coroutines { get; set; } = new ();
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()

@@ -11,7 +11,6 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Enums;
-    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
@@ -19,7 +18,6 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.EventArgs;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms;
     using MEC;
     using PlayerStatsSystem;
     using YamlDotNet.Serialization;
@@ -29,7 +27,7 @@ namespace CustomItems.Items
     [CustomItem(ItemType.SCP268)]
     public class DeflectorShield : CustomItem
     {
-        private readonly List<Player> deflectorPlayers = new List<Player>();
+        private readonly List<Player> deflectorPlayers = new ();
 
         private readonly ItemType type = ItemType.SCP268;
 
@@ -50,12 +48,12 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.65f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 10,
                     Location = SpawnLocation.InsideHid,

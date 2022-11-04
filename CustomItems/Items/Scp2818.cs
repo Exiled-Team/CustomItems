@@ -18,7 +18,6 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using PlayerStatsSystem;
     using UnityEngine;
@@ -66,17 +65,17 @@ namespace CustomItems.Items
         public bool DespawnAfterUse { get; set; } = false;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 60,
                     Location = SpawnLocation.InsideHid,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideHczArmory,

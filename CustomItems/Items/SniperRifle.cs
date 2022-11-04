@@ -10,7 +10,6 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features.Attributes;
-    using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
@@ -46,17 +45,17 @@ namespace CustomItems.Items
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new ()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideHid,
                 },
-                new DynamicSpawnPoint
+                new ()
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideHczArmory,

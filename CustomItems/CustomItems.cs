@@ -21,7 +21,7 @@ namespace CustomItems
         /// <summary>
         /// Random Number Generator.
         /// </summary>
-        public Random Rng = new Random();
+        public Random Rng = new ();
 
         private Harmony harmonyInstance;
 
@@ -33,7 +33,7 @@ namespace CustomItems
         public static CustomItems Instance { get; private set; }
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(5, 2, 2);
+        public override Version RequiredExiledVersion { get; } = new Version(5, 3, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
