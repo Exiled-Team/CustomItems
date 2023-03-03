@@ -23,7 +23,7 @@ namespace CustomItems.Configs
         /// Gets the list of emp greanades.
         /// </summary>
         [Description("The list of EMP grenades.")]
-        public List<EmpGrenade> EmpGrenades { get; private set; } = new List<EmpGrenade>
+        public List<EmpGrenade> EmpGrenades { get; private set; } = new()
         {
             new EmpGrenade(),
         };
@@ -32,7 +32,7 @@ namespace CustomItems.Configs
         /// Gets the list of grenade launchers.
         /// </summary>
         [Description("The list of grenade launchers.")]
-        public List<GrenadeLauncher> GrenadeLaunchers { get; private set; } = new List<GrenadeLauncher>
+        public List<GrenadeLauncher> GrenadeLaunchers { get; private set; } = new()
         {
             new GrenadeLauncher(),
         };
@@ -41,7 +41,7 @@ namespace CustomItems.Configs
         /// Gets the list of implosion grenades.
         /// </summary>
         [Description("The list of implosion grenades.")]
-        public List<ImplosionGrenade> ImplosionGrenades { get; private set; } = new List<ImplosionGrenade>
+        public List<ImplosionGrenade> ImplosionGrenades { get; private set; } = new()
         {
             new ImplosionGrenade(),
         };
@@ -50,7 +50,7 @@ namespace CustomItems.Configs
         /// Gets the list of lethal injections.
         /// </summary>
         [Description("The list of lethal injections.")]
-        public List<LethalInjection> LethalInjections { get; private set; } = new List<LethalInjection>
+        public List<LethalInjection> LethalInjections { get; private set; } = new()
         {
             new LethalInjection(),
         };
@@ -59,7 +59,7 @@ namespace CustomItems.Configs
         /// Gets the list of lucky coins.
         /// </summary>
         [Description("The list of lucky coins.")]
-        public List<LuckyCoin> LuckyCoins { get; private set; } = new List<LuckyCoin>
+        public List<LuckyCoin> LuckyCoins { get; private set; } = new()
         {
             new LuckyCoin(),
         };
@@ -68,7 +68,7 @@ namespace CustomItems.Configs
         /// Gets the list of mediGuns.
         /// </summary>
         [Description("The list of mediGuns.")]
-        public List<MediGun> MediGuns { get; private set; } = new List<MediGun>
+        public List<MediGun> MediGuns { get; private set; } = new()
         {
             new MediGun(),
         };
@@ -77,7 +77,7 @@ namespace CustomItems.Configs
         /// Gets the list of Scp127s.
         /// </summary>
         [Description("The list of Scp127s.")]
-        public List<Scp127> Scp127s { get; private set; } = new List<Scp127>
+        public List<Scp127> Scp127s { get; private set; } = new()
         {
             new Scp127(),
         };
@@ -86,7 +86,7 @@ namespace CustomItems.Configs
         /// Gets the list of Scp1499s.
         /// </summary>
         [Description("The list of Scp1499s.")]
-        public List<Scp1499> Scp1499s { get; private set; } = new List<Scp1499>
+        public List<Scp1499> Scp1499s { get; private set; } = new()
         {
             new Scp1499(),
         };
@@ -95,7 +95,7 @@ namespace CustomItems.Configs
         /// Gets the list of sniper rifles.
         /// </summary>
         [Description("The list of sniper rifles.")]
-        public List<SniperRifle> SniperRifle { get; private set; } = new List<SniperRifle>
+        public List<SniperRifle> SniperRifle { get; private set; } = new()
         {
             new SniperRifle(),
         };
@@ -104,7 +104,7 @@ namespace CustomItems.Configs
         /// Gets the list of tranquilizer guns.
         /// </summary>
         [Description("The list of tranquilizer guns.")]
-        public List<TranquilizerGun> TranquilizerGun { get; private set; } = new List<TranquilizerGun>
+        public List<TranquilizerGun> TranquilizerGun { get; private set; } = new()
         {
             new TranquilizerGun(),
         };
@@ -113,7 +113,7 @@ namespace CustomItems.Configs
         /// Gets the list of Scp714s.
         /// </summary>
         [Description("The list of Scp714s.")]
-        public List<Scp714> Scp714s { get; private set; } = new List<Scp714>
+        public List<Scp714> Scp714s { get; private set; } = new()
         {
             new Scp714(),
         };
@@ -122,7 +122,7 @@ namespace CustomItems.Configs
         /// Gets the list of Anti-Memetic Pills.
         /// </summary>
         [Description("The list of Anti-Memetic Pills.")]
-        public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new List<AntiMemeticPills>
+        public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new()
         {
             new AntiMemeticPills(),
         };
@@ -131,7 +131,7 @@ namespace CustomItems.Configs
         /// Gets the list of DeflectorSheilds.
         /// </summary>
         [Description("The list of DeflectorSheilds.")]
-        public List<DeflectorShield> DeflectorSheilds { get; private set; } = new List<DeflectorShield>
+        public List<DeflectorShield> DeflectorSheilds { get; private set; } = new()
         {
             new DeflectorShield(),
         };
@@ -140,7 +140,7 @@ namespace CustomItems.Configs
         /// Gets the list of <see cref="Scp2818"/>s.
         /// </summary>
         [Description("The list of SCP-2818s.")]
-        public List<Scp2818> Scp2818s { get; private set; } = new List<Scp2818>
+        public List<Scp2818> Scp2818s { get; private set; } = new()
         {
             new Scp2818(),
         };
@@ -149,7 +149,7 @@ namespace CustomItems.Configs
         /// Gets the list of C4Charges.
         /// </summary>
         [Description("The list of C4Charges.")]
-        public List<C4Charge> C4Charges { get; private set; } = new List<C4Charge>
+        public List<C4Charge> C4Charges { get; private set; } = new()
         {
             new C4Charge(),
         };
@@ -158,7 +158,7 @@ namespace CustomItems.Configs
         /// Gets the list of AutoGuns.
         /// </summary>
         [Description("The list of AutoGuns.")]
-        public List<AutoGun> AutoGuns { get; private set; } = new List<AutoGun>
+        public List<AutoGun> AutoGuns { get; private set; } = new()
         {
             new AutoGun(),
         };

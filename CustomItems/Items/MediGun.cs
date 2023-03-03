@@ -17,7 +17,9 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
+    using PlayerRoles;
     using PlayerStatsSystem;
     using UnityEngine;
     using Firearm = Exiled.API.Features.Items.Firearm;
@@ -26,7 +28,7 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GunFSP9)]
     public class MediGun : CustomWeapon
     {
-        private readonly Dictionary<Player, RoleType> previousRoles = new Dictionary<Player, RoleType>();
+        private readonly Dictionary<Player, RoleTypeId> previousRoles = new();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 5;
@@ -47,25 +49,25 @@ namespace CustomItems.Items
         public override byte ClipSize { get; set; } = 10;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 40,
-                    Location = SpawnLocation.InsideGr18,
+                    Location = SpawnLocationType.InsideGr18,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.InsideGateA,
+                    Location = SpawnLocationType.InsideGateA,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.InsideGateB,
+                    Location = SpawnLocationType.InsideGateB,
                 },
             },
         };
@@ -123,22 +125,22 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Target && ev.Handler.Base is FirearmDamageHandler firearmHandler && firearmHandler.WeaponType == ev.Attacker.CurrentItem.Type)
+            if (Check(ev.Attacker.CurrentItem) && ev.Attacker != ev.Player && ev.DamageHandler.Base is FirearmDamageHandler firearmHandler && firearmHandler.WeaponType == ev.Attacker.CurrentItem.Type)
                 ev.Amount = 0f;
         }
 
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            if (!(Player.Get(ev.TargetNetId) is Player player))
+            if (Player.Get(ev.TargetNetId) is not { } player)
                 return;
-            if (!(ev.Shooter.CurrentItem is Firearm firearm))
+            if (ev.Player.CurrentItem is not Firearm firearm)
                 return;
 
-            float num3 = Vector3.Distance(ev.Shooter.CameraTransform.transform.position, ev.ShotPosition);
+            float num3 = Vector3.Distance(ev.Player.CameraTransform.transform.position, ev.ShotPosition);
             float damage = firearm.Base.BaseStats.DamageAtDistance(firearm.Base, num3);
 
-            if (player.Role.Side == ev.Shooter.Role.Side)
+            if (player.Role.Side == ev.Player.Role.Side)
             {
                 float amount = damage * HealingModifier;
                 if (player.Health + amount > player.MaxHealth)
@@ -146,37 +148,37 @@ namespace CustomItems.Items
                 else
                     player.Health += amount;
             }
-            else if (player.Role == RoleType.Scp0492 && HealZombies)
+            else if (player.Role == RoleTypeId.Scp0492 && HealZombies)
             {
                 player.MaxArtificialHealth = ZombieHealingRequired;
                 player.ArtificialHealth += damage;
 
                 if (player.ArtificialHealth >= player.MaxArtificialHealth)
-                    DoReviveZombie(player, ev.Shooter);
+                    DoReviveZombie(player, ev.Player);
             }
         }
 
         private void OnDying(DyingEventArgs ev)
         {
-            if (!ev.Target.IsHuman || (ev.Killer != null && ev.Killer.Role != RoleType.Scp049))
+            if (!ev.Player.IsHuman || (ev.Attacker != null && ev.Attacker.Role != RoleTypeId.Scp049))
                 return;
 
-            if (!previousRoles.ContainsKey(ev.Target))
-                previousRoles.Add(ev.Target, RoleType.None);
+            if (!previousRoles.ContainsKey(ev.Player))
+                previousRoles.Add(ev.Player, RoleTypeId.None);
 
-            previousRoles[ev.Target] = ev.Target.Role;
+            previousRoles[ev.Player] = ev.Player.Role;
         }
 
         private void DoReviveZombie(Player target, Player healer)
         {
             if (HealZombiesTeamCheck)
             {
-                target.SetRole(healer.Role.Side == Side.Mtf ? RoleType.NtfPrivate : RoleType.ChaosConscript);
+                target.Role.Set(healer.Role.Side == Side.Mtf ? RoleTypeId.NtfPrivate : RoleTypeId.ChaosConscript);
                 return;
             }
 
             if (previousRoles.ContainsKey(target))
-                target.SetRole(previousRoles[target]);
+                target.Role.Set(previousRoles[target]);
         }
     }
 }

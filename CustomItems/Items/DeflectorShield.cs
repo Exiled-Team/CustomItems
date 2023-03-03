@@ -19,6 +19,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API.EventArgs;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms;
     using MEC;
     using PlayerStatsSystem;
@@ -29,7 +30,7 @@ namespace CustomItems.Items
     [CustomItem(ItemType.SCP268)]
     public class DeflectorShield : CustomItem
     {
-        private readonly List<Player> deflectorPlayers = new List<Player>();
+        private readonly List<Player> deflectorPlayers = new();
 
         private readonly ItemType type = ItemType.SCP268;
 
@@ -50,15 +51,15 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.65f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 10,
-                    Location = SpawnLocation.InsideHid,
+                    Location = SpawnLocationType.InsideHid,
                 },
             },
         };
@@ -117,8 +118,8 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnOwnerDying(OwnerDyingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target))
-                deflectorPlayers.Remove(ev.Target);
+            if (deflectorPlayers.Contains(ev.Player))
+                deflectorPlayers.Remove(ev.Player);
         }
 
         private void OnDestroying(DestroyingEventArgs ev)
@@ -148,7 +149,7 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Target) && (ev.Handler.Base is FirearmDamageHandler && ev.Target != ev.Attacker))
+            if (deflectorPlayers.Contains(ev.Player) && (ev.DamageHandler.Base is FirearmDamageHandler && ev.Player != ev.Attacker))
             {
                 ev.IsAllowed = false;
                 ev.Attacker.Hurt(new FirearmDamageHandler(((Firearm)ev.Attacker.CurrentItem).Base, ev.Amount * Multiplier, ev.Attacker.Role.Side != Side.Scp));

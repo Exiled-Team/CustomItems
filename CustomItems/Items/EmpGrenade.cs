@@ -21,11 +21,16 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Map;
+    using Exiled.Events.EventArgs.Player;
+    using Exiled.Events.EventArgs.Scp079;
     using Exiled.Events.Handlers;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
     using MEC;
     using UnityEngine;
+    using Camera = Exiled.API.Features.Camera;
+    using CameraType = Exiled.API.Enums.CameraType;
     using Item = Exiled.API.Features.Items.Item;
     using KeycardPermissions = Interactables.Interobjects.DoorUtils.KeycardPermissions;
     using Player = Exiled.API.Features.Player;
@@ -34,11 +39,11 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GrenadeFlash)]
     public class EmpGrenade : CustomGrenade
     {
-        private static readonly List<Room> LockedRooms079 = new List<Room>();
+        private static readonly List<Room> LockedRooms079 = new();
 
-        private readonly List<Door> lockedDoors = new List<Door>();
+        private readonly List<Door> lockedDoors = new();
 
-        private readonly List<TeslaGate> disabledTeslaGates = new List<TeslaGate>();
+        private readonly List<TeslaGate> disabledTeslaGates = new();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 0;
@@ -50,20 +55,20 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.15f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.Inside173Gate,
+                    Location = SpawnLocationType.Inside173Gate,
                 },
             },
             StaticSpawnPoints = new List<StaticSpawnPoint>
             {
-                new StaticSpawnPoint
+                new()
                 {
                     Chance = 50,
                     Name = "somewhere",
@@ -97,7 +102,7 @@ namespace CustomItems.Items
         /// Gets or sets a value indicating what doors will never be opened by EMP grenades.
         /// </summary>
         [Description("A list of door names that will not be opened with EMP grenades regardless of the above configs.")]
-        public HashSet<DoorType> BlacklistedDoorTypes { get; set; } = new HashSet<DoorType>();
+        public HashSet<DoorType> BlacklistedDoorTypes { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a value indicating whether if tesla gates will get disabled.
@@ -139,10 +144,10 @@ namespace CustomItems.Items
         protected override void OnExploding(ExplodingGrenadeEventArgs ev)
         {
             ev.IsAllowed = false;
-            Room room = Exiled.API.Features.Map.FindParentRoom(ev.Grenade.gameObject);
+            Room room = Room.FindParentRoom(ev.Projectile.GameObject);
             TeslaGate gate = null;
 
-            Log.Debug($"{ev.Grenade.transform.position} - {room.Position} - {Room.List.Count()}", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{ev.Projectile.GameObject.transform.position} - {room.Position} - {Room.List.Count()}");
 
             LockedRooms079.Add(room);
 
@@ -159,7 +164,7 @@ namespace CustomItems.Items
                     }
             }
 
-            Log.Debug($"{room.Doors.Count()} - {room.Type}", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{room.Doors.Count()} - {room.Type}");
 
             foreach (Door door in room.Doors)
             {
@@ -169,7 +174,7 @@ namespace CustomItems.Items
                     (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors))
                     continue;
 
-                Log.Debug("Opening a door!", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug("Opening a door!");
 
                 door.IsOpen = true;
                 door.ChangeLock(DoorLockType.NoPower);
@@ -188,7 +193,7 @@ namespace CustomItems.Items
             {
                 if (player.Role.As<Scp079Role>() is Scp079Role scp079)
                     if (scp079.Camera != null && scp079.Camera.Room == room)
-                        scp079.SetCamera(198);
+                        scp079.Camera = Camera.Get(CameraType.Hcz079ContChamber);
 
                 if (player.CurrentRoom != room)
                     continue;
@@ -198,7 +203,7 @@ namespace CustomItems.Items
                     switch (item)
                     {
                         case Radio radio:
-                            radio.Disable();
+                            radio.IsEnabled = false;
                             break;
                         case Flashlight flashlight:
                             flashlight.Active = false;
@@ -256,8 +261,8 @@ namespace CustomItems.Items
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
             foreach (TeslaGate gate in TeslaGate.List)
-                if (Exiled.API.Features.Map.FindParentRoom(gate.GameObject) == ev.Player.CurrentRoom && disabledTeslaGates.Contains(gate))
-                    ev.IsTriggerable = false;
+                if (Room.FindParentRoom(gate.GameObject) == ev.Player.CurrentRoom && disabledTeslaGates.Contains(gate))
+                    ev.IsAllowed = false;
         }
     }
 }

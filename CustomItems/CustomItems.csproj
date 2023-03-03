@@ -10,8 +10,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CustomItems</RootNamespace>
     <AssemblyName>CustomItems</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <CodeAnalysisRuleSet>CustomItems.ruleset</CodeAnalysisRuleSet>
@@ -41,62 +43,44 @@
     <DocumentationFile>bin\Release\CustomItems.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.4\lib\net472\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.2.2\lib\net472\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Assembly-CSharp-Publicized.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\CommandSystem.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.API.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.API, Version=6.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Bootstrap, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.Bootstrap.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Loader, Version=6.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Exiled.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.CreditTags.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.CustomItems, Version=6.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.CustomItems.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Events, Version=6.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomRoles, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.CustomRoles.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Permissions, Version=6.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Exiled.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.Events.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Exiled.Loader, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.Loader.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Exiled.Permissions, Version=5.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.Permissions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\Exiled.Updater.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\Exiled.Updater.dll</HintPath>
     </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\Mirror.dll</HintPath>
     </Reference>
-    <Reference Include="NorthwoodLib, Version=1.2.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EXILED.5.2.2\lib\net472\NorthwoodLib.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NorthwoodLib, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\NorthwoodLib.dll</HintPath>
+    </Reference>
+    <Reference Include="PluginAPI, Version=12.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\EXILED.6.0.0-beta.26\lib\net48\PluginAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -111,8 +95,8 @@
     <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
-      <HintPath>..\..\..\..\Desktop\EXILED VISUAL STUDIO\EXILED 5\5.2\dependencies\YamlDotNet.dll</HintPath>
+    <Reference Include="YamlDotNet, Version=12.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.12.0.2\lib\net47\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +127,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>

@@ -31,7 +31,7 @@ namespace CustomItems
         /// <summary>
         /// The list of <see cref="CustomItem"/>s and their spawn chances for each Subclass.
         /// </summary>
-        public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new Dictionary<string, List<Tuple<CustomItem, float>>>();
+        public Dictionary<string, List<Tuple<CustomItem, float>>> SubclassItems = new();
 
         /// <inheritdoc/>
         [Description("Whether or not this plugin is enabled.")]
@@ -41,13 +41,13 @@ namespace CustomItems
         /// Gets or sets a value indicating whether if debug mode is enabled.
         /// </summary>
         [Description("Whether or not debug messages should be displayed in the server console.")]
-        public bool IsDebugEnabled { get; set; } = false;
+        public bool Debug { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating what subclasses should get what items, and their spawn chances.
         /// </summary>
         [Description("A list of each item and the subclasses that can spawn with it, and the % chance of them receiving it. **This is only used if Advanced Subclassing is installed!**")]
-        public Dictionary<string, Dictionary<string, float>> SubclassList { get; set; } = new Dictionary<string, Dictionary<string, float>>
+        public Dictionary<string, Dictionary<string, float>> SubclassList { get; set; } = new()
         {
             {
                 "ExampleSubclass", new Dictionary<string, float> { { "SR-119", 100 }, { "SG-119", 50 } }
@@ -95,7 +95,7 @@ namespace CustomItems
 
             foreach (KeyValuePair<string, Dictionary<string, float>> list in SubclassList)
             {
-                List<Tuple<CustomItem, float>> customItems = new List<Tuple<CustomItem, float>>();
+                List<Tuple<CustomItem, float>> customItems = new();
 
                 foreach (KeyValuePair<string, float> itemChance in list.Value)
                 {
@@ -115,12 +115,12 @@ namespace CustomItems
 
                     customItems.Add(new Tuple<CustomItem, float>(item, itemChance.Value));
 
-                    Log.Debug($"Adding {itemChance.Key} to {list.Key} with {itemChance.Value}% spawn chance.", IsDebugEnabled);
+                    Log.Debug($"Adding {itemChance.Key} to {list.Key} with {itemChance.Value}% spawn chance.");
                 }
 
                 SubclassItems.Add(list.Key, customItems);
 
-                Log.Debug($"{list.Key} has had {customItems.Count} items added to their spawn list.", IsDebugEnabled);
+                Log.Debug($"{list.Key} has had {customItems.Count} items added to their spawn list.");
             }
         }
     }

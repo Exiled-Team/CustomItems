@@ -9,12 +9,14 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using PlayerStatsSystem;
     using YamlDotNet.Serialization;
@@ -46,20 +48,20 @@ namespace CustomItems.Items
         public override float Damage { get; set; }
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.InsideHid,
+                    Location = SpawnLocationType.InsideHid,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 40,
-                    Location = SpawnLocation.InsideHczArmory,
+                    Location = SpawnLocationType.InsideHczArmory,
                 },
             },
         };
@@ -81,7 +83,7 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != ev.Target && ev.Handler.Base is FirearmDamageHandler firearmDamageHandler && firearmDamageHandler.WeaponType == ev.Attacker.CurrentItem.Type)
+            if (ev.Attacker != ev.Player && ev.DamageHandler.Base is FirearmDamageHandler firearmDamageHandler && firearmDamageHandler.WeaponType == ev.Attacker.CurrentItem.Type)
                 ev.Amount *= DamageMultiplier;
         }
     }

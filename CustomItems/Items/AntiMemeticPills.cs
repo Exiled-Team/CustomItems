@@ -9,13 +9,17 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using CustomPlayerEffects;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
+    using Exiled.API.Features.Roles;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using MEC;
+    using PlayerRoles;
 
     /// <inheritdoc />
     [CustomItem(ItemType.SCP500)]
@@ -35,11 +39,11 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint { Chance = 100, Location = SpawnLocation.Inside096 },
+                new() { Chance = 100, Location = SpawnLocationType.Inside096 },
             },
         };
 
@@ -62,14 +66,15 @@ namespace CustomItems.Items
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            IEnumerable<Player> scp096s = Player.Get(RoleType.Scp096);
+            IEnumerable<Player> scp096S = Player.Get(RoleTypeId.Scp096);
 
             Timing.CallDelayed(1f, () =>
             {
-                foreach (Player scp in scp096s)
-                    if (scp.CurrentScp is PlayableScps.Scp096 scp096 && scp096.HasTarget(ev.Player.ReferenceHub))
-                        scp096._targets.Remove(ev.Player.ReferenceHub);
-                ev.Player.EnableEffect<Amnesia>(10f, true);
+                foreach (Player scp in scp096S)
+                    if (scp.Role is Scp096Role scp096)
+                        if (scp096.HasTarget(ev.Player))
+                            scp096.RemoveTarget(ev.Player);
+                ev.Player.EnableEffect<AmnesiaVision>(10f, true);
             });
         }
     }

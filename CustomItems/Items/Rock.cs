@@ -52,7 +52,7 @@ namespace CustomItems.Items
                 new DynamicSpawnPoint
                 {
                     Chance = 100,
-                    Location = SpawnLocation.InsideLocker,
+                    Location = SpawnLocationType.InsideLocker,
                 },
             },
         };
@@ -167,24 +167,24 @@ namespace CustomItems.Items
                     if (!Physics.Linecast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.position + (forward * 1.5f), out RaycastHit hit, PlayerLayerMask))
                         return;
 
-                    Log.Debug($"{ev.Player.Nickname} linecast is true!", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{ev.Player.Nickname} linecast is true!");
                     if (hit.collider == null)
                     {
-                        Log.Debug($"{ev.Player.Nickname} collider is null?", CustomItems.Instance.Config.IsDebugEnabled);
+                        Log.Debug($"{ev.Player.Nickname} collider is null?");
                         return;
                     }
 
                     Player target = Player.Get(hit.collider.GetComponentInParent<ReferenceHub>());
                     if (target == null)
                     {
-                        Log.Debug($"{ev.Player.Nickname} target null", CustomItems.Instance.Config.IsDebugEnabled);
+                        Log.Debug($"{ev.Player.Nickname} target null");
                         return;
                     }
 
                     if (ev.Player.Side == target.Side && !FriendlyFire)
                         return;
 
-                    Log.Debug($"{ev.Player.Nickname} hit {target.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{ev.Player.Nickname} hit {target.Nickname}");
 
                     ev.Player.ShowHitMarker();
                     target.Hurt(HitDamage, ev.Player, DamageTypes.Wall);

@@ -11,6 +11,7 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
@@ -18,8 +19,10 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using MEC;
+    using PlayerRoles;
     using PlayerStatsSystem;
     using UnityEngine;
     using YamlDotNet.Serialization;
@@ -66,20 +69,20 @@ namespace CustomItems.Items
         public bool DespawnAfterUse { get; set; } = false;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 60,
-                    Location = SpawnLocation.InsideHid,
+                    Location = SpawnLocationType.InsideHid,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 40,
-                    Location = SpawnLocation.InsideHczArmory,
+                    Location = SpawnLocationType.InsideHczArmory,
                 },
             },
         };
@@ -93,22 +96,22 @@ namespace CustomItems.Items
         {
             try
             {
-                foreach (Item item in ev.Shooter.Items.ToList())
+                foreach (Item item in ev.Player.Items.ToList())
                     if (Check(item))
                     {
                         Log.Debug($"SCP-2818: Found a 2818 in inventory of shooter, removing.");
-                        ev.Shooter.RemoveItem(item);
+                        ev.Player.RemoveItem(item);
                     }
 
                 Player target = Player.Get(ev.TargetNetId);
-                if (ev.ShotPosition == Vector3.zero || (ev.Shooter.Position - ev.ShotPosition).sqrMagnitude > 1000f)
+                if (ev.ShotPosition == Vector3.zero || (ev.Player.Position - ev.ShotPosition).sqrMagnitude > 1000f)
                 {
-                    ev.Shooter.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Warhead));
+                    ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Warhead));
                     ev.IsAllowed = false;
                     return;
                 }
 
-                Timing.RunCoroutine(ShooterProjectile(ev.Shooter, ev.ShotPosition, target));
+                Timing.RunCoroutine(ShooterProjectile(ev.Player, ev.ShotPosition, target));
             }
             catch (Exception e)
             {
@@ -118,7 +121,7 @@ namespace CustomItems.Items
 
         private IEnumerator<float> ShooterProjectile(Player player, Vector3 targetPos, Player target = null)
         {
-            RoleType playerRole = player.Role;
+            RoleTypeId playerRole = player.Role;
 
             // This is the camera transform used to make grenades appear like they are coming from the player's head instead of their stomach. We move them here so they aren't skidding across the floor.
             player.Position = player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
@@ -160,9 +163,9 @@ namespace CustomItems.Items
                     }
             }
 
-            if (player.Role != RoleType.Spectator)
+            if (player.Role != RoleTypeId.Spectator)
                 player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Warhead));
-            if (target?.Role != RoleType.Spectator)
+            if (target?.Role != RoleTypeId.Spectator)
                 target?.Hurt(new UniversalDamageHandler(Damage, DeathTranslations.Warhead));
         }
     }

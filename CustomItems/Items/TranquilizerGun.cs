@@ -12,16 +12,20 @@ namespace CustomItems.Items
     using System.ComponentModel;
     using System.Linq;
     using CustomPlayerEffects;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pools;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using Mirror;
+    using PlayerRoles;
     using PlayerStatsSystem;
     using UnityEngine;
     using Ragdoll = Exiled.API.Features.Ragdoll;
@@ -31,8 +35,8 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GunCOM18)]
     public class TranquilizerGun : CustomWeapon
     {
-        private readonly Dictionary<Player, float> tranquilizedPlayers = new Dictionary<Player, float>();
-        private readonly List<Player> activeTranqs = new List<Player>();
+        private readonly Dictionary<Player, float> tranquilizedPlayers = new();
+        private readonly List<Player> activeTranqs = new();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 11;
@@ -47,20 +51,20 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.55f;
 
         /// <inheritdoc />
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.InsideGr18,
+                    Location = SpawnLocationType.InsideGr18,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 80,
-                    Location = SpawnLocation.Inside173Armory,
+                    Location = SpawnLocationType.Inside173Armory,
                 },
             },
         };
@@ -130,33 +134,33 @@ namespace CustomItems.Items
         {
             base.OnHurting(ev);
 
-            if (ev.Attacker == ev.Target)
+            if (ev.Attacker == ev.Player)
                 return;
 
-            if (ev.Target.Role.Team == Team.SCP)
+            if (ev.Player.Role.Team == Team.SCPs)
             {
                 int r = Random.Range(1, 101);
-                Log.Debug($"{Name}: SCP roll: {r} (must be greater than {ScpResistChance})", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name}: SCP roll: {r} (must be greater than {ScpResistChance})");
                 if (r <= ScpResistChance)
                 {
-                    Log.Debug($"{Name}: {r} is too low, no tranq.", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{Name}: {r} is too low, no tranq.");
                     return;
                 }
             }
 
             float duration = Duration;
 
-            if (!tranquilizedPlayers.TryGetValue(ev.Target, out _))
-                tranquilizedPlayers.Add(ev.Target, 1);
+            if (!tranquilizedPlayers.TryGetValue(ev.Player, out _))
+                tranquilizedPlayers.Add(ev.Player, 1);
 
-            tranquilizedPlayers[ev.Target] *= ResistanceModifier;
-            Log.Debug($"{Name}: Resistance Duration Mod: {tranquilizedPlayers[ev.Target]}", CustomItems.Instance.Config.IsDebugEnabled);
+            tranquilizedPlayers[ev.Player] *= ResistanceModifier;
+            Log.Debug($"{Name}: Resistance Duration Mod: {tranquilizedPlayers[ev.Player]}");
 
-            duration -= tranquilizedPlayers[ev.Target];
-            Log.Debug($"{Name}: Duration: {duration}", CustomItems.Instance.Config.IsDebugEnabled);
+            duration -= tranquilizedPlayers[ev.Player];
+            Log.Debug($"{Name}: Duration: {duration}");
 
             if (duration > 0f)
-                Timing.RunCoroutine(DoTranquilize(ev.Target, duration));
+                Timing.RunCoroutine(DoTranquilize(ev.Player, duration));
         }
 
         private IEnumerator<float> DoTranquilize(Player player, float duration)
@@ -166,14 +170,12 @@ namespace CustomItems.Items
             Item previousItem = player.CurrentItem;
             Vector3 previousScale = player.Scale;
             float newHealth = player.Health - Damage;
-            List<PlayerEffect> activeEffects = NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Rent();
+            List<StatusEffectBase> activeEffects = ListPool<StatusEffectBase>.Pool.Get();
 
             if (newHealth <= 0)
                 yield break;
 
-            foreach (PlayerEffect effect in player.ReferenceHub.playerEffectsController.AllEffects.Values)
-                if (effect.IsEnabled)
-                    activeEffects.Add(effect);
+            activeEffects.AddRange(player.ActiveEffects.Where(effect => effect.IsEnabled));
 
             try
             {
@@ -199,14 +201,14 @@ namespace CustomItems.Items
                 Log.Error($"{nameof(DoTranquilize)}: {e}");
             }
 
-            Ragdoll ragdoll = new Ragdoll(player, new UniversalDamageHandler(0f, DeathTranslations.Warhead), true);
+            Ragdoll ragdoll = Ragdoll.CreateAndSpawn(player.Role, player.DisplayNickname, "Tranquilized", player.Position, player.ReferenceHub.PlayerCameraReference.rotation, player);
 
-            player.IsInvisible = true;
+            player.EnableEffect<Invisible>(Duration);
             player.Scale = Vector3.one * 0.2f;
             player.Health = newHealth;
             player.IsGodModeEnabled = true;
 
-            player.EnableEffect<Amnesia>(duration);
+            player.EnableEffect<AmnesiaVision>(duration);
             player.EnableEffect<Ensnared>(duration);
 
             yield return Timing.WaitForSeconds(duration);
@@ -224,17 +226,15 @@ namespace CustomItems.Items
                 player.IsGodModeEnabled = false;
                 player.Scale = previousScale;
                 player.Health = newHealth;
-                player.IsInvisible = false;
 
                 if (!DropItems)
                     player.CurrentItem = previousItem;
 
-                foreach (PlayerEffect effect in activeEffects)
-                    if ((effect.Duration - duration) > 0)
-                        player.ReferenceHub.playerEffectsController.EnableEffect(effect, effect.Duration - duration);
+                foreach (StatusEffectBase effect in activeEffects.Where(effect => (effect.Duration - duration) > 0))
+                    player.EnableEffect(effect, effect.Duration);
 
                 activeTranqs.Remove(player);
-                NorthwoodLib.Pools.ListPool<PlayerEffect>.Shared.Return(activeEffects);
+                ListPool<StatusEffectBase>.Pool.Return(activeEffects);
             }
             catch (Exception e)
             {

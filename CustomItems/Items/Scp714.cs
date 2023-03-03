@@ -17,6 +17,8 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
+    using PlayerRoles;
 
     /// <inheritdoc/>
     [CustomItem(ItemType.Coin)]
@@ -35,15 +37,15 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.15f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.Inside049Armory,
+                    Location = SpawnLocationType.Inside049Armory,
                 },
             },
         };
@@ -52,17 +54,17 @@ namespace CustomItems.Items
         /// Gets or sets which roles shouldn't be able to deal damage to the player that has SCP-714 put on.
         /// </summary>
         [Description("Which roles shouldn't be able to deal damage to the player that has SCP-714 put on.")]
-        public List<RoleType> Scp714Roles { get; set; } = new List<RoleType>()
+        public List<RoleTypeId> Scp714Roles { get; set; } = new()
         {
-            RoleType.Scp049,
-            RoleType.Scp0492,
+            RoleTypeId.Scp049,
+            RoleTypeId.Scp0492,
         };
 
         /// <summary>
         /// Gets or sets which effects should be given to the player, when he will put on SCP-714.
         /// </summary>
         [Description("Which effects should be given to the player, when he will put on SCP-714.")]
-        public List<string> Scp714Effects { get; set; } = new List<string>
+        public List<string> Scp714Effects { get; set; } = new()
         {
             "Asphyxiated",
         };
@@ -148,7 +150,7 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Target.CurrentItem))
+            if (Check(ev.Player.CurrentItem))
             {
                 if (Scp714Roles.Contains(ev.Attacker.Role))
                 {

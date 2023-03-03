@@ -18,6 +18,7 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.BasicMessages;
     using InventorySystem.Items.ThrowableProjectiles;
@@ -29,9 +30,9 @@ namespace CustomItems.Items
     [CustomItem(ItemType.GunLogicer)]
     public class GrenadeLauncher : CustomWeapon
     {
-        private CustomGrenade loadedCustomGrenade;
+        private CustomGrenade? loadedCustomGrenade;
 
-        private GrenadeType loadedGrenade = GrenadeType.FragGrenade;
+        private ProjectileType loadedGrenade = ProjectileType.FragGrenade;
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 1;
@@ -46,20 +47,20 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 2.95f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.Inside049Armory,
+                    Location = SpawnLocationType.Inside049Armory,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 40,
-                    Location = SpawnLocation.InsideHczArmory,
+                    Location = SpawnLocationType.InsideHczArmory,
                 },
             },
         };
@@ -104,11 +105,11 @@ namespace CustomItems.Items
                 if (!(ev.Player.CurrentItem is Firearm firearm) || firearm.Ammo >= ClipSize)
                     return;
 
-                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} is reloading!", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} is reloading!");
 
                 foreach (Item item in ev.Player.Items.ToList())
                 {
-                    Log.Debug($"{Name}.{nameof(OnReloading)}: Found item: {item.Type} - {item.Serial}", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{Name}.{nameof(OnReloading)}: Found item: {item.Type} - {item.Serial}");
                     if (item.Type != ItemType.GrenadeHE && item.Type != ItemType.GrenadeFlash && item.Type != ItemType.SCP018)
                         continue;
                     if (TryGet(item, out CustomItem cItem))
@@ -125,15 +126,15 @@ namespace CustomItems.Items
 
                     Timing.CallDelayed(3f, () => firearm.Ammo = ClipSize);
 
-                    loadedGrenade = item.Type == ItemType.GrenadeFlash ? GrenadeType.Flashbang :
-                        item.Type == ItemType.GrenadeHE ? GrenadeType.FragGrenade : GrenadeType.Scp018;
-                    Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} successfully reloaded. Grenade type: {loadedGrenade} IsCustom: {loadedCustomGrenade != null}", CustomItems.Instance.Config.IsDebugEnabled);
+                    loadedGrenade = item.Type == ItemType.GrenadeFlash ? ProjectileType.Flashbang :
+                        item.Type == ItemType.GrenadeHE ? ProjectileType.FragGrenade : ProjectileType.Scp018;
+                    Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} successfully reloaded. Grenade type: {loadedGrenade} IsCustom: {loadedCustomGrenade != null}");
                     ev.Player.RemoveItem(item);
 
                     return;
                 }
 
-                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} was unable to reload - No grenades in inventory.", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} was unable to reload - No grenades in inventory.");
             }
         }
 
@@ -142,38 +143,31 @@ namespace CustomItems.Items
         {
             ev.IsAllowed = false;
 
-            if (ev.Shooter.CurrentItem is Firearm firearm)
+            if (ev.Player.CurrentItem is Firearm firearm)
                 firearm.Ammo -= 1;
 
-            Vector3 pos = ev.Shooter.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
+            Vector3 pos = ev.Player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
             ThrownProjectile projectile;
 
-            if (loadedCustomGrenade != null)
+            switch (loadedGrenade)
             {
-                projectile = (ThrownProjectile)loadedCustomGrenade.Throw(pos, GrenadeSpeed, FuseTime, loadedCustomGrenade.Type, ev.Shooter).Base;
-                loadedCustomGrenade = null;
-            }
-            else
-            {
-                switch (loadedGrenade)
-                {
-                    case GrenadeType.Scp018:
-                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.Scp018).Base.Projectile;
-                        break;
-                    case GrenadeType.Flashbang:
-                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.Flashbang).Base.Projectile;
-                        break;
-                    default:
-                        projectile = ev.Shooter.ThrowGrenade(GrenadeType.FragGrenade).Base.Projectile;
-                        break;
-                }
+                case ProjectileType.Scp018:
+                    projectile = ev.Player.ThrowGrenade(ProjectileType.Scp018).Base.Projectile;
+                    break;
+                case ProjectileType.Flashbang:
+                    projectile = ev.Player.ThrowGrenade(ProjectileType.Flashbang).Base.Projectile;
+                    break;
+                default:
+                    projectile = ev.Player.ThrowGrenade(ProjectileType.FragGrenade).Base.Projectile;
+                    break;
             }
 
-            var comp = projectile.gameObject.AddComponent<CollisionHandler>();
-            comp.Init(ev.Shooter.GameObject, projectile);
+            CollisionHandler? comp = projectile.gameObject.AddComponent<CollisionHandler>();
+            comp.Init(ev.Player.GameObject, projectile);
             if (comp.Owner == null || comp.Grenade == null)
             {
-                Log.Debug($"{nameof(Name)}.{nameof(OnShooting)}: Grenade or owner is null, destroying collision component!", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug(
+                    $"{nameof(Name)}.{nameof(OnShooting)}: Grenade or owner is null, destroying collision component!");
             }
         }
     }

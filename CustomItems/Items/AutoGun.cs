@@ -18,7 +18,9 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
+    using PlayerRoles;
     using PlayerStatsSystem;
     using UnityEngine;
 
@@ -42,15 +44,15 @@ namespace CustomItems.Items
         public override bool ShouldMessageOnGban => true;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.Inside173Armory,
+                    Location = SpawnLocationType.Inside173Armory,
                 },
             },
         };
@@ -82,24 +84,25 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void OnShooting(ShootingEventArgs ev)
         {
-            if (ev.Shooter.CurrentItem is Firearm firearm)
+            if (ev.Player.CurrentItem is Firearm firearm)
             {
                 int ammoUsed = 0;
                 foreach (Player player in Player.List)
                 {
+                    Vector3 forward = ev.Player.CameraTransform.forward;
                     if (firearm.Ammo == ammoUsed &&
-                        (!PerHitAmmo || firearm.Ammo == 0 || player.Role == RoleType.Spectator ||
-                         (player.Role.Side == ev.Shooter.Role.Side && (player.Role.Side != ev.Shooter.Role.Side || !TeamKill)) ||
-                         player == ev.Shooter ||
-                         !(Vector3.Distance(ev.Shooter.Position, player.Position) < MaxDistance) ||
-                         Physics.Linecast(ev.Shooter.Position, player.Position, player.ReferenceHub.playerMovementSync.CollidableSurfaces)))
+                        (!PerHitAmmo || firearm.Ammo == 0 || player.Role == RoleTypeId.Spectator ||
+                         (player.Role.Side == ev.Player.Role.Side && (player.Role.Side != ev.Player.Role.Side || !TeamKill)) ||
+                         player == ev.Player ||
+                         !(Vector3.Distance(ev.Player.Position, player.Position) < MaxDistance) ||
+                         Physics.Raycast(ev.Player.CameraTransform.position + forward, forward, out var hit, MaxDistance)))
                         continue;
 
                     ammoUsed++;
                     player.Hurt(new FirearmDamageHandler(firearm.Base, Damage, player.Role.Side != Side.Scp));
                     if (player.IsDead)
                         player.ShowHint("<color=#FF0000>YOU HAVE BEEN KILLED BY AUTO AIM GUN</color>");
-                    ev.Shooter.ShowHitMarker(1f);
+                    ev.Player.ShowHitMarker(1f);
                 }
 
                 if (PerHitAmmo)

@@ -9,17 +9,21 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms;
     using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using Firearm = Exiled.API.Features.Items.Firearm;
+    using FirearmPickup = InventorySystem.Items.Firearms.FirearmPickup;
 
     /// <inheritdoc />
     [CustomItem(ItemType.GunCOM18)]
@@ -38,15 +42,15 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.45f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.Inside173Armory,
+                    Location = SpawnLocationType.Inside173Armory,
                 },
             },
         };
@@ -69,7 +73,14 @@ namespace CustomItems.Items
         [Description("The amount of ammo that will be regenerated each regeneration cycle.")]
         public byte RegenerationAmount { get; set; } = 2;
 
-        private List<CoroutineHandle> Coroutines { get; } = new List<CoroutineHandle>();
+        private List<CoroutineHandle> Coroutines { get; } = new();
+
+        /// <inheritdoc/>
+        public override void Init()
+        {
+            Coroutines.Add(Timing.RunCoroutine(DoAmmoRegeneration()));
+            base.Init();
+        }
 
         /// <inheritdoc/>
         public override void Destroy()
@@ -126,7 +137,7 @@ namespace CustomItems.Items
             {
                 yield return Timing.WaitForSeconds(RegenerationDelay);
 
-                foreach (Pickup pickup in Map.Pickups)
+                foreach (Pickup pickup in Pickup.List)
                 {
                     if (Check(pickup) && pickup.Base is FirearmPickup firearmPickup && firearmPickup.NetworkStatus.Ammo < ClipSize)
                     {

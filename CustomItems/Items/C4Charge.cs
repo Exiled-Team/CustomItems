@@ -14,11 +14,16 @@ namespace CustomItems.Items
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Map;
+    using Exiled.Events.EventArgs.Player;
+    using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
+    using Mirror;
     using UnityEngine;
     using YamlDotNet.Serialization;
 
@@ -36,7 +41,7 @@ namespace CustomItems.Items
         /// <summary>
         /// All of the currently placed charges.
         /// </summary>
-        public static Dictionary<Pickup, Player> PlacedCharges = new Dictionary<Pickup, Player>();
+        public static Dictionary<Pickup, Player> PlacedCharges = new();
 
         /// <summary>
         /// Enum containing methods indicating how C4 charge can be removed.
@@ -69,39 +74,39 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0.75f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 5,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 10,
-                    Location = SpawnLocation.InsideLczArmory,
+                    Location = SpawnLocationType.InsideLczArmory,
                 },
 
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 25,
-                    Location = SpawnLocation.InsideHczArmory,
+                    Location = SpawnLocationType.InsideHczArmory,
                 },
 
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.InsideNukeArmory,
+                    Location = SpawnLocationType.InsideNukeArmory,
                 },
 
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.Inside049Armory,
+                    Location = SpawnLocationType.Inside049Armory,
                 },
 
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.InsideSurfaceNuke,
+                    Location = SpawnLocationType.InsideSurfaceNuke,
                 },
             },
         };
@@ -238,7 +243,7 @@ namespace CustomItems.Items
         }
 
         /// <inheritdoc/>
-        protected override void OnThrowing(ThrowingItemEventArgs ev)
+        protected override void OnThrowingRequest(ThrowingRequestEventArgs ev)
         {
             ev.IsAllowed = false;
             ev.Player.RemoveItem(ev.Player.CurrentItem);
@@ -248,18 +253,18 @@ namespace CustomItems.Items
             if (ev.RequestType != ThrowRequest.WeakThrow)
                 slowThrowMultiplier = 1f;
 
-            Pickup c4 = Throw(ev.Player.CameraTransform.position, ThrowMultiplier * slowThrowMultiplier, FuseTime, Type, ev.Player);
+            Pickup c4 = Throw(ev.Player, ev.Throwable, ev.RequestType == ThrowRequest.WeakThrow);
 
             if (!PlacedCharges.ContainsKey(c4))
                 PlacedCharges.Add(c4, ev.Player);
 
-            base.OnThrowing(ev);
+            base.OnThrowingRequest(ev);
         }
 
         /// <inheritdoc/>
         protected override void OnExploding(ExplodingGrenadeEventArgs ev)
         {
-            PlacedCharges.Remove(Pickup.Get(ev.Grenade));
+            PlacedCharges.Remove(Pickup.Get(ev.Projectile.Base));
         }
 
         private void OnDestroying(DestroyingEventArgs ev)
@@ -277,7 +282,7 @@ namespace CustomItems.Items
         {
             foreach (var charge in PlacedCharges.ToList())
             {
-                if (charge.Value == ev.Target)
+                if (charge.Value == ev.Player)
                 {
                     C4Handler(charge.Key, MethodOnDeath);
                 }
@@ -289,8 +294,8 @@ namespace CustomItems.Items
             if (!AllowShoot)
                 return;
 
-            Vector3 forward = ev.Shooter.CameraTransform.forward;
-            if (Physics.Raycast(ev.Shooter.CameraTransform.position + forward, forward, out var hit, 500))
+            Vector3 forward = ev.Player.CameraTransform.forward;
+            if (Physics.Raycast(ev.Player.CameraTransform.position + forward, forward, out var hit, 500))
             {
                 EffectGrenade grenade = hit.collider.gameObject.GetComponentInParent<EffectGrenade>();
                 if (grenade == null)
@@ -303,6 +308,31 @@ namespace CustomItems.Items
                     C4Handler(Pickup.Get(grenade), ShotMethod);
                 }
             }
+        }
+
+        private Pickup Throw(Player player, Throwable throwable, bool weakThrow)
+        {
+            ThrowableItem.ProjectileSettings settings =
+                weakThrow ? throwable.Base.WeakThrowSettings : throwable.Base.FullThrowSettings;
+            ThrownProjectile projectile = Object.Instantiate(
+                throwable.Projectile.Base,
+                throwable.Owner.ReferenceHub.PlayerCameraReference.position,
+                throwable.Owner.ReferenceHub.PlayerCameraReference.rotation);
+            Transform transform = projectile.transform;
+            PickupSyncInfo newInfo = new(Type, transform.position, transform.rotation, Weight, throwable.Serial)
+            {
+                Locked = true,
+            };
+
+            projectile.NetworkInfo = newInfo;
+            projectile.PreviousOwner = player.Footprint;
+            NetworkServer.Spawn(projectile.gameObject);
+            Vector3 limitedVelocity = ThrowableNetworkHandler.GetLimitedVelocity(player.Velocity);
+            projectile.InfoReceived(new(), newInfo);
+            if (projectile.TryGetComponent(out Rigidbody rigidbody))
+                throwable.Base.PropelBody(rigidbody, settings.StartTorque, limitedVelocity, settings.StartVelocity, settings.UpwardsFactor);
+
+            return Pickup.Get(projectile);
         }
     }
 }

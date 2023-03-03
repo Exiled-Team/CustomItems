@@ -10,17 +10,21 @@ namespace CustomItems.Items
     using System.Collections.Generic;
     using System.ComponentModel;
     using CustomPlayerEffects;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
+    using Exiled.Events.Handlers;
     using MEC;
-    using PlayableScps;
+    using PlayerRoles;
+    using PlayerRoles.PlayableScps.Scp096;
     using PlayerStatsSystem;
     using Player = Exiled.Events.Handlers.Player;
-    using Scp096 = PlayableScps.Scp096;
+    using Scp096Role = Exiled.API.Features.Roles.Scp096Role;
 
     /// <inheritdoc />
     [CustomItem(ItemType.Adrenaline)]
@@ -39,15 +43,15 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.Inside096,
+                    Location = SpawnLocationType.Inside096,
                 },
             },
         };
@@ -76,29 +80,29 @@ namespace CustomItems.Items
 
         private void OnUsingItem(UsedItemEventArgs ev)
         {
-            Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{ev.Player.Nickname} used a medical item: {ev.Item}");
             if (!Check(ev.Player.CurrentItem))
                 return;
 
             Timing.CallDelayed(1.5f, () =>
             {
-                Log.Debug($"{ev.Player.Nickname} used a {Name}", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{ev.Player.Nickname} used a {Name}");
                 foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
-                    if (player.Role == RoleType.Scp096)
+                    if (player.Role == RoleTypeId.Scp096)
                     {
-                        Log.Debug($"{ev.Player.Nickname} - {Name} found an 096: {player.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
-                        if (!(player.CurrentScp is Scp096 scp096))
+                        Log.Debug($"{ev.Player.Nickname} - {Name} found an 096: {player.Nickname}");
+                        if (player.Role is not Scp096Role scp096)
                             continue;
 
-                        Log.Debug($"{player.Nickname} 096 component found.", CustomItems.Instance.Config.IsDebugEnabled);
-                        if ((!scp096.HasTarget(ev.Player.ReferenceHub) ||
-                             scp096.PlayerState != Scp096PlayerState.Enraged) &&
-                            scp096.PlayerState != Scp096PlayerState.Enraging &&
-                            scp096.PlayerState != Scp096PlayerState.Attacking)
+                        Log.Debug($"{player.Nickname} 096 component found.");
+                        if ((!scp096.HasTarget(ev.Player) ||
+                             scp096.RageState != Scp096RageState.Docile) &&
+                            scp096.RageState != Scp096RageState.Distressed &&
+                            scp096.RageState != Scp096RageState.Calming)
                             continue;
 
-                        Log.Debug($"{player.Nickname} 096 checks passed.", CustomItems.Instance.Config.IsDebugEnabled);
-                        scp096.EndEnrage();
+                        Log.Debug($"{player.Nickname} 096 checks passed.");
+                        scp096.RageManager.ServerEndEnrage();
                         ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Poisoned));
                         return;
                     }
@@ -113,7 +117,7 @@ namespace CustomItems.Items
                     return;
                 }
 
-                Log.Debug($"{Name} kill on fail: {ev.Player.Nickname}", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name} kill on fail: {ev.Player.Nickname}");
                 ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Poisoned));
             });
 

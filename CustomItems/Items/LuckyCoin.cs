@@ -9,13 +9,16 @@ namespace CustomItems.Items
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using MEC;
     using UnityEngine;
     using Player = Exiled.Events.Handlers.Player;
@@ -41,20 +44,20 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.Inside012Locker,
+                    Location = SpawnLocationType.Inside012Locker,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.Inside173Armory,
+                    Location = SpawnLocationType.Inside173Armory,
                 },
             },
         };
@@ -97,7 +100,7 @@ namespace CustomItems.Items
             if (ev.Player.CurrentRoom.Name == "PocketWorld")
             {
                 ev.IsAllowed = false;
-                Log.Debug($"{Name} has been dropped in the Pocket Dimension.", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name} has been dropped in the Pocket Dimension.");
                 isDropped = true;
                 ev.Player.RemoveItem(ev.Item);
             }
@@ -109,31 +112,31 @@ namespace CustomItems.Items
 
         private void OnEnterPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            Log.Debug($"{ev.Player.Nickname} Entering Pocket Dimension.", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{ev.Player.Nickname} Entering Pocket Dimension.");
             if (onCooldown)
             {
-                Log.Debug($"{ev.Player.Nickname} - Not spawning, on cooldown.", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{ev.Player.Nickname} - Not spawning, on cooldown.");
                 return;
             }
 
-            if (!isDropped || !(ev.Position.y < -1900f))
+            if (!isDropped || !(Room.Get(RoomType.Pocket).Position.y < -1900f))
                 return;
 
-            Log.Debug($"{ev.Player.Nickname} - EPD checks passed.", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{ev.Player.Nickname} - EPD checks passed.");
             foreach (PocketDimensionTeleport teleport in Map.PocketDimensionTeleports)
             {
-                Log.Debug($"{ev.Player.Nickname} - Checking teleporter..", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{ev.Player.Nickname} - Checking teleporter..");
                 if (teleport._type != PocketDimensionTeleport.PDTeleportType.Exit)
                     continue;
 
                 onCooldown = true;
-                Log.Debug($"{ev.Player.Nickname} - Valid exit found..", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{ev.Player.Nickname} - Valid exit found..");
                 Vector3 tpPos = teleport.transform.position;
-                float dist = Vector3.Distance(tpPos, ev.Position);
-                Vector3 spawnPos = Vector3.MoveTowards(tpPos, ev.Position, 15);
-                Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}", CustomItems.Instance.Config.IsDebugEnabled);
+                float dist = Vector3.Distance(tpPos, Room.Get(RoomType.Pocket).Position);
+                Vector3 spawnPos = Vector3.MoveTowards(tpPos, Room.Get(RoomType.Pocket).Position, 15);
+                Log.Debug($"{ev.Player.Nickname} - TP: {tpPos}, Dist: {dist}, Spawn: {spawnPos}");
 
-                Pickup coin = Item.Create(ItemType.Coin).Spawn(spawnPos);
+                Pickup coin = Item.Create(ItemType.Coin).CreatePickup(spawnPos);
 
                 Timing.CallDelayed(Duration, () => coin.Destroy());
                 Timing.CallDelayed(120f, () => onCooldown = false);

@@ -10,14 +10,19 @@ namespace CustomItems.Items
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
+    using Exiled.API.Features.Pools;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Map;
+    using Exiled.Events.EventArgs.Scp106;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
+    using PlayerRoles;
     using UnityEngine;
     using Scp106 = Exiled.Events.Handlers.Scp106;
 
@@ -42,20 +47,20 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0.65f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
-                    Location = SpawnLocation.Inside012Locker,
+                    Location = SpawnLocationType.Inside012Locker,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
-                    Location = SpawnLocation.InsideHczArmory,
+                    Location = SpawnLocationType.InsideHczArmory,
                 },
             },
         };
@@ -94,9 +99,9 @@ namespace CustomItems.Items
         /// Gets or sets a list of roles unable to be affected by Implosion grenades.
         /// </summary>
         [Description("What roles will not be able to be affected by Implosion Grenades. Keeping SCP-173 on this list is highly recommended.")]
-        public HashSet<RoleType> BlacklistedRoles { get; set; } = new HashSet<RoleType> { RoleType.Scp173, RoleType.Tutorial, };
+        public HashSet<RoleTypeId> BlacklistedRoles { get; set; } = new() { RoleTypeId.Scp173, RoleTypeId.Tutorial, };
 
-        private List<CoroutineHandle> Coroutines { get; set; } = new List<CoroutineHandle>();
+        private List<CoroutineHandle> Coroutines { get; set; } = new();
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
@@ -121,37 +126,37 @@ namespace CustomItems.Items
         protected override void OnExploding(ExplodingGrenadeEventArgs ev)
         {
             ev.IsAllowed = false;
-            Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", CustomItems.Instance.Config.IsDebugEnabled);
-            List<Player> copiedList = new List<Player>();
+            Log.Debug($"{ev.Player.Nickname} threw an implosion grenade!");
+            List<Player> copiedList = new();
             foreach (Player player in ev.TargetsToAffect)
             {
                 copiedList.Add(player);
             }
 
             ev.TargetsToAffect.Clear();
-            Log.Debug("IG: List cleared.", CustomItems.Instance.Config.IsDebugEnabled);
-            effectedPlayers = NorthwoodLib.Pools.ListPool<Player>.Shared.Rent();
+            Log.Debug("IG: List cleared.");
+            effectedPlayers = ListPool<Player>.Pool.Get();
             foreach (Player player in copiedList)
             {
                 if (BlacklistedRoles.Contains(player.Role))
                     continue;
 
-                Log.Debug($"{player.Nickname} starting suction", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{player.Nickname} starting suction");
 
                 try
                 {
                     if (layerMask == 0)
                     {
-                        if (ev.Grenade is ExplosionGrenade explosionGrenade)
+                        if (ev.Projectile.Base is ExplosionGrenade explosionGrenade)
                             layerMask = explosionGrenade._detectionMask;
                     }
 
-                    bool line = Physics.Linecast(ev.Grenade.transform.position, player.Position, layerMask);
-                    Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
+                    bool line = Physics.Linecast(ev.Projectile.Transform.position, player.Position, layerMask);
+                    Log.Debug($"{player.Nickname} - {line}");
                     if (line)
                     {
                         effectedPlayers.Add(player);
-                        Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Grenade.transform.position + (Vector3.up * 1.5f))));
+                        Coroutines.Add(Timing.RunCoroutine(DoSuction(player, ev.Projectile.Transform.position + (Vector3.up * 1.5f))));
                     }
                 }
                 catch (Exception exception)
@@ -163,19 +168,19 @@ namespace CustomItems.Items
 
         private IEnumerator<float> DoSuction(Player player, Vector3 position)
         {
-            Log.Debug($"{player.Nickname} Suction begin", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{player.Nickname} Suction begin");
             for (int i = 0; i < SuctionCount; i++)
             {
-                Log.Debug($"{player.Nickname} suctioned?", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{player.Nickname} suctioned?");
                 Vector3 alteredPosition = position + (1f * (player.Position - position).normalized);
                 Vector3 newPos = Vector3.MoveTowards(player.Position, alteredPosition, SuctionPerTick);
-                if (!Physics.Linecast(player.Position, newPos, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                if (!Physics.Raycast(player.Position, player.Position - newPos, 20f))
                     player.Position = newPos;
 
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
 
-            NorthwoodLib.Pools.ListPool<Player>.Shared.Return(effectedPlayers);
+            ListPool<Player>.Pool.Return(effectedPlayers);
         }
 
         private void OnTeleporting(TeleportingEventArgs ev)

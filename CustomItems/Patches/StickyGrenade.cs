@@ -9,6 +9,7 @@ namespace CustomItems.Patches
 {
 #pragma warning disable SA1313
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using HarmonyLib;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
