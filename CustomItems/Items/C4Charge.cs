@@ -324,6 +324,7 @@ namespace CustomItems.Items
                 Locked = true,
             };
 
+            projectile.Info = PickupSyncInfo.None;
             projectile.NetworkInfo = newInfo;
             projectile.PreviousOwner = player.Footprint;
             NetworkServer.Spawn(projectile.gameObject);
