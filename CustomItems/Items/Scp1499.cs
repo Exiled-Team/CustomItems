@@ -28,8 +28,6 @@ namespace CustomItems.Items
     [CustomItem(ItemType.SCP268)]
     public class Scp1499 : CustomItem
     {
-        // This position is where is unused terrain on the Surface
-        private readonly Vector3 scp1499DimensionPos = new(152.93f, 978.03f, 93.64f);
         private readonly Dictionary<Player, Vector3> scp1499Players = new();
 
         /// <inheritdoc/>
@@ -63,6 +61,9 @@ namespace CustomItems.Items
         /// </summary>
         [Description("How long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit)")]
         public float Duration { get; set; } = 15f;
+
+        [Description("The location to teleport when using SCP-1499")]
+        public Vector3 TeleportPosition = new(38.464f, 1014.112f, -32.689f);
 
         /// <inheritdoc/>
         protected override void SubscribeEvents()
@@ -129,7 +130,7 @@ namespace CustomItems.Items
             else
                 scp1499Players.Add(ev.Player, ev.Player.Position);
 
-            ev.Player.Position = scp1499DimensionPos;
+            ev.Player.Position = TeleportPosition;
             ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Invisible>();
 
             if (Duration > 0)
