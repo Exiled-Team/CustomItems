@@ -201,7 +201,9 @@ namespace CustomItems.Items
                 Log.Error($"{nameof(DoTranquilize)}: {e}");
             }
 
-            Ragdoll ragdoll = Ragdoll.CreateAndSpawn(player.Role, player.DisplayNickname, "Tranquilized", player.Position, player.ReferenceHub.PlayerCameraReference.rotation, player);
+            Ragdoll ragdoll = null;
+            if (player.Role.Type != RoleTypeId.Scp106) 
+                ragdoll = Ragdoll.CreateAndSpawn(player.Role, player.DisplayNickname, "Tranquilized", player.Position, player.ReferenceHub.PlayerCameraReference.rotation, player);
 
             player.EnableEffect<Invisible>(Duration);
             player.Scale = Vector3.one * 0.2f;

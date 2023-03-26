@@ -150,7 +150,7 @@ namespace CustomItems.Items
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (Check(ev.Player.CurrentItem))
+            if (Check(ev.Player.CurrentItem) && ev.Attacker is not null)
             {
                 if (Scp714Roles.Contains(ev.Attacker.Role))
                 {

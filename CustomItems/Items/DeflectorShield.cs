@@ -24,6 +24,8 @@ namespace CustomItems.Items
     using MEC;
     using PlayerStatsSystem;
     using YamlDotNet.Serialization;
+
+    using DamageHandlerBase = Exiled.API.Features.DamageHandlers.DamageHandlerBase;
     using Firearm = Exiled.API.Features.Items.Firearm;
 
     /// <inheritdoc />
@@ -149,10 +151,10 @@ namespace CustomItems.Items
 
         private void OnHurt(HurtingEventArgs ev)
         {
-            if (deflectorPlayers.Contains(ev.Player) && (ev.DamageHandler.Base is FirearmDamageHandler && ev.Player != ev.Attacker))
+            if (deflectorPlayers.Contains(ev.Player) && ev.DamageHandler.Base is FirearmDamageHandler && ev.Player != ev.Attacker)
             {
                 ev.IsAllowed = false;
-                ev.Attacker.Hurt(new FirearmDamageHandler(((Firearm)ev.Attacker.CurrentItem).Base, ev.Amount * Multiplier, ev.Attacker.Role.Side != Side.Scp));
+                ev.Attacker.Hurt(ev.Player, ev.Amount * Multiplier, ev.DamageHandler.Type, DamageHandlerBase.CassieAnnouncement.Default);
             }
         }
     }

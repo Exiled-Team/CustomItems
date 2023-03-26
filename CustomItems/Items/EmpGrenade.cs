@@ -171,7 +171,7 @@ namespace CustomItems.Items
                 if (door == null ||
                     BlacklistedDoorTypes.Contains(door.Type) ||
                     (door.DoorLockType > 0 && !OpenLockedDoors) ||
-                    (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors))
+                    (door.RequiredPermissions.RequiredPermissions != KeycardPermissions.None && !OpenKeycardDoors) || door.Type.IsElevator())
                     continue;
 
                 Log.Debug("Opening a door!");

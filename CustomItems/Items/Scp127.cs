@@ -121,7 +121,7 @@ namespace CustomItems.Items
                 {
                     if (!Check(item) || !(item is Firearm firearm))
                         continue;
-                    if (firearm.Ammo < RegenerationAmount)
+                    if (firearm.Ammo < ClipSize)
                         firearm.Ammo += RegenerationAmount;
                     hasItem = true;
                 }

@@ -174,8 +174,7 @@ namespace CustomItems.Items
                 Log.Debug($"{player.Nickname} suctioned?");
                 Vector3 alteredPosition = position + (1f * (player.Position - position).normalized);
                 Vector3 newPos = Vector3.MoveTowards(player.Position, alteredPosition, SuctionPerTick);
-                if (!Physics.Raycast(player.Position, player.Position - newPos, 20f))
-                    player.Position = newPos;
+                player.Position = newPos;
 
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
