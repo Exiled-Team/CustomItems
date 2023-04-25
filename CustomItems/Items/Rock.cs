@@ -1,12 +1,12 @@
 // -----------------------------------------------------------------------
-// <copyright file="Rock.cs" company="Galaxy119 and iopietro">
-// Copyright (c) Galaxy119 and iopietro. All rights reserved.
+// <copyright file="Rock.cs" company="Joker119">
+// Copyright (c) Joker119. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CustomItems.Items
-{/*
+namespace CustomItems.Items;
+/*
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -192,4 +192,3 @@ namespace CustomItems.Items
             }
         }
     }*/
-}

@@ -1,71 +1,55 @@
 // -----------------------------------------------------------------------
-// <copyright file="CustomItems.cs" company="Galaxy119 and iopietro">
-// Copyright (c) Galaxy119 and iopietro. All rights reserved.
+// <copyright file="CustomItems.cs" company="Joker119">
+// Copyright (c) Joker119. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
 #pragma warning disable SA1200
-namespace CustomItems
+namespace CustomItems;
+
+using System;
+using Events;
+using Exiled.API.Features;
+using Exiled.CustomItems.API.Features;
+using HarmonyLib;
+using Server = Exiled.Events.Handlers.Server;
+
+/// <inheritdoc />
+public class CustomItems : Plugin<Config>
 {
-    using System;
-    using Events;
-    using Exiled.API.Features;
-    using Exiled.CustomItems.API.Features;
-    using HarmonyLib;
-    using Server = Exiled.Events.Handlers.Server;
+    private ServerHandler serverHandler = null!;
 
-    /// <inheritdoc />
-    public class CustomItems : Plugin<Config>
+    /// <summary>
+    /// Gets the Plugin instance.
+    /// </summary>
+    public static CustomItems Instance { get; private set; } = null!;
+
+    /// <inheritdoc/>
+    public override Version RequiredExiledVersion { get; } = new(6, 0, 0);
+
+    /// <inheritdoc/>
+    public override void OnEnabled()
     {
-        /// <summary>
-        /// Random Number Generator.
-        /// </summary>
-        public Random Rng = new();
+        Instance = this;
+        serverHandler = new ServerHandler();
 
-        private Harmony harmonyInstance;
+        Config.LoadItems();
 
-        private ServerHandler serverHandler;
+        Log.Debug("Registering items..");
+        CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
+        Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 
-        /// <summary>
-        /// Gets the Plugin instance.
-        /// </summary>
-        public static CustomItems Instance { get; private set; }
+        base.OnEnabled();
+    }
 
-        /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new(6,0,0);
+    /// <inheritdoc/>
+    public override void OnDisabled()
+    {
+        CustomItem.UnregisterItems();
 
-        /// <inheritdoc/>
-        public override void OnEnabled()
-        {
-            Instance = this;
-            serverHandler = new ServerHandler();
+        Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
 
-            harmonyInstance = new Harmony($"com.{nameof(CustomItems)}.galaxy-{DateTime.Now.Ticks}");
-            harmonyInstance.PatchAll();
-
-            Config.LoadItems();
-
-            Log.Debug("Registering items..");
-            CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
-            Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
-
-            base.OnEnabled();
-        }
-
-        /// <inheritdoc/>
-        public override void OnDisabled()
-        {
-            CustomItem.UnregisterItems();
-
-            Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
-
-            harmonyInstance?.UnpatchAll();
-
-            serverHandler = null;
-            Instance = null;
-
-            base.OnDisabled();
-        }
+        base.OnDisabled();
     }
 }

@@ -6,8 +6,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <Version>1.0.0</Version>
-    <AssemblyVersion>7.0.2</AssemblyVersion>
-    <FileVersion>7.0.2</FileVersion>
+    <AssemblyVersion>7.0.3</AssemblyVersion>
+    <FileVersion>7.0.3</FileVersion>
+    <Company>Exiled-Team</Company>
   </PropertyGroup>
 
   <Import Project="../../Plugin.props" />
