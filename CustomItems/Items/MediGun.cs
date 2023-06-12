@@ -53,7 +53,7 @@ public class MediGun : CustomWeapon
     public override bool FriendlyFire { get; set; } = true;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

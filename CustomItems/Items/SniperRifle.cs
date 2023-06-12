@@ -45,7 +45,7 @@ public class SniperRifle : CustomWeapon
     public override float Damage { get; set; }
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

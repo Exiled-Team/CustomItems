@@ -41,7 +41,7 @@ public class LuckyCoin : CustomItem
     public override float Weight { get; set; } = 0f;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

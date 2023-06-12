@@ -41,7 +41,7 @@ public class LethalInjection : CustomItem
     public override float Weight { get; set; } = 1f;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

@@ -37,7 +37,7 @@ public class AntiMemeticPills : CustomItem
     public override float Weight { get; set; } = 1f;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         DynamicSpawnPoints = new List<DynamicSpawnPoint>
         {

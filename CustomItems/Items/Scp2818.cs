@@ -67,7 +67,7 @@ public class Scp2818 : CustomWeapon
     public bool DespawnAfterUse { get; set; } = false;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

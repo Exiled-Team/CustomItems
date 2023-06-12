@@ -42,7 +42,7 @@ public class AutoGun : CustomWeapon
     public override bool ShouldMessageOnGban => true;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

@@ -51,7 +51,7 @@ public class TranquilizerGun : CustomWeapon
     public override float Weight { get; set; } = 1.55f;
 
     /// <inheritdoc />
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>
@@ -203,9 +203,9 @@ public class TranquilizerGun : CustomWeapon
                 {
                     foreach (Item item in player.Items.ToList())
                     {
-                        if (TryGet(item, out CustomItem customItem))
+                        if (TryGet(item, out CustomItem? customItem))
                         {
-                            customItem.Spawn(player.Position, item, player);
+                            customItem?.Spawn(player.Position, item, player);
                             player.RemoveItem(item);
                         }
                     }

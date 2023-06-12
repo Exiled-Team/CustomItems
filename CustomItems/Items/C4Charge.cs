@@ -76,7 +76,7 @@ public class C4Charge : CustomGrenade
     public override float Weight { get; set; } = 0.75f;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 5,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>

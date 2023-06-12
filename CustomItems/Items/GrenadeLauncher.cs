@@ -46,7 +46,7 @@ public class GrenadeLauncher : CustomWeapon
     public override float Weight { get; set; } = 2.95f;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>
@@ -111,7 +111,7 @@ public class GrenadeLauncher : CustomWeapon
                 Log.Debug($"{Name}.{nameof(OnReloading)}: Found item: {item.Type} - {item.Serial}");
                 if (item.Type != ItemType.GrenadeHE && item.Type != ItemType.GrenadeFlash && item.Type != ItemType.SCP018)
                     continue;
-                if (TryGet(item, out CustomItem cItem))
+                if (TryGet(item, out CustomItem? cItem))
                 {
                     if (IgnoreModdedGrenades)
                         continue;

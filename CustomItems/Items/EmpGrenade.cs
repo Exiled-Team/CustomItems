@@ -53,7 +53,7 @@ public class EmpGrenade : CustomGrenade
     public override float Weight { get; set; } = 1.15f;
 
     /// <inheritdoc/>
-    public override SpawnProperties SpawnProperties { get; set; } = new()
+    public override SpawnProperties? SpawnProperties { get; set; } = new()
     {
         Limit = 1,
         DynamicSpawnPoints = new List<DynamicSpawnPoint>
