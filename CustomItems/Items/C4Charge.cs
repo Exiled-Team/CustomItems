@@ -20,6 +20,8 @@ using Exiled.API.Features.Spawn;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Map;
 using Exiled.Events.EventArgs.Player;
+using Exiled.Events.EventArgs.Server;
+
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using Mirror;
@@ -181,8 +183,10 @@ public class C4Charge : CustomGrenade
     /// </summary>
     /// <param name="charge"> The C4 charge to be handled.</param>
     /// <param name="removeMethod"> The method of removing the charge.</param>
-    public void C4Handler(Pickup charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
+    public void C4Handler(Pickup? charge, C4RemoveMethod removeMethod = C4RemoveMethod.Detonate)
     {
+        if (charge?.Position is null)
+            return;
         switch (removeMethod)
         {
             case C4RemoveMethod.Remove:
@@ -200,7 +204,7 @@ public class C4Charge : CustomGrenade
 
             case C4RemoveMethod.Drop:
                 {
-                    TrySpawn((int)Id, charge.Position, out _);
+                    TrySpawn(Id, charge.Position, out _);
                     break;
                 }
         }
@@ -217,6 +221,7 @@ public class C4Charge : CustomGrenade
         PlayerEvent.Destroying += OnDestroying;
         PlayerEvent.Died += OnDied;
         PlayerEvent.Shooting += OnShooting;
+        Exiled.Events.Handlers.Server.RoundEnded += OnRoundEnded;
 
         base.SubscribeEvents();
     }
@@ -239,18 +244,11 @@ public class C4Charge : CustomGrenade
         base.OnWaitingForPlayers();
     }
 
-    /// <inheritdoc/>
-    protected override void OnThrowingRequest(ThrowingRequestEventArgs ev)
+    protected override void OnThrownProjectile(ThrownProjectileEventArgs ev)
     {
-        ev.IsAllowed = false;
-        ev.Player.RemoveItem(ev.Player.CurrentItem);
-
-        Pickup c4 = Throw(ev.Player, ev.Throwable, ev.RequestType == ThrowRequest.WeakThrow);
-
-        if (!PlacedCharges.ContainsKey(c4))
-            PlacedCharges.Add(c4, ev.Player);
-
-        base.OnThrowingRequest(ev);
+        if (!PlacedCharges.ContainsKey(ev.Projectile))
+            PlacedCharges.Add(ev.Projectile, ev.Player);
+        base.OnThrownProjectile(ev);
     }
 
     /// <inheritdoc/>
@@ -265,7 +263,7 @@ public class C4Charge : CustomGrenade
         {
             if (charge.Value == ev.Player)
             {
-                C4Handler(charge.Key, MethodOnDeath);
+                C4Handler(charge.Key, C4RemoveMethod.Remove);
             }
         }
     }
@@ -334,5 +332,10 @@ public class C4Charge : CustomGrenade
         throwable.Base.PropelBody(projectile.RigidBody, settings.StartTorque, limitedVelocity, settings.StartVelocity, settings.UpwardsFactor);
 
         return Pickup.Get(projectile);
+    }
+
+    private void OnRoundEnded(RoundEndedEventArgs ev)
+    {
+        PlacedCharges.Clear();
     }
 }

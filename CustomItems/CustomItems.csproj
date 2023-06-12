@@ -22,7 +22,6 @@
   <ItemGroup>
     <PackageReference Include="EXILED" Version="$(ExiledVersion)" />
     <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" IncludeAssets="All" PrivateAssets="All" />
-    <PackageReference Include="YamlDotNet" Version="$(YamlDotNetVersion)" />
     <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
   </ItemGroup>
 
@@ -32,5 +31,6 @@
     <Reference Include="UnityEngine" HintPath="$(EXILED_REFERENCES)\UnityEngine.dll" Private="false" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll" Private="false" />
     <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="false" />
+    <Reference Include="YamlDotNet" HintPath="$(EXILED_REFERENCES)\YamlDotNet.dll" Private="false"/>
   </ItemGroup>
 </Project>

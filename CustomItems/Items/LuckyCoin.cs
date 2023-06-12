@@ -49,7 +49,7 @@ public class LuckyCoin : CustomItem
             new()
             {
                 Chance = 100,
-                Location = SpawnLocationType.Inside012Locker,
+                Location = SpawnLocationType.InsideLocker,
             },
             new()
             {

@@ -52,7 +52,7 @@ public class Scp714 : CustomItem
     /// Gets or sets which roles shouldn't be able to deal damage to the player that has SCP-714 put on.
     /// </summary>
     [Description("Which roles shouldn't be able to deal damage to the player that has SCP-714 put on.")]
-    public List<RoleTypeId> Scp714Roles { get; set; } = new()
+    public List<RoleTypeId>? Scp714Roles { get; set; } = new()
     {
         RoleTypeId.Scp049,
         RoleTypeId.Scp0492,
@@ -150,7 +150,7 @@ public class Scp714 : CustomItem
     {
         if (Check(ev.Player.CurrentItem) && ev.Attacker is not null)
         {
-            if (Scp714Roles.Contains(ev.Attacker.Role))
+            if (Scp714Roles is not null && Scp714Roles.Contains(ev.Attacker.Role))
             {
                 ev.IsAllowed = false;
             }
