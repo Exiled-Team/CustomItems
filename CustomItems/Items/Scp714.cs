@@ -10,18 +10,40 @@ namespace CustomItems.Items;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+
+using CustomPlayerEffects;
+
 using Exiled.API.Enums;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
+using Exiled.API.Features.Pools;
+using Exiled.API.Features.Roles;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomItems.API.Features;
+using Exiled.Events.EventArgs.Map;
 using Exiled.Events.EventArgs.Player;
+using Exiled.Events.EventArgs.Scp049;
+
+using InventorySystem.Items.Usables.Scp330;
+
+using MEC;
+
 using PlayerRoles;
+using PlayerRoles.FirstPersonControl;
+
+using PlayerStatsSystem;
+
+using UnityEngine;
 
 /// <inheritdoc/>
 [CustomItem(ItemType.Coin)]
 public class Scp714 : CustomItem
 {
+    private HashSet<Player> equippedPlayers = new();
+    private Dictionary<Player, CoroutineHandle> stamLimiters = new();
+    private Dictionary<Player, List<(EffectType, float)>> existingEffects = new();
+
     /// <inheritdoc/>
     public override uint Id { get; set; } = 12;
 
@@ -29,7 +51,7 @@ public class Scp714 : CustomItem
     public override string Name { get; set; } = "SCP-714";
 
     /// <inheritdoc/>
-    public override string Description { get; set; } = "The green ring that protects you from SCP-049.";
+    public override string Description { get; set; } = "The jade ring that protects you from hazards.";
 
     /// <inheritdoc/>
     public override float Weight { get; set; } = 1.15f;
@@ -62,9 +84,19 @@ public class Scp714 : CustomItem
     /// Gets or sets which effects should be given to the player, when he will put on SCP-714.
     /// </summary>
     [Description("Which effects should be given to the player, when he will put on SCP-714.")]
-    public List<string> Scp714Effects { get; set; } = new()
+    public List<EffectType> Scp714Effects { get; set; } = new()
     {
-        "Asphyxiated",
+        EffectType.Asphyxiated,
+    };
+
+    public List<EffectType> PreventedEffects { get; set; } = new()
+    {
+        EffectType.AmnesiaItems,
+        EffectType.AmnesiaVision,
+        EffectType.Hypothermia,
+        EffectType.Burned,
+        EffectType.Concussed,
+        EffectType.Blinded,
     };
 
     /// <summary>
@@ -73,20 +105,33 @@ public class Scp714 : CustomItem
     [Description("Message shown to player, when he takes off the SCP-714.")]
     public string TakeOffMessage { get; set; } = "You've taken off the ring.";
 
+    public string PutOnMessage { get; set; } = "You have put on the ring.";
+
+    public float Scp049Damage { get; set; } = 40f;
+
+    public float PocketDimensionModifier { get; set; } = 0.75f;
+
+    public float StamLimitModifier { get; set; } = 0.5f;
+
+    public override bool Check(Player? player) => player is not null ? equippedPlayers.Contains(player) : base.Check(player);
+
     /// <inheritdoc/>
     protected override void SubscribeEvents()
     {
-        Exiled.Events.Handlers.Player.ChangingItem += OnChangingItem;
         Exiled.Events.Handlers.Player.Hurting += OnHurting;
-
+        Exiled.Events.Handlers.Scp049.Attacking += OnAttacking;
+        Exiled.Events.Handlers.Player.FlippingCoin += OnFlippingCoin;
+        Exiled.Events.Handlers.Player.ReceivingEffect += OnReceivingEffect;
         base.SubscribeEvents();
     }
 
     /// <inheritdoc/>
     protected override void UnsubscribeEvents()
     {
-        Exiled.Events.Handlers.Player.ChangingItem -= OnChangingItem;
         Exiled.Events.Handlers.Player.Hurting -= OnHurting;
+        Exiled.Events.Handlers.Scp049.Attacking -= OnAttacking;
+        Exiled.Events.Handlers.Player.FlippingCoin -= OnFlippingCoin;
+        Exiled.Events.Handlers.Player.ReceivingEffect -= OnReceivingEffect;
 
         base.UnsubscribeEvents();
     }
@@ -94,66 +139,94 @@ public class Scp714 : CustomItem
     /// <inheritdoc/>
     protected override void OnDropping(DroppingItemEventArgs ev)
     {
-        ev.Player.ShowHint(TakeOffMessage);
-
-        foreach (string effect in Scp714Effects)
-        {
-            try
-            {
-                ev.Player.DisableEffect((EffectType)Enum.Parse(typeof(EffectType), effect, true));
-            }
-            catch (Exception)
-            {
-                Log.Error($"\"{effect}\" is not a valid effect name.");
-                continue;
-            }
-        }
+        if (Check(ev.Player))
+            SetRingState(ev.Player, false);
 
         base.OnDropping(ev);
     }
 
-    private void OnChangingItem(ChangingItemEventArgs ev)
+    private void OnFlippingCoin(FlippingCoinEventArgs ev)
     {
-        if (Check(ev.NewItem))
-        {
-            foreach (string effect in Scp714Effects)
-            {
-                if (!ev.Player.EnableEffect(effect, 999f, false))
-                {
-                    Log.Error($"\"{effect}\" is not a valid effect name.");
-                }
-            }
-        }
-        else
+        if (!Check(ev.Player.CurrentItem))
+            return;
 
-        if (Check(ev.Player.CurrentItem))
-        {
-            if (!string.IsNullOrEmpty(TakeOffMessage))
-                ev.Player.ShowHint(TakeOffMessage);
+        SetRingState(ev.Player, !Check(ev.Player));
+    }
 
-            foreach (string effect in Scp714Effects)
+    private void OnAttacking(AttackingEventArgs ev)
+    {
+        if (Check(ev.Player) && (Scp714Roles?.Contains(ev.Player.Role.Type) ?? false))
+        {
+            if (ev.Target is not null)
             {
-                try
-                {
-                    ev.Player.DisableEffect((EffectType)Enum.Parse(typeof(EffectType), effect, true));
-                }
-                catch (Exception)
-                {
-                    Log.Error($"\"{effect}\" is not a valid effect name.");
-                    continue;
-                }
+                ev.IsAllowed = false;
+                ev.Target.Hurt(Scp049Damage);
             }
         }
     }
 
     private void OnHurting(HurtingEventArgs ev)
     {
-        if (Check(ev.Player.CurrentItem) && ev.Attacker is not null)
+        if (Check(ev.Player.CurrentItem))
         {
-            if (Scp714Roles is not null && Scp714Roles.Contains(ev.Attacker.Role))
-            {
+            if (ev.Attacker is not null && Scp714Roles is not null && Scp714Roles.Contains(ev.Attacker.Role))
                 ev.IsAllowed = false;
-            }
+
+            if (ev.DamageHandler.Type is DamageType.PocketDimension)
+                ev.Amount *= PocketDimensionModifier;
+        }
+    }
+
+    private void OnReceivingEffect(ReceivingEffectEventArgs ev)
+    {
+        if (Check(ev.Player) && PreventedEffects.Contains(ev.Effect.GetEffectType()))
+            ev.IsAllowed = false;
+    }
+
+    private void SetRingState(Player player, bool equipped)
+    {
+        switch (equipped)
+        {
+            case true:
+                List<(EffectType, float)> activeEffects = ListPool<(EffectType, float)>.Pool.Get();
+                foreach (StatusEffectBase? active in player.ActiveEffects)
+                    activeEffects.Add(new(active.GetEffectType(), active.TimeLeft));
+
+                existingEffects[player] = activeEffects;
+                ListPool<(EffectType, float)>.Pool.Return(activeEffects);
+                foreach (EffectType effect in Scp714Effects)
+                    player.EnableEffect(effect);
+                stamLimiters[player] = Timing.RunCoroutine(LimitStamina(player));
+                equippedPlayers.Add(player);
+                player.ShowHint(PutOnMessage);
+
+                break;
+            case false:
+                foreach (EffectType effect in Scp714Effects)
+                    player.DisableEffect(effect);
+                equippedPlayers.Remove(player);
+                player.ShowHint(TakeOffMessage);
+                Timing.KillCoroutines(stamLimiters[player]);
+                stamLimiters.Remove(player);
+                if (existingEffects.TryGetValue(player, out List<(EffectType, float)>? existingEffect))
+                {
+                    foreach ((EffectType type, float dur) in existingEffect)
+                        player.EnableEffect(type, dur);
+                    existingEffects.Remove(player);
+                }
+
+                break;
+        }
+    }
+
+    private IEnumerator<float> LimitStamina(Player player)
+    {
+        while (Check(player))
+        {
+            if (player.Stamina > player.StaminaStat.MaxValue * StamLimitModifier)
+                player.Stamina = player.StaminaStat.MaxValue * StamLimitModifier;
+
+            yield return Timing.WaitForSeconds(0.15f);
         }
     }
 }

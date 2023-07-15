@@ -300,40 +300,6 @@ public class C4Charge : CustomGrenade
         }
     }
 
-    private Pickup Throw(Player player, Throwable throwable, bool weakThrow)
-    {
-        ThrowableItem.ProjectileSettings settings =
-            weakThrow ? throwable.Base.WeakThrowSettings : throwable.Base.FullThrowSettings;
-        ThrownProjectile projectile = Object.Instantiate(
-            throwable.Projectile.Base,
-            throwable.Owner.ReferenceHub.PlayerCameraReference.position,
-            throwable.Owner.ReferenceHub.PlayerCameraReference.rotation);
-        Transform transform = projectile.transform;
-        PickupSyncInfo newInfo = new(Type, transform.position, transform.rotation, Weight, throwable.Serial)
-        {
-            Locked = true,
-        };
-
-        projectile.Info = PickupSyncInfo.None;
-        projectile.PreviousOwner = player.Footprint;
-        NetworkServer.Spawn(projectile.gameObject);
-        Vector3 limitedVelocity = ThrowableNetworkHandler.GetLimitedVelocity(player.Velocity);
-        try
-        {
-            projectile.Awake();
-            projectile.NetworkInfo = newInfo;
-        }
-        catch (Exception e)
-        {
-            Log.Error($"{e}\n\n{e.StackTrace}");
-        }
-
-        projectile.InfoReceived(new(), newInfo);
-        throwable.Base.PropelBody(projectile.RigidBody, settings.StartTorque, limitedVelocity, settings.StartVelocity, settings.UpwardsFactor);
-
-        return Pickup.Get(projectile);
-    }
-
     private void OnRoundEnded(RoundEndedEventArgs ev)
     {
         PlacedCharges.Clear();
