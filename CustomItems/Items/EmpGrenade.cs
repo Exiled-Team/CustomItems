@@ -15,6 +15,7 @@ using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
+using Exiled.API.Features.Doors;
 using Exiled.API.Features.Items;
 using Exiled.API.Features.Roles;
 using Exiled.API.Features.Spawn;
@@ -257,7 +258,7 @@ public class EmpGrenade : CustomGrenade
             ev.IsAllowed = false;
     }
 
-    private void OnInteractingDoor(InteractingDoorEventArgs ev)
+    private void OnInteractingDoor(TriggeringDoorEventArgs ev)
     {
         if (lockedDoors.Contains(ev.Door))
             ev.IsAllowed = false;

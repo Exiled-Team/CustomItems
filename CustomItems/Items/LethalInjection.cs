@@ -63,7 +63,7 @@ public class LethalInjection : CustomItem
     /// <inheritdoc/>
     protected override void SubscribeEvents()
     {
-        Player.UsingItem += OnUsingItem;
+        Player.UsedItem += OnUsingItem;
 
         base.SubscribeEvents();
     }
@@ -71,7 +71,7 @@ public class LethalInjection : CustomItem
     /// <inheritdoc/>
     protected override void UnsubscribeEvents()
     {
-        Player.UsingItem -= OnUsingItem;
+        Player.UsedItem -= OnUsingItem;
 
         base.UnsubscribeEvents();
     }
