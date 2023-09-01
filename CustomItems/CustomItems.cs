@@ -26,7 +26,7 @@ public class CustomItems : Plugin<Config>
     public static CustomItems Instance { get; private set; } = null!;
 
     /// <inheritdoc/>
-    public override Version RequiredExiledVersion { get; } = new(6, 0, 0);
+    public override Version RequiredExiledVersion { get; } = new(8, 0, 0);
 
     /// <inheritdoc/>
     public override void OnEnabled()
