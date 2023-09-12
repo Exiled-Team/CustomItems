@@ -6,8 +6,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <Version>1.0.0</Version>
-    <AssemblyVersion>7.1.1</AssemblyVersion>
-    <FileVersion>7.1.1</FileVersion>
+    <AssemblyVersion>7.1.2</AssemblyVersion>
+    <FileVersion>7.1.2</FileVersion>
     <Company>Exiled-Team</Company>
   </PropertyGroup>
 

@@ -102,7 +102,7 @@ public class Scp127 : CustomWeapon
     protected override void OnHurting(HurtingEventArgs ev)
     {
         if (DamageMultiplier > 0)
-            ev.Amount *= Damage;
+            ev.Amount *= DamageMultiplier;
     }
 
     /// <inheritdoc/>
